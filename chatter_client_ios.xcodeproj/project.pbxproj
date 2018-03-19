@@ -15,8 +15,13 @@
 		CE0AB471205FD39F0071DE82 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB46F205FD39F0071DE82 /* Main.storyboard */; };
 		CE0AB473205FD39F0071DE82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB472205FD39F0071DE82 /* Assets.xcassets */; };
 		CE0AB476205FD39F0071DE82 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB474205FD39F0071DE82 /* LaunchScreen.storyboard */; };
-		CE0AB481205FD3A20071DE82 /* chatter_client_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB480205FD3A20071DE82 /* chatter_client_iosTests.swift */; };
 		CE0AB48C205FD3A20071DE82 /* chatter_client_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB48B205FD3A20071DE82 /* chatter_client_iosUITests.swift */; };
+		CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB49F205FE2D10071DE82 /* AppStore.swift */; };
+		CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A120600DF90071DE82 /* RootReducer.swift */; };
+		CE0AB4A42060310A0071DE82 /* LoginScreenActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A32060310A0071DE82 /* LoginScreenActions.swift */; };
+		CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */; };
+		CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A7206035640071DE82 /* RootActions.swift */; };
+		CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,11 +57,16 @@
 		CE0AB475205FD39F0071DE82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE0AB477205FD3A10071DE82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE0AB47C205FD3A20071DE82 /* chatter_client_iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = chatter_client_iosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE0AB480205FD3A20071DE82 /* chatter_client_iosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = chatter_client_iosTests.swift; sourceTree = "<group>"; };
 		CE0AB482205FD3A20071DE82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE0AB487205FD3A20071DE82 /* chatter_client_iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = chatter_client_iosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE0AB48B205FD3A20071DE82 /* chatter_client_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = chatter_client_iosUITests.swift; sourceTree = "<group>"; };
 		CE0AB48D205FD3A20071DE82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE0AB49F205FE2D10071DE82 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
+		CE0AB4A120600DF90071DE82 /* RootReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootReducer.swift; sourceTree = "<group>"; };
+		CE0AB4A32060310A0071DE82 /* LoginScreenActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenActions.swift; sourceTree = "<group>"; };
+		CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenReducer.swift; sourceTree = "<group>"; };
+		CE0AB4A7206035640071DE82 /* RootActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootActions.swift; sourceTree = "<group>"; };
+		CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -137,9 +147,11 @@
 		CE0AB46A205FD39D0071DE82 /* chatter_client_ios */ = {
 			isa = PBXGroup;
 			children = (
-				CE0AB46B205FD39E0071DE82 /* AppDelegate.swift */,
-				CE0AB46D205FD39F0071DE82 /* ViewController.swift */,
-				CE0AB46F205FD39F0071DE82 /* Main.storyboard */,
+				CE0AB49E205FD88E0071DE82 /* core */,
+				CE0AB49D205FD8810071DE82 /* views */,
+				CE0AB49C205FD8770071DE82 /* reducers */,
+				CE0AB49B205FD86E0071DE82 /* store */,
+				CE0AB499205FD8540071DE82 /* actions */,
 				CE0AB472205FD39F0071DE82 /* Assets.xcassets */,
 				CE0AB474205FD39F0071DE82 /* LaunchScreen.storyboard */,
 				CE0AB477205FD3A10071DE82 /* Info.plist */,
@@ -150,7 +162,7 @@
 		CE0AB47F205FD3A20071DE82 /* chatter_client_iosTests */ = {
 			isa = PBXGroup;
 			children = (
-				CE0AB480205FD3A20071DE82 /* chatter_client_iosTests.swift */,
+				CE0AB4A920603A3E0071DE82 /* store */,
 				CE0AB482205FD3A20071DE82 /* Info.plist */,
 			);
 			path = chatter_client_iosTests;
@@ -163,6 +175,57 @@
 				CE0AB48D205FD3A20071DE82 /* Info.plist */,
 			);
 			path = chatter_client_iosUITests;
+			sourceTree = "<group>";
+		};
+		CE0AB499205FD8540071DE82 /* actions */ = {
+			isa = PBXGroup;
+			children = (
+				CE0AB4A32060310A0071DE82 /* LoginScreenActions.swift */,
+				CE0AB4A7206035640071DE82 /* RootActions.swift */,
+			);
+			path = actions;
+			sourceTree = "<group>";
+		};
+		CE0AB49B205FD86E0071DE82 /* store */ = {
+			isa = PBXGroup;
+			children = (
+				CE0AB49F205FE2D10071DE82 /* AppStore.swift */,
+			);
+			path = store;
+			sourceTree = "<group>";
+		};
+		CE0AB49C205FD8770071DE82 /* reducers */ = {
+			isa = PBXGroup;
+			children = (
+				CE0AB4A120600DF90071DE82 /* RootReducer.swift */,
+				CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */,
+			);
+			path = reducers;
+			sourceTree = "<group>";
+		};
+		CE0AB49D205FD8810071DE82 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				CE0AB46F205FD39F0071DE82 /* Main.storyboard */,
+				CE0AB46D205FD39F0071DE82 /* ViewController.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		CE0AB49E205FD88E0071DE82 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				CE0AB46B205FD39E0071DE82 /* AppDelegate.swift */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		CE0AB4A920603A3E0071DE82 /* store */ = {
+			isa = PBXGroup;
+			children = (
+				CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */,
+			);
+			path = store;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -460,7 +523,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */,
+				CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */,
 				CE0AB46E205FD39F0071DE82 /* ViewController.swift in Sources */,
+				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
+				CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */,
+				CE0AB4A42060310A0071DE82 /* LoginScreenActions.swift in Sources */,
 				CE0AB46C205FD39E0071DE82 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -469,7 +537,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE0AB481205FD3A20071DE82 /* chatter_client_iosTests.swift in Sources */,
+				CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
