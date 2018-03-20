@@ -20,7 +20,7 @@ class StoreTests: XCTestCase,StoreSubscriber {
 
     override func setUp() {
         super.setUp()
-        appStore.dispatch(ChangeActivityAction(activity:AppScreens.USER_PROFILE))
+        appStore.dispatch(ChangeActivityAction(activity:AppScreens.LOGIN_FORM))
         appStore.subscribe(self)
     }
 
