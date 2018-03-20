@@ -22,6 +22,7 @@
 		CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */; };
 		CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A7206035640071DE82 /* RootActions.swift */; };
 		CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */; };
+		CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AC20613A380071DE82 /* MessageCenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenReducer.swift; sourceTree = "<group>"; };
 		CE0AB4A7206035640071DE82 /* RootActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootActions.swift; sourceTree = "<group>"; };
 		CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
+		CE0AB4AC20613A380071DE82 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -216,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				CE0AB46B205FD39E0071DE82 /* AppDelegate.swift */,
+				CE0AB4AC20613A380071DE82 /* MessageCenter.swift */,
 			);
 			path = core;
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 				CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */,
 				CE0AB46E205FD39F0071DE82 /* ViewController.swift in Sources */,
 				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
+				CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */,
 				CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */,
 				CE0AB4A42060310A0071DE82 /* LoginScreenActions.swift in Sources */,
 				CE0AB46C205FD39E0071DE82 /* AppDelegate.swift in Sources */,

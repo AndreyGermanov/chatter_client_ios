@@ -11,24 +11,20 @@ import ReSwift
 @testable import chatter_client_ios
 
 class StoreTests: XCTestCase,StoreSubscriber {
-  
-    func newState(state: AppState) {
-        print(state.current_activity)
-    }
     
     typealias StoreSubscriberStateType = AppState
     
-    
+    func newState(state: AppState) {
+        print(state.current_activity)
+    }
+
     override func setUp() {
         super.setUp()
+        appStore.dispatch(ChangeActivityAction(activity:AppScreens.USER_PROFILE))
         appStore.subscribe(self)
-        
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
-    
 
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
@@ -36,5 +32,4 @@ class StoreTests: XCTestCase,StoreSubscriber {
         appStore.dispatch(ChangeActivityAction(activity:AppScreens.USER_PROFILE))
         XCTAssertEqual(AppScreens.USER_PROFILE, appStore.state.current_activity)
     }
-    
 }

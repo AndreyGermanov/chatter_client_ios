@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -59,29 +59,29 @@
 /* Begin PBXFileReference section */
 		01E01C30DDF6803C898761A1AFBE60BF /* Middleware.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Middleware.swift; path = ReSwift/CoreTypes/Middleware.swift; sourceTree = "<group>"; };
 		054C4D7DDA748CDF7AA30DF15D4B1528 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0E9D1BED946E4D8EB5905E0ED16B242E /* Starscream.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Starscream.framework; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E9D1BED946E4D8EB5905E0ED16B242E /* Starscream.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EA987881D119F7D4DB057DD82D234A2 /* Pods-chatter_client_iosTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-chatter_client_iosTests-dummy.m"; sourceTree = "<group>"; };
-		106F494BB3FD0C7348BDB5D57DB12B59 /* Pods-chatter_client_ios.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-chatter_client_ios.modulemap"; sourceTree = "<group>"; };
+		106F494BB3FD0C7348BDB5D57DB12B59 /* Pods-chatter_client_ios.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-chatter_client_ios.modulemap"; sourceTree = "<group>"; };
 		11E5F5BE03DCA552560CC362EDA9F56F /* Pods-chatter_client_ios-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-chatter_client_ios-dummy.m"; sourceTree = "<group>"; };
 		130081F00227E20D012B45F64D561996 /* Action.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Action.swift; path = ReSwift/CoreTypes/Action.swift; sourceTree = "<group>"; };
 		1A7CF3F24AC5EBEDE4CC6F06E7E83CB3 /* Pods-chatter_client_iosUITests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-chatter_client_iosUITests-frameworks.sh"; sourceTree = "<group>"; };
 		1B5A6E82B226511FFF6517E26E0EE16A /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1C79B409589E6AB2AA5BC3C86B0949E7 /* Pods_chatter_client_iosTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_chatter_client_iosTests.framework; path = "Pods-chatter_client_iosTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C79B409589E6AB2AA5BC3C86B0949E7 /* Pods_chatter_client_iosTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_chatter_client_iosTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DD7758FB8680B83CD22BB54A550966D /* Coding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Coding.swift; path = ReSwift/Utils/Coding.swift; sourceTree = "<group>"; };
 		1FF27754B78017899799FB8C298DC44F /* StoreType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StoreType.swift; path = ReSwift/CoreTypes/StoreType.swift; sourceTree = "<group>"; };
 		2747C2714D22A1DCCF67F4BA7A492BB3 /* Pods-chatter_client_ios-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-chatter_client_ios-acknowledgements.markdown"; sourceTree = "<group>"; };
 		2D9CC660833DFA13FEC10A14991B40E3 /* Pods-chatter_client_iosUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-chatter_client_iosUITests-acknowledgements.plist"; sourceTree = "<group>"; };
-		359218398E8D861150989C3AD14504C9 /* ReSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ReSwift.framework; path = ReSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		359218398E8D861150989C3AD14504C9 /* ReSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ReSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3869C30A20F15C9A411792AE5F1B6EB5 /* ReSwift-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ReSwift-umbrella.h"; sourceTree = "<group>"; };
-		3A50EB9E6DB5435D9E6C83F827F721BA /* Starscream.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = Starscream.modulemap; sourceTree = "<group>"; };
+		3A50EB9E6DB5435D9E6C83F827F721BA /* Starscream.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Starscream.modulemap; sourceTree = "<group>"; };
 		3B33D3AE099F87C0F0847C15AA7DF855 /* Starscream-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Starscream-prefix.pch"; sourceTree = "<group>"; };
 		3F0131C3FB0F6FB655C7700B76B69C60 /* Pods-chatter_client_iosUITests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-chatter_client_iosUITests-umbrella.h"; sourceTree = "<group>"; };
-		4836E25C33DF3488FB8CD7A66F79613E /* Pods_chatter_client_iosUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_chatter_client_iosUITests.framework; path = "Pods-chatter_client_iosUITests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B335B88330040F74D4A508BEE5E82D8 /* Pods_chatter_client_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_chatter_client_ios.framework; path = "Pods-chatter_client_ios.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4836E25C33DF3488FB8CD7A66F79613E /* Pods_chatter_client_iosUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_chatter_client_iosUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B335B88330040F74D4A508BEE5E82D8 /* Pods_chatter_client_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_chatter_client_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		504F6EC392D14F9B0F160724153A4FE9 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		527E22EA3FD0E7989DBBEF6E6F0DC261 /* Subscription.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Subscription.swift; path = ReSwift/CoreTypes/Subscription.swift; sourceTree = "<group>"; };
 		5433EE67EF2C1415D32A1F67698321DF /* SSLSecurity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SSLSecurity.swift; path = Sources/SSLSecurity.swift; sourceTree = "<group>"; };
-		5A94D7B33A0A290728D9C0A56574AF35 /* Pods-chatter_client_iosUITests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-chatter_client_iosUITests.modulemap"; sourceTree = "<group>"; };
+		5A94D7B33A0A290728D9C0A56574AF35 /* Pods-chatter_client_iosUITests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-chatter_client_iosUITests.modulemap"; sourceTree = "<group>"; };
 		5CAE4E72665526687BC6C7522B8F8DA6 /* Pods-chatter_client_iosTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-chatter_client_iosTests-resources.sh"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		660A52CB1FB7B1BB5D24ADDC5FD652DC /* Compression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Compression.swift; path = Sources/Compression.swift; sourceTree = "<group>"; };
@@ -91,11 +91,11 @@
 		70907C154B101A2D199EFD322FF80F14 /* Pods-chatter_client_iosTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-chatter_client_iosTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7EF86B011562A756BD2A9C304909E9CE /* Pods-chatter_client_iosTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-chatter_client_iosTests-frameworks.sh"; sourceTree = "<group>"; };
 		823AB4E6FD068BB2CDFACDA9109CE108 /* Pods-chatter_client_iosUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-chatter_client_iosUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		8498DED14B4BB9CF1EE3C2EA79A1915F /* ReSwift.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = ReSwift.modulemap; sourceTree = "<group>"; };
+		8498DED14B4BB9CF1EE3C2EA79A1915F /* ReSwift.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = ReSwift.modulemap; sourceTree = "<group>"; };
 		88CD3CBD3AAF332D0AD3A2B28F793D0C /* State.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = State.swift; path = ReSwift/CoreTypes/State.swift; sourceTree = "<group>"; };
 		8BDA7A210912FA8C30BDB2B11B8B253C /* Pods-chatter_client_ios-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-chatter_client_ios-acknowledgements.plist"; sourceTree = "<group>"; };
 		8D974F2FC9B8D4B2EECC005B0F724128 /* Assertions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Assertions.swift; path = ReSwift/Utils/Assertions.swift; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		964A85117ED2C698A3AD792E5A9FDD1F /* Starscream-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Starscream-umbrella.h"; sourceTree = "<group>"; };
 		9A262973E96C57CC6A97EBD69452673E /* Pods-chatter_client_iosTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-chatter_client_iosTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		9CFC29047974890DCBACE9493432B911 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 		CFFE781A766898101B2C9787591C4962 /* Pods-chatter_client_iosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-chatter_client_iosTests.release.xcconfig"; sourceTree = "<group>"; };
 		D5E447AFACC9B79653CB30A387AAA57F /* Pods-chatter_client_iosUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-chatter_client_iosUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		D5F6F0B9AEDBD91F9C8761DBB9C998FE /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
-		D96D4B8A9EB4D5467968577792434C39 /* Pods-chatter_client_iosTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-chatter_client_iosTests.modulemap"; sourceTree = "<group>"; };
+		D96D4B8A9EB4D5467968577792434C39 /* Pods-chatter_client_iosTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-chatter_client_iosTests.modulemap"; sourceTree = "<group>"; };
 		E03A3A3D5F3CC19DCE5961F968C5A23E /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 		E2BF5A54C8B2B075AA6E3FBAAB361628 /* ReSwift.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ReSwift.xcconfig; sourceTree = "<group>"; };
 		E3FE7715022E75850DA9702209D70130 /* Pods-chatter_client_ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-chatter_client_ios.debug.xcconfig"; sourceTree = "<group>"; };
@@ -185,7 +185,6 @@
 				E69BABD7842D9E26D36EF98E44558DF9 /* WebSocket.swift */,
 				6208267E4DAF593C6EB6F959FA35A85C /* Support Files */,
 			);
-			name = Starscream;
 			path = Starscream;
 			sourceTree = "<group>";
 		};
@@ -293,7 +292,6 @@
 				E5C78172D11D336826D7EB0CB87D2415 /* TypeHelper.swift */,
 				52464C3E791E7B9C09CF1264A45BDEFD /* Support Files */,
 			);
-			name = ReSwift;
 			path = ReSwift;
 			sourceTree = "<group>";
 		};
@@ -480,7 +478,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0920;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -786,6 +784,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;
