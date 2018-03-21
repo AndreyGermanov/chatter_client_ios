@@ -22,6 +22,8 @@ import Starscream
  */
 class MessageCenter: NSObject, WebSocketDelegate {
     
+    //MARK: Core functions
+    
     /*****************************
      * WebSocket server core vars
      ****************************/
@@ -48,9 +50,42 @@ class MessageCenter: NSObject, WebSocketDelegate {
     /// Timer used to run main message loop (process message queues)
     lazy var timer: Timer = Timer()
 
-    /******************
-     *  Message Queues
-     *****************/
+    /**
+     * Class constructor
+     *
+     * - Parameter host: WebSocket server host
+     * - Parameter port: WebSocket server port
+     * - Parameter endpoint: WebSocket server endpoint URL
+     */
+    init(host:String="localhost",port:Int=80,endpoint:String = "") {
+        super.init()
+        self.host = host
+        self.port = port
+        self.endpoint = endpoint
+    }
+    
+    /**
+     * Message center starter
+     */
+    func run() {
+        self.timer = Timer(timeInterval: 1, target: self, selector: #selector(self.runCronjob), userInfo: nil, repeats: true)
+        self.timer.fire()
+    }
+    
+    /**
+     * Function determines server connection status
+     *
+     * - Returns: true if connection active and false otherwise
+     */
+    func isConnected() -> Bool {
+        return self.ws.isConnected
+    }
+    
+    //MARK: Message queue management
+    
+    /***************************
+     * Message queue management
+     **************************/
     
     /// Pending requests queue
     var pendingRequests = [String:Any]()
@@ -60,35 +95,320 @@ class MessageCenter: NSObject, WebSocketDelegate {
     var pendingRequestsQueueTimeout = 10
     
     /// Sent requests queue, which wait for response
-    var requetsWaitingResponses = [String:Any]()
+    var requestsWaitingResponses = [String:Any]()
     
     /// Time period in seconds, after wchich request in queue outdates and becaeme as subject
     /// of garbage collector (seconds)
     var requestsWaitingResponsesQueueTimeout = 20
     
-    /// Received files queue [checksum:binary-data-of-file]
-    var receivedFilesQueue = [Int:Data]()
+    /// Received files queue [checksum:[data:binary-data-of-file,timestamp:timestamp]
+    var receivedFiles = [Int:Any]()
     
     /// Time period in seconds, after wchich request in queue outdates and becaeme as subject
     /// of garbage collector (seconds)
     var receivedFilesQueueTimeout = 120
 
+    /// Pending waiting files requests queue. Responses for requests, which is waiting binary data
+    /// to come to be finished
+    var responsesWaitingFile = [Int:Any]()
+    
+    /// Time period in seconds, after wchich request in queue outdates and becaeme as subject
+    /// of garbage collector (seconds)
+    var responseWaitingFileQueueTimeout = 120
+    
     /**
-     * Class constructor
+     * Adds request to pendingRequests queue
      *
-     * - Parameter host: WebSocket server host
-     * - Parameter port: WebSocket server port
-     * - Parameter endpoint: WebSocket server endpoint URL
+     * - Parameter request: Request
+     * - Returns: request_id of added request
      */
-    init(host:String="localhost",port:Int=80,endpoint:String = "") {
-        self.host = host
-        self.port = port
-        self.endpoint = endpoint
+    func addToPendingRequests(_ request:[String:Any]) -> String? {
+        var request = request
+        var request_id = UUID().uuidString
+        if request["request_id"] as? String != nil {
+            request_id = request["request_id"] as! String
+        } else {
+            request["request_id"] = request_id
+        }
+        let request_timestamp:Int = Int.init(NSDate().timeIntervalSince1970)
+        if (request["request_timestamp"] != nil) {
+            print("ERROR: 'request_timestamp' attribute already exists. Could not add this request")
+            return nil
+        } else {
+            request["request_timestamp"] = request_timestamp
+            self.pendingRequests[request_id] = request
+            return request_id
+        }
+    }
+    
+    /**
+     * Removes request from pendingRequests queue
+     *
+     * - Parameter request_id: request ID to remove
+     * - Returns: removed request body if it really removed or nil if nothing removed
+     */
+    func removeFromPendingRequests(_ request_id:String) -> Any? {
+        if let request = self.pendingRequests[request_id] {
+            self.pendingRequests.removeValue(forKey: request_id)
+            return request
+        } else {
+            return nil
+        }
+    }
+    
+    /**
+     * Used to send all requests from pendingRequests queue to the server
+     * and put them to requetsWaitingResponsesQueue queue
+     */
+    func processPendingRequests() {
+        for (request_id,request) in self.pendingRequests {
+            if let request = request as? [String:Any] {
+                if let sender = request["sender"] as? MessageCenterResponseListener {
+                    var message_to_send = [String:Any]()
+                    var files_to_send = [Data]()
+                    for (field_index,field) in request {
+                        if (field_index != "sender") {
+                            if let binary = field as? Data {
+                                files_to_send.append(binary)
+                            } else {
+                                message_to_send[field_index] = field
+                            }
+                        }
+                    }
+                    var failed_to_send_message = false
+                    if message_to_send.count>0 {
+                        do {
+                            let jsonString = try String(describing:JSONSerialization.data(withJSONObject: message_to_send, options: .sortedKeys))
+                            if self.isConnected() && !self.testingMode {
+                                self.ws.write(string:jsonString)
+                            }
+                        } catch {
+                            sender.handleWebSocketResponse(request_id: request_id, response: [
+                                "status": "error",
+                                "status_code": MessageCenterErrorCodes.RESULT_ERROR_REQUEST_PARSE_ERROR,
+                                "request": request
+                            ])
+                            failed_to_send_message = true
+                        }
+                    }
+                    if (files_to_send.count>0 && !failed_to_send_message) {
+                        if (self.isConnected() && !self.testingMode) {
+                            for binary in files_to_send {
+                                self.ws.write(data: binary)
+                            }
+                        }
+                    }
+                    if (!failed_to_send_message) {
+                        _ = self.addToRequestsWaitingResponses(request)
+                        _ = self.removeFromPendingRequests(request_id)
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Cleans outdated records from pendingRequests queue, based on 'request_timestamp' attribute
+     */
+    func cleanPendingRequests() {
+        for (request_id,request) in self.pendingRequests {
+            if let request = request as? [String:Any] {
+                if let timestamp = request["request_timestamp"] as? Int {
+                    if Int.init(NSDate().timeIntervalSince1970) - timestamp >= self.pendingRequestsQueueTimeout {
+                        _ = self.removeFromPendingRequests(request_id)
+                    }
+                } else {
+                    _ = self.removeFromPendingRequests(request_id)
+                }
+            } else {
+                _ = self.removeFromPendingRequests(request_id)
+            }
+        }
+    }
+    
+    /**
+     * Adds request to requestsWaitingResponsesQueue
+     *
+     * - Parameter request: Request
+     * - Returns: request_id or empty string if impossible to add request to queue
+     */
+    func addToRequestsWaitingResponses(_ request:[String:Any]) -> String {
+        var request = request
+        if let request_id = request["request_id"] as? String {
+            let request_timestamp:Int = Int.init(NSDate().timeIntervalSince1970)
+            request["request_timestamp"] = request_timestamp
+            self.requestsWaitingResponses[request_id] = request
+            return request_id
+        } else {
+            return ""
+        }
+    }
+    
+    /**
+     * Removes request from requestsWaitingResponses
+     *
+     * - Parameter: request_id: Request ID to remove or nil of nothing removed
+     * - Returns: body of removed request
+     */
+    func removeFromRequestsWaitingResponses(_ request_id: String) -> [String:Any]? {
+        if let request = self.requestsWaitingResponses[request_id] as? [String:Any] {
+            self.requestsWaitingResponses.removeValue(forKey: request_id)
+            return request
+        } else {
+            return nil
+        }
+    }
+    
+    /**
+     * Removes outdated records from requestsWaitingResponses queue
+     */
+    func cleanRequestsWaitingResponses() {
+        for (request_id,request) in self.requestsWaitingResponses {
+            if let request = request as? [String:Any] {
+                if let timestamp = request["request_timestamp"] as? Int {
+                    if (Int.init(NSDate().timeIntervalSince1970)-timestamp >= self.requestsWaitingResponsesQueueTimeout) {
+                        _ = self.removeFromRequestsWaitingResponses(request_id)
+                    }
+                } else {
+                    _ = self.removeFromRequestsWaitingResponses(request_id)
+                }
+            } else {
+                _ = self.removeFromRequestsWaitingResponses(request_id)
+            }
+        }
+    }
+    
+    /**
+     * Adds record to receivedFiles queue, keyed by checksum of file and marked by timestamp of
+     * a moment when file was added
+     *
+     * - Parameter data: Binary data of file
+     * - Returns: added record
+     */
+    func addToReceivedFiles(_ data: Data) -> [String:Any] {
+        let checksum = data.hashValue
+        let timestamp = Int.init(NSDate().timeIntervalSince1970)
+        let record:[String:Any] = ["data":data,"timestamp":timestamp]
+        self.receivedFiles[checksum] = record
+        return record
+    }
+    
+    /**
+     * Removes record from receivedFiles queue
+     *
+     * - Parameter checksum: Checksum of file to remove
+     * - Returns: record of removed file or nil if no record removed
+     */
+    func removeFromReceivedFiles(_ checksum:Int) -> [String:Any]? {
+        if let record = self.receivedFiles[checksum] as? [String:Any] {
+            self.receivedFiles.removeValue(forKey: checksum)
+            return record
+        } else {
+            return nil
+        }
+    }
+    
+    /**
+     * Removes outdated files from receivedFiles queue
+     */
+    func cleanReceivedFiles() {
+        for (checksum,_) in self.receivedFiles {
+            if let record = self.receivedFiles[checksum] as? [String:Any] {
+                if let timestamp = record["timestamp"] as? Int {
+                    if Int.init(NSDate().timeIntervalSince1970)-timestamp>=self.receivedFilesQueueTimeout {
+                        _ = self.removeFromReceivedFiles(checksum)
+                    }
+                } else {
+                    _ = self.removeFromReceivedFiles(checksum)
+                }
+            } else {
+                _ = self.removeFromReceivedFiles(checksum)
+            }
+        }
+    }
+    
+    /**
+     * Function adds record to responsesWaitingFile queue
+     *
+     * - Parameter checksum: Checksum of file, which response is wating
+     * - Parameter response: Body of response, which is waiting this file
+     * - Returns: added record
+     */
+    func addToResponsesWaitingFile(checksum:Int,response:[String:Any]) -> [String:Any] {
+        let timestamp = Int.init(NSDate().timeIntervalSince1970)
+        let record:[String:Any] = ["response":response,"timestamp":timestamp]
+        self.responsesWaitingFile[checksum] = record
+        return record
+    }
+    
+    /**
+     * Function removes record from responsesWaitingFile queue
+     *
+     * - Parameter checksum: Checksum of record to remove
+     * - Returns: removed record or nil if nothing removed
+     */
+    func removeFromResponsesWaitingFile(_ checksum:Int) -> [String:Any]? {
+        if let record = self.responsesWaitingFile[checksum] as? [String:Any] {
+            self.responsesWaitingFile.removeValue(forKey: checksum)
+            return record
+        } else {
+            return nil
+        }
+    }
+    
+    /**
+     * Function removes outdated records from responsesWaitingFile queue
+     */
+    func cleanResponsesWaitingFile() {
+        for (checksum,_) in self.responsesWaitingFile {
+            if let record = self.responsesWaitingFile[checksum] as? [String:Any] {
+                if let timestamp = record["timestamp"] as? Int {
+                    if Int.init(NSDate().timeIntervalSince1970)-timestamp>=self.receivedFilesQueueTimeout {
+                        _ = self.removeFromResponsesWaitingFile(checksum)
+                    }
+                } else {
+                    _ = self.removeFromResponsesWaitingFile(checksum)
+                }
+            } else {
+                _ = self.removeFromResponsesWaitingFile(checksum)
+            }
+        }
     }
     
     /***************************
+     * Message center main loop
+     **************************/
+    
+    /**
+     * Function runs every second and processes message queues
+     */
+    @objc func runCronjob() {
+        if (!self.isConnected() && !self.testingMode) {
+            self.ws = WebSocket(url:URL(string:"ws://\(self.host):\(self.port)/\(self.endpoint)")!)
+            self.ws.delegate = self
+            self.ws.connect()
+        }
+        self.processPendingRequests()
+        self.cleanPendingRequests()
+        self.cleanRequestsWaitingResponses()
+        self.cleanReceivedFiles()
+        self.cleanResponsesWaitingFile()
+    }
+    
+    //MARK: WebSocket event handlers
+
+    /***************************
      * WebSocket event handlers
      **************************/
+    
+    /// Last response from WebSocket server as text
+    var lastResponseText = ""
+    
+    /// Last response from WebSocket server as object
+    var lastResponseObject: [String:Any]? = nil
+    
+    /// Last received data block (or file) from WebSocket server
+    var lastReceivedFile = Data()
     
     /**
      * Executes when connection to server established
@@ -106,9 +426,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
      * - Parameter error: Error, if disconnected due to error
      */
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        if (!self.testingMode) {
-            ws = WebSocket(url:URL(string:"ws://\(self.host):\(self.port)/\(self.endpoint)")!)
-            ws.connect()
+        if error != nil {
+            Logger.log(level:LogLevel.ERROR,message:error.debugDescription,className:"MessageCenter",methodName:"websocketDidDisconnect")
         }
     }
     
@@ -119,7 +438,43 @@ class MessageCenter: NSObject, WebSocketDelegate {
      * - Parameter text: Received message
      */
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        
+        self.lastResponseText = text
+        if (text.count>0) {
+            do {
+                let result = try JSONSerialization.jsonObject(with: text.data(using: .utf8)!, options: JSONSerialization.ReadingOptions.mutableContainers)
+                if var response = result as? [String:Any] {
+                    self.lastResponseObject = response
+                    if response["request_id"] != nil {
+                        let request_id = String(describing: response["request_id"])
+                        if let request = self.requestsWaitingResponses[request_id] as? [String:Any] {
+                            response["request"] = request
+                            if let sender = request["sender"] as? MessageCenterResponseListener {
+                                sender.handleWebSocketResponse(request_id: request_id, response: response)
+                            } else {
+                                Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) does not have correct correct handler -"+self.lastResponseText,
+                                           className:"MessageCenter",methodName:"websocketDidReceiveMessage")
+                            }
+                        } else {
+                            Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) not found in waiting requests queue -"+self.lastResponseText,
+                                       className:"MessageCenter",methodName:"websocketDidReceiveMessage")
+                        }
+                    } else {
+                        Logger.log(level:LogLevel.WARNING,message:"No request_id in received JSON response - "+self.lastResponseText,
+                                   className:"MessageCenter", methodName:"websocketDidReceiveMessage")
+                    }
+                } else {
+                    self.lastResponseObject = nil
+                    Logger.log(level:LogLevel.WARNING,message:"Incorrect JSON in last response received - "+self.lastResponseText,
+                               className:"MessageCenter", methodName:"websocketDidReceiveMessage")
+                }
+            } catch {
+                Logger.log(level:LogLevel.WARNING,message:"Incorrect JSON in last response received - "+self.lastResponseText,
+                           className:"MessageCenter", methodName:"websocketDidReceiveMessage")
+            }
+        } else {
+            Logger.log(level:LogLevel.WARNING,message:"Empty WebSocket response received",
+                       className:"MessageCenter", methodName:"websocketDidReceiveMessage")
+        }
     }
     
     /**
@@ -129,9 +484,31 @@ class MessageCenter: NSObject, WebSocketDelegate {
      * - Parameter data: Binary data
      */
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        receivedFilesQueue[data.hashValue] = data
+        let checksum = data.hashValue
+        _ = self.addToReceivedFiles(data)
+        if let response = self.responsesWaitingFile[checksum] as? [String:Any] {
+            if let request = response["request"] as? [String:Any] {
+                if (request["request_id"] != nil) {
+                    let request_id = String(describing:request["request_id"])
+                    if let sender = request["sender"] as? MessageCenterResponseListener {
+                        sender.handleWebSocketResponse(request_id: request_id, response: response)
+                    } else {
+                        Logger.log(level:LogLevel.WARNING,message:"Response with \(request_id) does not have correct handler",
+                            className:"MessageCenter",methodName:"websocketDidReceiveData")
+                    }
+                } else {
+                    Logger.log(level:LogLevel.WARNING,message:"Response for file \(checksum) does not have correct request_id",
+                        className:"MessageCenter",methodName:"websocketDidReceiveData")
+                }
+            } else {
+                Logger.log(level:LogLevel.WARNING,message:"Could not find link to request for file \(checksum)",
+                    className:"MessageCenter",methodName:"websocketDidReceiveData")
+            }
+        }
     }
 }
+
+//MARK: MessageCenter Listener protocol
 
 /**
  * Any object, which want to send messages and receive responses from MessageCenter
@@ -149,5 +526,15 @@ protocol MessageCenterResponseListener {
      * - Parameter request_id: Request id
      * - Parameter response: Decoded from JSON response as a Dictionary
      */
-    func handleWebSocketResponse(request_id:String, response:[String:Any]) -> Unit
- }
+    func handleWebSocketResponse(request_id:String, response:[String:Any])
+    
+}
+
+//MARK: Utility enums
+
+/**
+ *  Message Center errors definitions
+ */
+enum MessageCenterErrorCodes:String {
+    case RESULT_ERROR_REQUEST_PARSE_ERROR = "Could not encode request to send to server"
+}

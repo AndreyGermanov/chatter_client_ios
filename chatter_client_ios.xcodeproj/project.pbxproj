@@ -23,6 +23,7 @@
 		CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A7206035640071DE82 /* RootActions.swift */; };
 		CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */; };
 		CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AC20613A380071DE82 /* MessageCenter.swift */; };
+		CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AF2062CA090071DE82 /* Logger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		CE0AB4A7206035640071DE82 /* RootActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootActions.swift; sourceTree = "<group>"; };
 		CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		CE0AB4AC20613A380071DE82 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
+		CE0AB4AF2062CA090071DE82 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -149,6 +151,7 @@
 		CE0AB46A205FD39D0071DE82 /* chatter_client_ios */ = {
 			isa = PBXGroup;
 			children = (
+				CE0AB4AE2062C9DF0071DE82 /* utils */,
 				CE0AB49E205FD88E0071DE82 /* core */,
 				CE0AB49D205FD8810071DE82 /* views */,
 				CE0AB49C205FD8770071DE82 /* reducers */,
@@ -229,6 +232,14 @@
 				CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */,
 			);
 			path = store;
+			sourceTree = "<group>";
+		};
+		CE0AB4AE2062C9DF0071DE82 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				CE0AB4AF2062CA090071DE82 /* Logger.swift */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -530,6 +541,7 @@
 				CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */,
 				CE0AB46E205FD39F0071DE82 /* ViewController.swift in Sources */,
 				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
+				CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */,
 				CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */,
 				CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */,
 				CE0AB4A42060310A0071DE82 /* LoginScreenActions.swift in Sources */,
