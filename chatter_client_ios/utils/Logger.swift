@@ -14,7 +14,7 @@ import Foundation
 class Logger {
     
     /// Which log levels to display
-    static var displayLevels: [LogLevel] = [LogLevel.INFO,LogLevel.ERROR,LogLevel.WARNING]
+    static var displayLevels: [LogLevel] = [LogLevel.INFO,LogLevel.ERROR,LogLevel.WARNING,LogLevel.DEBUG]
     
     /**
      * Function used to log message

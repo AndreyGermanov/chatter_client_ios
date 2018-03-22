@@ -9,6 +9,8 @@ target 'chatter_client_ios' do
   
   pod 'Starscream', '~> 3.0.2'
   pod 'ReSwift'
+  pod 'XCTest-Gherkin'
+  pod 'XCTest-Gherkin/Native'
   
   target 'chatter_client_iosTests' do
     inherit! :search_paths

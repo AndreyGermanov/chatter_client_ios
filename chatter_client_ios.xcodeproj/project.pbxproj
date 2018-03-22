@@ -24,6 +24,9 @@
 		CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */; };
 		CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AC20613A380071DE82 /* MessageCenter.swift */; };
 		CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AF2062CA090071DE82 /* Logger.swift */; };
+		CE0AB4B32063804C0071DE82 /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */; };
+		CE0AB4B5206420B30071DE82 /* apple.png in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB4B4206420B20071DE82 /* apple.png */; };
+		CE0AB4B720642F750071DE82 /* Adler32.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4B620642F750071DE82 /* Adler32.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +74,9 @@
 		CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		CE0AB4AC20613A380071DE82 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		CE0AB4AF2062CA090071DE82 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
+		CE0AB4B4206420B20071DE82 /* apple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple.png; sourceTree = "<group>"; };
+		CE0AB4B620642F750071DE82 /* Adler32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Adler32.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,6 +164,7 @@
 				CE0AB49B205FD86E0071DE82 /* store */,
 				CE0AB499205FD8540071DE82 /* actions */,
 				CE0AB472205FD39F0071DE82 /* Assets.xcassets */,
+				CE0AB4B4206420B20071DE82 /* apple.png */,
 				CE0AB474205FD39F0071DE82 /* LaunchScreen.storyboard */,
 				CE0AB477205FD3A10071DE82 /* Info.plist */,
 			);
@@ -167,6 +174,7 @@
 		CE0AB47F205FD3A20071DE82 /* chatter_client_iosTests */ = {
 			isa = PBXGroup;
 			children = (
+				CE0AB4B1206380160071DE82 /* core */,
 				CE0AB4A920603A3E0071DE82 /* store */,
 				CE0AB482205FD3A20071DE82 /* Info.plist */,
 			);
@@ -238,8 +246,17 @@
 			isa = PBXGroup;
 			children = (
 				CE0AB4AF2062CA090071DE82 /* Logger.swift */,
+				CE0AB4B620642F750071DE82 /* Adler32.swift */,
 			);
 			path = utils;
+			sourceTree = "<group>";
+		};
+		CE0AB4B1206380160071DE82 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */,
+			);
+			path = core;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -360,6 +377,7 @@
 			files = (
 				CE0AB476205FD39F0071DE82 /* LaunchScreen.storyboard in Resources */,
 				CE0AB473205FD39F0071DE82 /* Assets.xcassets in Resources */,
+				CE0AB4B5206420B30071DE82 /* apple.png in Resources */,
 				CE0AB471205FD39F0071DE82 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -519,11 +537,13 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/ReSwift/ReSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/XCTest-Gherkin/XCTest_Gherkin.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCTest_Gherkin.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -538,6 +558,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */,
+				CE0AB4B720642F750071DE82 /* Adler32.swift in Sources */,
 				CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */,
 				CE0AB46E205FD39F0071DE82 /* ViewController.swift in Sources */,
 				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
@@ -553,6 +574,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE0AB4B32063804C0071DE82 /* MessageCenterTests.swift in Sources */,
 				CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
