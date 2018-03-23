@@ -51,8 +51,11 @@ class LoginFormActions: XCTestCase,MessageCenterResponseListener {
     }
     
     func testChangeModeFieldAction() {
+        appStore.dispatch(changeLoginFormErrorsAction(errors:["general":.RESULT_ERROR_CONNECTION_ERROR]))
+        XCTAssertEqual(appStore.state.loginForm.errors["general"], LoginFormError.RESULT_ERROR_CONNECTION_ERROR,"Should contain error")
         appStore.dispatch(changeLoginFormModeAction(mode:.REGISTER))
-        XCTAssertEqual(LoginFormMode.REGISTER,appStore.state.loginForm.mode)
+        XCTAssertEqual(LoginFormMode.REGISTER,appStore.state.loginForm.mode,"Should switch to new mode")
+        XCTAssertEqual(0,appStore.state.loginForm.errors.count,"Should reset all errors after switch to new mode")
     }
     
     func testChangeProgressIndicatorFieldAction() {
@@ -66,6 +69,7 @@ class LoginFormActions: XCTestCase,MessageCenterResponseListener {
         appStore.dispatch(changeLoginFormErrorsAction(errors:errors))
         let result_errors = appStore.state.loginForm.errors
         XCTAssertEqual(LoginFormError.RESULT_ERROR_CONNECTION_ERROR,result_errors["general"])
+        XCTAssertEqual(result_errors["general"]?.getMessage(),"Connection error.","Should return correct error description")
     }
 
     func handleWebSocketResponse(request_id: String, response: [String : Any]) {

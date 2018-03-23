@@ -26,6 +26,7 @@ func loginFormReducer(action:Action,state:LoginFormState) -> LoginFormState {
         newState.confirm_password = action.confirmPassword
     case let action as changeLoginFormModeAction:
         newState.mode = action.mode
+        newState.errors = [String:LoginFormError]()
     case let action as changeEmailAction:
         newState.email = action.email
     case let action as changeLoginFormErrorsAction:
