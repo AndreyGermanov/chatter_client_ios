@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Pods_chatter_client_iosTests
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,8 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        var msgCenter = MessageCenter(host: "192.168.0.184", port: 8080, endpoint: "websocket")
+        let msgCenter = MessageCenter(host: "192.168.0.184", port: 8080, endpoint: "websocket")
+        
         msgCenter.run()
+        let tester = MessageCenterTests(msgCenter:msgCenter)
+        tester.testTransferImage()
+        
         // Override point for customization after application launch.
         return true
     }

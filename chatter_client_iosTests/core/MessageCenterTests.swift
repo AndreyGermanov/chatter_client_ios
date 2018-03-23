@@ -7,9 +7,10 @@
 //
 
 import XCTest
+@testable import CryptoSwift
 @testable import chatter_client_ios
 
-class MessageCenterTests: XCTestCase,MessageCenterResponseListener {
+class MessageCenterTests: XCTestCase {
     
     var messageCenter: MessageCenter = MessageCenter()
     var lastWebSocketResponse: [String:Any]? = nil
@@ -48,7 +49,9 @@ class MessageCenterTests: XCTestCase,MessageCenterResponseListener {
     
     func testSendRequestToServerWithFailure() {
         self.messageCenter.connect()
+        sleep(2)
         self.messageCenter.run()
+        sleep(1)
         let request:[String:Any] = ["sender":self,"action":"register_user"]
         var result = messageCenter.addToPendingRequests(request)
         wait(for: [self.expect],timeout:5)
@@ -57,47 +60,5 @@ class MessageCenterTests: XCTestCase,MessageCenterResponseListener {
         XCTAssertNotNil(self.lastWebSocketResponse!["request"]!,"Should contain original request inside response")
     }
     
-    func testTransferImage() {
-        self.messageCenter.connect()
-        self.messageCenter.run()
-        do {
-            let bundle = Bundle.main
-            let path = bundle.path(forResource: "apple", ofType: "png")!
-            let data = try Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
-            var request:[String:Any] = [
-                "sender": self,
-                "action": "login_user",
-                "login": "andrey",
-                "password": "123"
-            ]
-            self.messageCenter.addToPendingRequests(request)
-            wait(for:[self.expect],timeout:15)
-            if let checksum = self.lastWebSocketResponse!["checksum"] as? Int {
-                self.expect = XCTestExpectation()
-                self.messageCenter.addToResponsesWaitingFile(checksum: checksum, response: self.lastWebSocketResponse!)
-                wait(for:[self.expect],timeout:10)
-            }
-            print(self.lastWebSocketResponse)
- 
-        } catch  {
-            print(error)
-        }
-    }
     
-    func handleWebSocketResponse(request_id: String, response: [String : Any]) {
-        self.lastWebSocketResponse = response
-        let request_id = response["request_id"] as! String
-        if let checksum = response["checksum"] as? Int {
-            if self.messageCenter.receivedFiles[checksum] != nil {
-                var record = self.messageCenter.receivedFiles[checksum] as! [String:Any]
-                self.lastWebSocketResponse!["profile_image"] = record["data"] as! Data
-                self.messageCenter.removeFromReceivedFiles(checksum)
-                self.expect.fulfill()
-                
-            } else {
-                self.messageCenter.addToResponsesWaitingFile(checksum: checksum, response: response)
-                self.messageCenter.removeFromPendingRequests(request_id)
-            }
-        }
-    }
 }

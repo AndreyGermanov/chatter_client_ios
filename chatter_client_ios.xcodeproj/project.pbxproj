@@ -27,6 +27,7 @@
 		CE0AB4B32063804C0071DE82 /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */; };
 		CE0AB4B5206420B30071DE82 /* apple.png in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB4B4206420B20071DE82 /* apple.png */; };
 		CE0AB4B720642F750071DE82 /* Adler32.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4B620642F750071DE82 /* Adler32.swift */; };
+		CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CE0AB4B4206420B20071DE82 /* apple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple.png; sourceTree = "<group>"; };
 		CE0AB4B620642F750071DE82 /* Adler32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Adler32.swift; sourceTree = "<group>"; };
+		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,6 +159,7 @@
 		CE0AB46A205FD39D0071DE82 /* chatter_client_ios */ = {
 			isa = PBXGroup;
 			children = (
+				CEC7C06920653B2E00D1302B /* tests */,
 				CE0AB4AE2062C9DF0071DE82 /* utils */,
 				CE0AB49E205FD88E0071DE82 /* core */,
 				CE0AB49D205FD8810071DE82 /* views */,
@@ -257,6 +260,14 @@
 				CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */,
 			);
 			path = core;
+			sourceTree = "<group>";
+		};
+		CEC7C06920653B2E00D1302B /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */,
+			);
+			path = tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -535,12 +546,14 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/ReSwift/ReSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
 				"${BUILT_PRODUCTS_DIR}/XCTest-Gherkin/XCTest_Gherkin.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCTest_Gherkin.framework",
@@ -564,6 +577,7 @@
 				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
 				CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */,
 				CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */,
+				CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */,
 				CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */,
 				CE0AB4A42060310A0071DE82 /* LoginScreenActions.swift in Sources */,
 				CE0AB46C205FD39E0071DE82 /* AppDelegate.swift in Sources */,

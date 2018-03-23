@@ -4,13 +4,15 @@
 target 'chatter_client_ios' do
 # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
  
-  platform :ios, '9.0'
+  platform :ios, '8.0'
   use_frameworks!
   
   pod 'Starscream', '~> 3.0.2'
   pod 'ReSwift'
   pod 'XCTest-Gherkin'
   pod 'XCTest-Gherkin/Native'
+  pod 'CryptoSwift'
+ 
   
   target 'chatter_client_iosTests' do
     inherit! :search_paths

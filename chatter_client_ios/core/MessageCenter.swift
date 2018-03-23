@@ -10,6 +10,8 @@
 
 import UIKit
 import Starscream
+import Foundation
+import CryptoSwift
 
 /**
  *   Wrapper of Web Socket client with queue support. When client wants to send
@@ -168,6 +170,7 @@ class MessageCenter: NSObject, WebSocketDelegate {
      */
     func addToPendingRequests(_ request:[String:Any]) -> [String:Any]? {
         var request = request
+        
         if (request["sender"] == nil) {
             Logger.log(level:LogLevel.WARNING,message:"Could not add request to queue. No 'sender' object specified",
                        className:"MessageCenter",methodName:"addToPendingRequests")
@@ -190,6 +193,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
             return nil
         } else {
             request["request_timestamp"] = request_timestamp
+            Logger.log(level:LogLevel.DEBUG,message:"Added request with \(request_id) to pendingRequests queue",
+                className:"MessageCenter",methodName:"addToPendingRequests")
             self.pendingRequests[request_id] = request
             return request
         }
@@ -203,6 +208,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
      */
     func removeFromPendingRequests(_ request_id:String) -> Any? {
         if let request = self.pendingRequests[request_id] {
+            Logger.log(level:LogLevel.DEBUG,message:"Removing request \(request_id) from pendingRequests",
+                className:"MessageCenter",methodName:"removeFromPendingRequests")
             self.pendingRequests.removeValue(forKey: request_id)
             return request
         } else {
@@ -233,11 +240,7 @@ class MessageCenter: NSObject, WebSocketDelegate {
                     if message_to_send.count>0 {
                         do {
                             self.lastRequestText = (try String(data:JSONSerialization.data(withJSONObject: message_to_send, options: .sortedKeys),encoding: .utf8))!
-                            if self.isConnected() && !self.testingMode {
-                                self.ws.write(string:self.lastRequestText)
-                                Logger.log(level:LogLevel.DEBUG,message:"Sent request to WebSocketServer - "+self.lastRequestText,
-                                           className:"MessageCenter",methodName:"processPendingRequests")
-                            }
+                            
                         } catch {
                             Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Failed to construct JSON from message",
                                        className:"MessageCenter",methodName:"processPendingRequests")
@@ -249,16 +252,19 @@ class MessageCenter: NSObject, WebSocketDelegate {
                             failed_to_send_message = true
                         }
                     }
-                    if (files_to_send.count>0 && !failed_to_send_message) {
-                        if (self.isConnected() && !self.testingMode) {
-                            for binary in files_to_send {
-                                self.ws.write(data: binary)
-                            }
-                        }
-                    }
                     if (!failed_to_send_message) {
                         _ = self.addToRequestsWaitingResponses(request)
                         _ = self.removeFromPendingRequests(request_id)
+                        if self.isConnected() && !self.testingMode {
+                            self.ws.write(string:self.lastRequestText)
+                            if (files_to_send.count>0 && !failed_to_send_message) {
+                                for binary in files_to_send {
+                                    self.ws.write(data: binary)
+                                }
+                            }
+                            Logger.log(level:LogLevel.DEBUG,message:"Sent request to WebSocketServer - "+self.lastRequestText,
+                                       className:"MessageCenter",methodName:"processPendingRequests")
+                        }
                     } else {
                         Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Message is empty",
                                    className:"MessageCenter",methodName:"processPendingRequests")
@@ -299,6 +305,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
             let request_timestamp:Int = Int.init(NSDate().timeIntervalSince1970)
             request["request_timestamp"] = request_timestamp
             self.requestsWaitingResponses[request_id] = request
+            Logger.log(level:LogLevel.DEBUG,message:"Adding request with \(request_id) to requestsWaitingResponses queue. Queue content \(self.requestsWaitingResponses)",
+                className:"MessageCenter",methodName:"addToRequestsWaitingResponses")
             return request_id
         } else {
             return ""
@@ -313,6 +321,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
      */
     func removeFromRequestsWaitingResponses(_ request_id: String) -> [String:Any]? {
         if let request = self.requestsWaitingResponses[request_id] as? [String:Any] {
+            Logger.log(level:LogLevel.DEBUG,message:"Removing request \(request_id) from requestsWaitingResponses queue",
+                className:"MessageCenter",methodName:"removeFromRequestsWaitingResponses")
             self.requestsWaitingResponses.removeValue(forKey: request_id)
             return request
         } else {
@@ -347,9 +357,11 @@ class MessageCenter: NSObject, WebSocketDelegate {
      * - Returns: added record
      */
     func addToReceivedFiles(_ data: Data) -> [String:Any] {
-        let checksum = Int(Adler32.crc(data:[UInt8](data)))
+        let checksum = Int(data.bytes.crc32())
         let timestamp = Int.init(NSDate().timeIntervalSince1970)
         let record:[String:Any] = ["data":data,"timestamp":timestamp]
+        Logger.log(level:LogLevel.DEBUG,message:"Added file with checksum \(checksum) to receivedFiles queue",
+            className:"MessageCenter",methodName:"addToReceivedFiles")
         self.receivedFiles[checksum] = record
         return record
     }
@@ -362,6 +374,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
      */
     func removeFromReceivedFiles(_ checksum:Int) -> [String:Any]? {
         if let record = self.receivedFiles[checksum] as? [String:Any] {
+            Logger.log(level:LogLevel.DEBUG,message:"Removing file with \(checksum) from receivedFiles",
+                className:"MessageCenter",methodName:"removeFromReceivedFiles")
             self.receivedFiles.removeValue(forKey: checksum)
             return record
         } else {
@@ -398,6 +412,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
     func addToResponsesWaitingFile(checksum:Int,response:[String:Any]) -> [String:Any] {
         let timestamp = Int.init(NSDate().timeIntervalSince1970)
         let record:[String:Any] = ["response":response,"timestamp":timestamp]
+        Logger.log(level:LogLevel.DEBUG,message:"Added file with checksum \(checksum) to responsesWaitingFile queue",
+            className:"MessageCenter",methodName:"addToResponsesWaitingFile")
         self.responsesWaitingFile[checksum] = record
         return record
     }
@@ -410,6 +426,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
      */
     func removeFromResponsesWaitingFile(_ checksum:Int) -> [String:Any]? {
         if let record = self.responsesWaitingFile[checksum] as? [String:Any] {
+            Logger.log(level:LogLevel.DEBUG,message:"Removing file with \(checksum) from responsesWaitingFile queue",
+                className:"MessageCenter",methodName:"removeFromResponsesWaitingFile")
             self.responsesWaitingFile.removeValue(forKey: checksum)
             return record
         } else {
@@ -487,13 +505,15 @@ class MessageCenter: NSObject, WebSocketDelegate {
                         if let request = self.requestsWaitingResponses[request_id] as? [String:Any] {
                             response["request"] = request
                             if let sender = request["sender"] as? MessageCenterResponseListener {
+                                Logger.log(level:LogLevel.DEBUG,message:"Run handler for request \(request_id) for incoming text message",
+                                    className:"MessageCenter",methodName:"websocketDidReceiveMessage")
                                 sender.handleWebSocketResponse(request_id: request_id, response: response)
                             } else {
                                 Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) does not have correct correct handler -"+self.lastResponseText,
                                            className:"MessageCenter",methodName:"websocketDidReceiveMessage")
                             }
                         } else {
-                            Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) not found in waiting requests queue -"+self.lastResponseText,
+                            Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) not found in waiting requests queue -"+self.lastResponseText+". Queue content: \(self.requestsWaitingResponses).",
                                        className:"MessageCenter",methodName:"websocketDidReceiveMessage")
                         }
                     } else {
@@ -522,28 +542,40 @@ class MessageCenter: NSObject, WebSocketDelegate {
      * - Parameter data: Binary data
      */
     func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        let checksum = Int(Adler32.crc(data:[UInt8](data)))
+        let checksum = Int(data.bytes.crc32())
         _ = self.addToReceivedFiles(data)
         Logger.log(level:LogLevel.DEBUG,message:"Received binary data with checksum \(checksum)",
             className:"MessageCenter",methodName:"websocketDidReceiveData")
-        if let response = self.responsesWaitingFile[checksum] as? [String:Any] {
-            if let request = response["request"] as? [String:Any] {
-                if (request["request_id"] != nil) {
-                    let request_id = String(describing:request["request_id"])
-                    if let sender = request["sender"] as? MessageCenterResponseListener {
-                        sender.handleWebSocketResponse(request_id: request_id, response: response)
+        if let responseObj = self.responsesWaitingFile[checksum] as? [String:Any] {
+            Logger.log(level:LogLevel.DEBUG,message:"Found response for \(checksum) in responsesWaitingFile queue",
+                className:"MessageCenter",methodName:"websocketDidReceiveData")
+            if let response = responseObj["response"] as? [String:Any] {
+                if let request = response["request"] as? [String:Any] {
+                    if (request["request_id"] != nil) {
+                        let request_id = String(describing:request["request_id"])
+                        if let sender = request["sender"] as? MessageCenterResponseListener {
+                            Logger.log(level:LogLevel.DEBUG,message:"Run hander for request \(request_id) for incoming binary data",
+                                className:"MessageCenter",methodName:"websocketDidReceiveData")
+                            sender.handleWebSocketResponse(request_id: request_id, response: response)
+                        } else {
+                            Logger.log(level:LogLevel.WARNING,message:"Response with \(request_id) does not have correct handler",
+                                className:"MessageCenter",methodName:"websocketDidReceiveData")
+                        }
                     } else {
-                        Logger.log(level:LogLevel.WARNING,message:"Response with \(request_id) does not have correct handler",
+                        Logger.log(level:LogLevel.WARNING,message:"Response for file \(checksum) does not have correct request_id",
                             className:"MessageCenter",methodName:"websocketDidReceiveData")
                     }
                 } else {
-                    Logger.log(level:LogLevel.WARNING,message:"Response for file \(checksum) does not have correct request_id",
+                    Logger.log(level:LogLevel.WARNING,message:"Could not find link to request for file \(checksum)",
                         className:"MessageCenter",methodName:"websocketDidReceiveData")
                 }
             } else {
-                Logger.log(level:LogLevel.WARNING,message:"Could not find link to request for file \(checksum)",
+                Logger.log(level:LogLevel.WARNING,message:"Could not find link to response object for file \(checksum)",
                     className:"MessageCenter",methodName:"websocketDidReceiveData")
             }
+        } else {
+            Logger.log(level:LogLevel.DEBUG,message:"Could not find waiting response for file with checksum \(checksum) in responsesWaitingFile queue",
+                className:"MessageCenter",methodName:"websocketDidReceiveData")
         }
     }
 }
