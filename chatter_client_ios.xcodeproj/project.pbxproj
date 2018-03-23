@@ -28,6 +28,7 @@
 		CE0AB4B5206420B30071DE82 /* apple.png in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB4B4206420B20071DE82 /* apple.png */; };
 		CE0AB4B720642F750071DE82 /* Adler32.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4B620642F750071DE82 /* Adler32.swift */; };
 		CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */; };
+		CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06F20656D4900D1302B /* LoginFormActions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		CE0AB4B4206420B20071DE82 /* apple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple.png; sourceTree = "<group>"; };
 		CE0AB4B620642F750071DE82 /* Adler32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Adler32.swift; sourceTree = "<group>"; };
 		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
+		CEC7C06F20656D4900D1302B /* LoginFormActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormActions.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -177,6 +179,7 @@
 		CE0AB47F205FD3A20071DE82 /* chatter_client_iosTests */ = {
 			isa = PBXGroup;
 			children = (
+				CEC7C06C20656CE000D1302B /* actions */,
 				CE0AB4B1206380160071DE82 /* core */,
 				CE0AB4A920603A3E0071DE82 /* store */,
 				CE0AB482205FD3A20071DE82 /* Info.plist */,
@@ -268,6 +271,14 @@
 				CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */,
 			);
 			path = tests;
+			sourceTree = "<group>";
+		};
+		CEC7C06C20656CE000D1302B /* actions */ = {
+			isa = PBXGroup;
+			children = (
+				CEC7C06F20656D4900D1302B /* LoginFormActions.swift */,
+			);
+			path = actions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -590,6 +601,7 @@
 			files = (
 				CE0AB4B32063804C0071DE82 /* MessageCenterTests.swift in Sources */,
 				CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */,
+				CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

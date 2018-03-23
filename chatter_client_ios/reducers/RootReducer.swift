@@ -21,6 +21,8 @@ func rootReducer(action:Action,state:AppState?) -> AppState {
     switch action {
     case let action as ChangeActivityAction:
         newState.current_activity = action.activity
+    case let action as LoginFormAction:
+        newState.loginForm = loginFormReducer(action: action, state: newState.loginForm)
     default:
         break
     }

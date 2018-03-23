@@ -43,8 +43,7 @@ struct LoginFormState {
     var password = ""
     var confirm_password = ""
     var show_progress_indicator = false
-    var popup_message = ""
-    var errors = [String:Any]()
+    var errors = [String:LoginFormError]()
 }
 
 /**

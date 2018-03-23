@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let msgCenter = MessageCenter(host: "192.168.0.184", port: 8080, endpoint: "websocket")
         
         msgCenter.run()
-        let tester = MessageCenterTests(msgCenter:msgCenter)
-        tester.testTransferImage()
+        //let tester = MessageCenterTests(msgCenter:msgCenter)
+        //tester.testTransferImage()
         
         // Override point for customization after application launch.
         return true

@@ -206,8 +206,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
      * - Parameter request_id: request ID to remove
      * - Returns: removed request body if it really removed or nil if nothing removed
      */
-    func removeFromPendingRequests(_ request_id:String) -> Any? {
-        if let request = self.pendingRequests[request_id] {
+    func removeFromPendingRequests(_ request_id:String) -> [String:Any]? {
+        if let request = self.pendingRequests[request_id] as? [String:Any] {
             Logger.log(level:LogLevel.DEBUG,message:"Removing request \(request_id) from pendingRequests",
                 className:"MessageCenter",methodName:"removeFromPendingRequests")
             self.pendingRequests.removeValue(forKey: request_id)
@@ -254,7 +254,6 @@ class MessageCenter: NSObject, WebSocketDelegate {
                     }
                     if (!failed_to_send_message) {
                         _ = self.addToRequestsWaitingResponses(request)
-                        _ = self.removeFromPendingRequests(request_id)
                         if self.isConnected() && !self.testingMode {
                             self.ws.write(string:self.lastRequestText)
                             if (files_to_send.count>0 && !failed_to_send_message) {
@@ -264,11 +263,17 @@ class MessageCenter: NSObject, WebSocketDelegate {
                             }
                             Logger.log(level:LogLevel.DEBUG,message:"Sent request to WebSocketServer - "+self.lastRequestText,
                                        className:"MessageCenter",methodName:"processPendingRequests")
+                            _ = self.removeFromPendingRequests(request_id)
                         }
                     } else {
                         Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Message is empty",
                                    className:"MessageCenter",methodName:"processPendingRequests")
+                        _ = self.removeFromPendingRequests(request_id)
                     }
+                } else {
+                    Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Incorrect sender",
+                               className:"MessageCenter",methodName:"processPendingRequests")
+                    _ = self.removeFromPendingRequests(request_id)
                 }
             }
         }

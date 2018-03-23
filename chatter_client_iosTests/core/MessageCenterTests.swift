@@ -10,7 +10,11 @@ import XCTest
 @testable import CryptoSwift
 @testable import chatter_client_ios
 
-class MessageCenterTests: XCTestCase {
+class MessageCenterTests: XCTestCase,MessageCenterResponseListener {
+    
+    func handleWebSocketResponse(request_id: String, response: [String : Any]) {
+        
+    }
     
     var messageCenter: MessageCenter = MessageCenter()
     var lastWebSocketResponse: [String:Any]? = nil
@@ -45,6 +49,21 @@ class MessageCenterTests: XCTestCase {
         XCTAssertEqual(1,messageCenter.pendingRequests.count,"Should add request to pendingRequests queue")
         XCTAssertNotNil(messageCenter.pendingRequests[result!["request_id"] as! String],
                         "Request should be added with request_id key to pendingRequests queue")
+    }
+    
+    func testRemoveFromPendingRequests() {
+        messageCenter.testingMode = true
+        var result = messageCenter.removeFromPendingRequests("fake")
+        XCTAssertNil(result,"Should return nil of incorrect request_id provided")
+        let request = messageCenter.addToPendingRequests(["sender":self])!
+        let request_id = request["request_id"] as! String
+        result = messageCenter.removeFromPendingRequests(request_id)
+        if let success_result = result {
+            let returned_request_id = success_result["request_id"] as! String
+            XCTAssertEqual(request_id,returned_request_id,"Should return request with the same id as removed")
+        } else {
+            XCTFail("Should return not nil")
+        }
     }
     
     func testSendRequestToServerWithFailure() {
