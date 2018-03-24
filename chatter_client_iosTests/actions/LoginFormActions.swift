@@ -319,8 +319,12 @@ class LoginFormActions: XCTestCase,MessageCenterResponseListener {
         XCTAssertNotNil(profileState.profileImage,"Should set profile image to User profile")
         XCTAssertEqual(checksum,Int(userState.profileImage!.bytes.crc32()),"Should set correct profile image to User")
         XCTAssertEqual(checksum,Int(profileState.profileImage!.bytes.crc32()),"Should set correct profile image to User Profile")
+        XCTAssertEqual(0,messageCenter.receivedFiles.count,"Should remove request from receivedFiels queue")
+        XCTAssertEqual(0,messageCenter.responsesWaitingFile.count,"Should remove request from responsesWaitingFile queue")
+        XCTAssertTrue(userState.isLogin,"Should switch user login status to TRUE")
     }
-     func handleWebSocketResponse(request_id: String, response: [String : Any]) {
+    
+    func handleWebSocketResponse(request_id: String, response: [String : Any]) {
         
     }
 }

@@ -190,7 +190,7 @@ struct registerUserAction: LoginFormAction,MessageCenterResponseListener {
 }
 
 /**
- * User register action. Used to validate login form, put user register request to MessageCenter
+ * User login action. Used to validate login form, put user login request to MessageCenter
  * queue and process response from server
  */
 struct loginUserAction: LoginFormAction,MessageCenterResponseListener {
