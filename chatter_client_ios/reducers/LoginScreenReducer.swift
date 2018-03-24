@@ -17,6 +17,7 @@ import ReSwift
  */
 func loginFormReducer(action:Action,state:LoginFormState) -> LoginFormState {
     var newState = state
+    Logger.log(level:LogLevel.DEBUG_REDUX,message:"LoginFormReducer: Received action \(action)",className:"loginFormReducer",methodName:"loginFormReducer")
     switch action {
     case let action as changeLoginAction:
         newState.login = action.login
@@ -33,8 +34,11 @@ func loginFormReducer(action:Action,state:LoginFormState) -> LoginFormState {
         newState.errors = action.errors
     case let action as changeLoginFormShowProgressIndicatorAction:
         newState.show_progress_indicator = action.progressIndicator
+    case let action as changeLoginFormPopupMessageAction:
+        newState.popup_message = action.popupMessage
     default:
         break
     }
+    Logger.log(level:LogLevel.DEBUG_REDUX,message:"LoginFormReducer: LoginFormState after reducing - \(newState)",className:"loginFormReducer",methodName:"loginFormReducer")
     return newState
 }

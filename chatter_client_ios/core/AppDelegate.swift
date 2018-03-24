@@ -13,10 +13,10 @@ import Pods_chatter_client_iosTests
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
+    let msgCenter = MessageCenter(host: "192.168.0.184", port: 8080, endpoint: "websocket")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let msgCenter = MessageCenter(host: "192.168.0.184", port: 8080, endpoint: "websocket")
         
         msgCenter.run()
         //let tester = MessageCenterTests(msgCenter:msgCenter)

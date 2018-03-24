@@ -49,4 +49,5 @@ enum LogLevel:String {
     case INFO = "INFO"
     case ERROR = "ERROR"
     case DEBUG = "DEBUG"
+    case DEBUG_REDUX = "DEBUG_REDUX"
 }

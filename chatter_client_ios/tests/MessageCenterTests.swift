@@ -30,32 +30,15 @@ class MessageCenterTests: MessageCenterResponseListener {
                 "login": "andrey",
                 "password": "123"
             ]
-            
-            
-                self.messageCenter.addToPendingRequests(request)
+            self.messageCenter.addToPendingRequests(request)
             self.messageCenter.processPendingRequests()
-              sleep(2)
-                print(self.messageCenter.requestsWaitingResponses)
-            
+            sleep(2)
+            print(self.messageCenter.requestsWaitingResponses)
             sleep(10)
             if let response = self.lastWebSocketResponse {
                 Logger.log(level:LogLevel.DEBUG,message:"Received final response \(response)",
                     className:"MessageCenterTests",methodName: "testTransferImage")
-                /*
-                 XCTAssertNil(response["profile_image"],"Response should contain profile image")
-                 XCTAssertNotNil(response["checksum"],"Response should contain checksum of profile image")
-                 
-                 if let profile_image = response["profile_image"] as? Data {
-                 if let checksum = Int(response["checksum"] as! String) {
-                 XCTAssertEqual(checksum,Int(profile_image.bytes.crc32()),"Profile image should match its checksum")
-                 } else {
-                 XCTFail("Response does not contain profile image checksum")
-                 }
-                 } else {
-                 XCTFail("Response does not contain profile image")
-                 }*/
             }
-            
         } catch  {
             print(error)
         }

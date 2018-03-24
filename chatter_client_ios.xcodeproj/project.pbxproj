@@ -26,9 +26,15 @@
 		CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AF2062CA090071DE82 /* Logger.swift */; };
 		CE0AB4B32063804C0071DE82 /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */; };
 		CE0AB4B5206420B30071DE82 /* apple.png in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB4B4206420B20071DE82 /* apple.png */; };
-		CE0AB4B720642F750071DE82 /* Adler32.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4B620642F750071DE82 /* Adler32.swift */; };
 		CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */; };
 		CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06F20656D4900D1302B /* LoginFormActions.swift */; };
+		CEC7C0742066215600D1302B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0732066215600D1302B /* Utils.swift */; };
+		CEC7C0762066930F00D1302B /* UserProfileActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0752066930F00D1302B /* UserProfileActions.swift */; };
+		CEC7C07820669F3E00D1302B /* UserProfileReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07720669F3E00D1302B /* UserProfileReducer.swift */; };
+		CEC7C07A2066A25D00D1302B /* UserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0792066A25D00D1302B /* UserActions.swift */; };
+		CEC7C07C2066B0C700D1302B /* UserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07B2066B0C700D1302B /* UserReducer.swift */; };
+		CEC7C07E2066B5A000D1302B /* UserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07D2066B5A000D1302B /* UserActions.swift */; };
+		CEC7C0802066BE8300D1302B /* UserProfileActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,9 +84,15 @@
 		CE0AB4AF2062CA090071DE82 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CE0AB4B4206420B20071DE82 /* apple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple.png; sourceTree = "<group>"; };
-		CE0AB4B620642F750071DE82 /* Adler32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Adler32.swift; sourceTree = "<group>"; };
 		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CEC7C06F20656D4900D1302B /* LoginFormActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormActions.swift; sourceTree = "<group>"; };
+		CEC7C0732066215600D1302B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		CEC7C0752066930F00D1302B /* UserProfileActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileActions.swift; sourceTree = "<group>"; };
+		CEC7C07720669F3E00D1302B /* UserProfileReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileReducer.swift; sourceTree = "<group>"; };
+		CEC7C0792066A25D00D1302B /* UserActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActions.swift; sourceTree = "<group>"; };
+		CEC7C07B2066B0C700D1302B /* UserReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReducer.swift; sourceTree = "<group>"; };
+		CEC7C07D2066B5A000D1302B /* UserActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActions.swift; sourceTree = "<group>"; };
+		CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileActions.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -201,6 +213,8 @@
 			children = (
 				CE0AB4A32060310A0071DE82 /* LoginScreenActions.swift */,
 				CE0AB4A7206035640071DE82 /* RootActions.swift */,
+				CEC7C0752066930F00D1302B /* UserProfileActions.swift */,
+				CEC7C0792066A25D00D1302B /* UserActions.swift */,
 			);
 			path = actions;
 			sourceTree = "<group>";
@@ -218,6 +232,8 @@
 			children = (
 				CE0AB4A120600DF90071DE82 /* RootReducer.swift */,
 				CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */,
+				CEC7C07720669F3E00D1302B /* UserProfileReducer.swift */,
+				CEC7C07B2066B0C700D1302B /* UserReducer.swift */,
 			);
 			path = reducers;
 			sourceTree = "<group>";
@@ -252,7 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				CE0AB4AF2062CA090071DE82 /* Logger.swift */,
-				CE0AB4B620642F750071DE82 /* Adler32.swift */,
+				CEC7C0732066215600D1302B /* Utils.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -277,6 +293,8 @@
 			isa = PBXGroup;
 			children = (
 				CEC7C06F20656D4900D1302B /* LoginFormActions.swift */,
+				CEC7C07D2066B5A000D1302B /* UserActions.swift */,
+				CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */,
 			);
 			path = actions;
 			sourceTree = "<group>";
@@ -582,13 +600,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */,
-				CE0AB4B720642F750071DE82 /* Adler32.swift in Sources */,
 				CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */,
+				CEC7C07820669F3E00D1302B /* UserProfileReducer.swift in Sources */,
 				CE0AB46E205FD39F0071DE82 /* ViewController.swift in Sources */,
+				CEC7C07C2066B0C700D1302B /* UserReducer.swift in Sources */,
 				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
+				CEC7C0762066930F00D1302B /* UserProfileActions.swift in Sources */,
 				CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */,
 				CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */,
 				CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */,
+				CEC7C0742066215600D1302B /* Utils.swift in Sources */,
+				CEC7C07A2066A25D00D1302B /* UserActions.swift in Sources */,
 				CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */,
 				CE0AB4A42060310A0071DE82 /* LoginScreenActions.swift in Sources */,
 				CE0AB46C205FD39E0071DE82 /* AppDelegate.swift in Sources */,
@@ -599,9 +621,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC7C07E2066B5A000D1302B /* UserActions.swift in Sources */,
 				CE0AB4B32063804C0071DE82 /* MessageCenterTests.swift in Sources */,
 				CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */,
 				CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */,
+				CEC7C0802066BE8300D1302B /* UserProfileActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -34,6 +34,9 @@ class MessageCenter: NSObject, WebSocketDelegate {
     /// (Used for unit testing)
     var testingMode = false;
     
+    /// Server connected flag for testing mode
+    var testingModeConnected = false;
+    
     /// WebSocket Server endpoint host
     var host = "localhost"
     
@@ -57,6 +60,9 @@ class MessageCenter: NSObject, WebSocketDelegate {
     
     /// Last request sent to WebSocket server as string
     var lastRequestText = ""
+    
+    /// Last request sent to WebSocket server as object
+    var lastRequestObject = [String:Any]()
     
     /// Last received data block (or file) from WebSocket server
     var lastReceivedFile = Data()
@@ -130,7 +136,11 @@ class MessageCenter: NSObject, WebSocketDelegate {
      * - Returns: true if connection active and false otherwise
      */
     func isConnected() -> Bool {
-        return self.ws.isConnected
+        if (!self.testingMode) {
+            return self.ws.isConnected
+        } else {
+            return self.testingModeConnected
+        }
     }
     
     /**
@@ -240,7 +250,6 @@ class MessageCenter: NSObject, WebSocketDelegate {
                     if message_to_send.count>0 {
                         do {
                             self.lastRequestText = (try String(data:JSONSerialization.data(withJSONObject: message_to_send, options: .sortedKeys),encoding: .utf8))!
-                            
                         } catch {
                             Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Failed to construct JSON from message",
                                        className:"MessageCenter",methodName:"processPendingRequests")
@@ -253,6 +262,7 @@ class MessageCenter: NSObject, WebSocketDelegate {
                         }
                     }
                     if (!failed_to_send_message) {
+                        self.lastRequestObject = message_to_send
                         _ = self.addToRequestsWaitingResponses(request)
                         if self.isConnected() && !self.testingMode {
                             self.ws.write(string:self.lastRequestText)
@@ -264,6 +274,8 @@ class MessageCenter: NSObject, WebSocketDelegate {
                             Logger.log(level:LogLevel.DEBUG,message:"Sent request to WebSocketServer - "+self.lastRequestText,
                                        className:"MessageCenter",methodName:"processPendingRequests")
                             _ = self.removeFromPendingRequests(request_id)
+                        } else if self.testingMode {
+                            _ = self.removeFromPendingRequests(request_id)                            
                         }
                     } else {
                         Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Message is empty",

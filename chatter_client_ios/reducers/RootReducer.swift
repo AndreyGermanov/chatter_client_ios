@@ -18,13 +18,19 @@ import ReSwift
  */
 func rootReducer(action:Action,state:AppState?) -> AppState {
     var newState = state ?? AppState()
+    Logger.log(level:LogLevel.DEBUG_REDUX,message:"RootReducer: Received action \(action)",className:"rootReducer",methodName:"rootReducer")
     switch action {
     case let action as ChangeActivityAction:
         newState.current_activity = action.activity
     case let action as LoginFormAction:
         newState.loginForm = loginFormReducer(action: action, state: newState.loginForm)
+    case let action as UserAction:
+        newState.user = userReducer(action: action, state: newState.user)
+    case let action as UserProfileAction:
+        newState.userProfile = userProfileReducer(action: action, state: newState.userProfile)
     default:
         break
     }
+    Logger.log(level:LogLevel.DEBUG_REDUX,message:"RootReducer: AppState after reducing - \(newState)",className:"rootReducer",methodName:"rootReducer")
     return newState
 }

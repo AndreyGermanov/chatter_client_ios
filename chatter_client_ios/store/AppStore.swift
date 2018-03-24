@@ -28,8 +28,8 @@ enum LoginFormMode {
  * Genders of user
  */
 enum Gender: String {
-    case M = "Male"
-    case F = "Female"
+    case M = "M"
+    case F = "F"
 }
 
 /**
@@ -44,6 +44,7 @@ struct LoginFormState {
     var confirm_password = ""
     var show_progress_indicator = false
     var errors = [String:LoginFormError]()
+    var popup_message = ""
 }
 
 /**
@@ -60,10 +61,11 @@ struct UserProfileState {
     var birthDate = 0
     var default_room = ""
     var profileImage: Data? = nil
-    var rooms = [String:Any]()
+    var rooms = [[String:String]]()
     var show_progress_indicator = false
-    var popup_messagge = ""
+    var popup_message = ""
     var show_date_picker_dialog = false
+    var errors = [String:UserProfileError]()
 }
 
 /**
