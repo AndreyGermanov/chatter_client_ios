@@ -1,5 +1,5 @@
 //
-//  LoginFormCell.swift
+//  RegisterFormCell.swift
 //  chatter_client_ios
 //
 //  Created by user on 25.03.2018.
@@ -10,45 +10,50 @@ import UIKit
 import ReSwift
 
 /**
- * User interface for Login Form as a cell of TableView
+ * User interface for Register Form as a cell of TableView
  */
-class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
+class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
     
     /// Alias to Application state for Redux
     typealias StoreSubscriberStateType = AppState
-
-    /// "Login" text field
-    @IBOutlet weak var loginTextField: UITextField!
-
-    /// "Password" text field
-    @IBOutlet weak var passwordTextField: UITextField!
-
-    /// "Login" button
-    @IBOutlet weak var loginButton: UIButton!
-    
-    /// Indicator of login progress
-    @IBOutlet weak var progressIndicator: UIActivityIndicatorView!
-    
-    /// Label which appears in case of error in "Login" field
-   
-    @IBOutlet weak var loginErrorLabel: UILabel!
-    
-    /// Label which appears in case of error in "Password" field
-    @IBOutlet weak var passwordErrorLabel: UILabel!
     
     /// Link to parent ViewController
     var parent:LoginFormViewController?
     
-    /** Fired when user clicks "Login" button
+    /// Login text field
+    @IBOutlet weak var loginTextField: UITextField!
+    
+    /// Email text field
+    @IBOutlet weak var emailTextField: UITextField!
+    
+    /// Password text field
+    @IBOutlet weak var passwordTextField: UITextField!
+    
+    /// Confirm password text field
+    @IBOutlet weak var confirmPasswordTextField: UITextField!
+    
+    /// Error message for Login field
+    @IBOutlet weak var loginErrorLabel: UILabel!
+
+    /// Error message for Email field
+    @IBOutlet weak var emailErrorLabel: UILabel!
+    
+    /// Error message for Password field
+    @IBOutlet weak var passwordErrorLabel: UILabel!
+    
+    /// Indicator of progress of Register operation
+    @IBOutlet weak var progressIndicator: UIActivityIndicatorView!
+    
+    /**
+     * "Register" button click handler
      *
-     * - Parameter sender: Link to clicked button
+     * - Parameter sender: Link to "Register" button
      */
-    @IBAction func onLoginButtonClick(_ sender: UIButton) {
+    @IBAction func registerButtonClick(_ sender: UIButton) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appStore.dispatch(changeLoginAction(login:loginTextField.text!))
-        appStore.dispatch(changePasswordAction(password:passwordTextField.text!))
-        loginUserAction(messageCenter:appDelegate.msgCenter).exec()
+        registerUserAction(messageCenter: appDelegate.msgCenter).exec()
     }
+    
     
     /**
      * Function determines is it required to redraw TableView cell after state update
@@ -59,11 +64,13 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
      */
     func needReloadTableView(state:AppState) -> Bool {
         return (state.loginForm.errors["login"] != nil && self.loginErrorLabel.isHidden) ||
-                (state.loginForm.errors["login"] == nil && !self.loginErrorLabel.isHidden) ||
-                (state.loginForm.errors["password"] != nil && self.passwordErrorLabel.isHidden) ||
-                (state.loginForm.errors["password"] == nil && !self.passwordErrorLabel.isHidden) ||
-                (!state.loginForm.show_progress_indicator && !self.progressIndicator.isHidden) ||
-                (state.loginForm.show_progress_indicator && self.progressIndicator.isHidden)
+            (state.loginForm.errors["login"] == nil && !self.loginErrorLabel.isHidden) ||
+            (state.loginForm.errors["password"] != nil && self.passwordErrorLabel.isHidden) ||
+            (state.loginForm.errors["password"] == nil && !self.passwordErrorLabel.isHidden) ||
+            (state.loginForm.errors["email"] != nil && self.emailErrorLabel.isHidden) ||
+            (state.loginForm.errors["email"] == nil && !self.emailErrorLabel.isHidden) ||
+            (!state.loginForm.show_progress_indicator && !self.progressIndicator.isHidden) ||
+            (state.loginForm.show_progress_indicator && self.progressIndicator.isHidden)
     }
     
     
@@ -89,6 +96,13 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
             self.passwordErrorLabel.text = ""
             self.passwordErrorLabel.isHidden = true
         }
+        if state.loginForm.errors["email"] != nil {
+            self.emailErrorLabel.text = state.loginForm.errors["email"]?.message
+            self.emailErrorLabel.isHidden = false
+        } else {
+            self.emailErrorLabel.text = ""
+            self.emailErrorLabel.isHidden = true
+        }
         if state.loginForm.show_progress_indicator {
             self.progressIndicator.isHidden = false
             self.progressIndicator.startAnimating()
@@ -107,13 +121,7 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
                 errors["general"] = nil
                 appStore.dispatch(changeLoginFormErrorsAction(errors:errors))
             }
-            if state.current_activity != .LOGIN_FORM {
-                switch state.current_activity {
-                case .CHAT: parent.performSegue(withIdentifier: "loginChatSegue", sender: self.parent)
-                case .USER_PROFILE: parent.performSegue(withIdentifier: "loginProfileSegue", sender: self.parent)
-                default: break
-                }
-            }
+            
             parent.view.isUserInteractionEnabled = !state.loginForm.show_progress_indicator
             if (self.needReloadTableView(state: state)) {
                 parent.loginFormTableView.reloadData()
@@ -127,7 +135,9 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         loginTextField.delegate = self
+        emailTextField.delegate = self
         passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
         // subscribe to application state change events
         appStore.subscribe(self)
     }
@@ -145,7 +155,9 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         text.replaceSubrange(Range<String.Index>.init(range, in: text)!, with: string)
         switch textField.tag {
         case textFields.LOGIN.rawValue: appStore.dispatch(changeLoginAction(login: text))
+        case textFields.EMAIL.rawValue: appStore.dispatch(changeEmailAction(email: text))
         case textFields.PASSWORD.rawValue: appStore.dispatch(changePasswordAction(password: text))
+            case textFields.CONFIRM_PASSWORD.rawValue: appStore.dispatch(changeLoginFormConfirmPasswordAction(confirmPassword: text))
         default: break
         }
         return true
@@ -155,7 +167,6 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
      * Enumeration to map "tag" codes of text fields to human readable IDs
      */
     enum textFields: Int {
-        case LOGIN = 1, PASSWORD = 2
+        case LOGIN = 3, EMAIL = 4, PASSWORD = 5, CONFIRM_PASSWORD = 6
     }
 }
-

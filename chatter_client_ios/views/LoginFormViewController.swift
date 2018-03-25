@@ -34,14 +34,29 @@ class LoginFormViewController: UIViewController, StoreSubscriber {
     }
     
     /**
+     * Function determines is it required to redraw TableView cell after state update
+     * It is required if any of conditions below meet
+     *
+     * - Parameter state: Changed state
+     * - Returns: true if need to redraw table cell to meet changed state or false otherwise
+     */
+    func needReloadTableView(state:AppState) -> Bool {
+        return (loginFormTableView.cellForRow(at: IndexPath(row: 0, section: 0)) is LoginFormCell && state.loginForm.mode == .REGISTER) ||
+        (loginFormTableView.cellForRow(at: IndexPath(row: 0, section: 0)) is RegisterFormCell && state.loginForm.mode == .LOGIN)
+    }
+    
+    /**
      * Redux state change callback. Executes when state changes. Used to update
      * UI based on new state
      *
      * - Parameter state: Link to new updated state
      */
     func newState(state: LoginFormViewController.StoreSubscriberStateType) {
-        DispatchQueue.main.async {
-            self.loginFormTableView.reloadData()
+         DispatchQueue.main.async {
+            if (self.needReloadTableView(state: state)) {
+                self.loginFormTableView.reloadData()
+            }
+            self.loginFormNavigation.selectedSegmentIndex = appStore.state.loginForm.mode.rawValue            
         }
     }
     
@@ -92,16 +107,16 @@ extension LoginFormViewController: UITableViewDataSource, UITableViewDelegate {
      * - Returns: Cell object (one of predefined templates)
      */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cellTemplateName = "loginCell"
-        if let cell = tableView.dequeueReusableCell(withIdentifier: cellTemplateName, for: indexPath) as? LoginFormCell {
+        if appStore.state.loginForm.mode == .REGISTER {
+            let cellTemplateName = "registerCell"
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellTemplateName, for: indexPath) as! RegisterFormCell
             cell.parent = self
             return cell
-        }
-        if appStore.state.loginForm.mode == .REGISTER {
-            cellTemplateName = "registerCell"
-            if let cell = tableView.dequeueReusableCell(withIdentifier: cellTemplateName, for: indexPath) as? UITableViewCell {
-                return cell
-            }
+        } else if appStore.state.loginForm.mode == .LOGIN {
+            let cellTemplateName = "loginCell"
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellTemplateName, for: indexPath) as! LoginFormCell
+            cell.parent = self
+            return cell
         } else {
             return UITableViewCell()
         }
@@ -117,6 +132,10 @@ extension LoginFormViewController: UITableViewDataSource, UITableViewDelegate {
      * - Returns: Calculated cell height
      */
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200.0
+        switch appStore.state.loginForm.mode {
+        case .LOGIN: return 200.0
+        case .REGISTER: return 400.0
+        }
+        
     }
 }

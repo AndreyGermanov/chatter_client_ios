@@ -37,6 +37,7 @@
 		CEC7C07E2066B5A000D1302B /* UserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07D2066B5A000D1302B /* UserActions.swift */; };
 		CEC7C0802066BE8300D1302B /* UserProfileActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */; };
 		CEC7C0822067995A00D1302B /* LoginFormCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0812067995A00D1302B /* LoginFormCell.swift */; };
+		CEC7C084206828E800D1302B /* RegisterFormCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C083206828E700D1302B /* RegisterFormCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 		CEC7C07D2066B5A000D1302B /* UserActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActions.swift; sourceTree = "<group>"; };
 		CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileActions.swift; sourceTree = "<group>"; };
 		CEC7C0812067995A00D1302B /* LoginFormCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormCell.swift; sourceTree = "<group>"; };
+		CEC7C083206828E700D1302B /* RegisterFormCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterFormCell.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -250,6 +252,7 @@
 				CE0AB46F205FD39F0071DE82 /* Main.storyboard */,
 				CE0AB46D205FD39F0071DE82 /* LoginFormViewController.swift */,
 				CEC7C0812067995A00D1302B /* LoginFormCell.swift */,
+				CEC7C083206828E700D1302B /* RegisterFormCell.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -604,6 +607,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC7C084206828E800D1302B /* RegisterFormCell.swift in Sources */,
 				CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */,
 				CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */,
 				CEC7C07820669F3E00D1302B /* UserProfileReducer.swift in Sources */,
