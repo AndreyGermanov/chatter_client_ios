@@ -24,50 +24,71 @@
                                     <segment title="LOGIN"/>
                                     <segment title="REGISTER"/>
                                 </segments>
+                                <connections>
+                                    <action selector="onChangeMode:" destination="BYZ-38-t0r" eventType="valueChanged" id="IDQ-bF-9md"/>
+                                </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ApV-AD-UOM">
                                 <rect key="frame" x="16" y="56" width="343" height="591"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="loginCell" rowHeight="96" id="4Cm-dN-Ouv">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="loginCell" rowHeight="96" id="4Cm-dN-Ouv" customClass="LoginFormCell" customModule="chatter_client_ios" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="343" height="96"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4Cm-dN-Ouv" id="HP8-QP-s0c">
                                             <rect key="frame" x="0.0" y="0.0" width="343" height="96"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" restorationIdentifier="loginLabelsStack" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="qM0-AI-MI1">
-                                                    <rect key="frame" x="10" y="0.0" width="74" height="46"/>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="uE8-Dg-faS">
+                                                    <rect key="frame" x="161" y="37.5" width="20" height="20"/>
+                                                </activityIndicatorView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" restorationIdentifier="loginLabelsStack" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="qM0-AI-MI1" userLabel="Labels Stack View">
+                                                    <rect key="frame" x="10" y="0.0" width="85" height="46"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qqx-Mj-sCq">
-                                                            <rect key="frame" x="0.0" y="0.0" width="74" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="85" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nWl-iP-UaJ">
-                                                            <rect key="frame" x="0.0" y="25.5" width="74" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="25.5" width="85" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="85" id="0Vw-Un-xox"/>
+                                                    </constraints>
                                                 </stackView>
-                                                <stackView opaque="NO" contentMode="center" restorationIdentifier="loginTextsStack" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="LLP-FP-myl">
-                                                    <rect key="frame" x="94" y="0.0" width="239" height="47"/>
+                                                <stackView opaque="NO" contentMode="center" restorationIdentifier="loginTextsStack" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="LLP-FP-myl" userLabel="Texts Stack View">
+                                                    <rect key="frame" x="95" y="0.0" width="238" height="47"/>
                                                     <subviews>
-                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wzD-JK-V5U">
-                                                            <rect key="frame" x="0.0" y="0.0" width="239" height="21"/>
+                                                        <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wzD-JK-V5U">
+                                                            <rect key="frame" x="0.0" y="0.0" width="238" height="21"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                         </textField>
-                                                        <textField opaque="NO" contentMode="scaleToFill" restorationIdentifier="loginTextField" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eaw-1q-x6j">
-                                                            <rect key="frame" x="0.0" y="26" width="239" height="21"/>
+                                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KL5-fY-v0y">
+                                                            <rect key="frame" x="0.0" y="23.5" width="238" height="0.0"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <textField opaque="NO" tag="2" contentMode="scaleToFill" restorationIdentifier="loginTextField" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eaw-1q-x6j">
+                                                            <rect key="frame" x="0.0" y="26" width="238" height="21"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" textContentType="password"/>
                                                         </textField>
+                                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lf2-z7-5eJ">
+                                                            <rect key="frame" x="0.0" y="47" width="238" height="0.0"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="wzD-JK-V5U" firstAttribute="leading" secondItem="LLP-FP-myl" secondAttribute="leading" id="Jj0-Vi-SPG"/>
@@ -81,19 +102,32 @@
                                                     <state key="normal" title="Login">
                                                         <color key="titleColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="onLoginButtonClick:" destination="4Cm-dN-Ouv" eventType="touchUpInside" id="evk-hd-C7h"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="5W1-lW-Rop" firstAttribute="leading" secondItem="HP8-QP-s0c" secondAttribute="leading" constant="10" id="5Ji-gr-7Ls"/>
                                                 <constraint firstItem="qM0-AI-MI1" firstAttribute="top" secondItem="HP8-QP-s0c" secondAttribute="top" id="8RQ-uV-AHF"/>
-                                                <constraint firstItem="LLP-FP-myl" firstAttribute="leading" secondItem="qM0-AI-MI1" secondAttribute="trailing" constant="10" id="Mid-Y0-wO3"/>
                                                 <constraint firstItem="5W1-lW-Rop" firstAttribute="top" secondItem="LLP-FP-myl" secondAttribute="bottom" constant="7" id="SiB-lE-VwF"/>
+                                                <constraint firstItem="uE8-Dg-faS" firstAttribute="centerX" secondItem="HP8-QP-s0c" secondAttribute="centerX" id="aBe-S9-uGT"/>
                                                 <constraint firstAttribute="trailing" secondItem="5W1-lW-Rop" secondAttribute="trailing" constant="10" id="ah9-Ma-pef"/>
+                                                <constraint firstItem="LLP-FP-myl" firstAttribute="leading" secondItem="qM0-AI-MI1" secondAttribute="trailing" id="bCW-l9-dHB"/>
+                                                <constraint firstItem="uE8-Dg-faS" firstAttribute="centerY" secondItem="HP8-QP-s0c" secondAttribute="centerY" id="dr4-sT-7RB"/>
                                                 <constraint firstAttribute="trailing" secondItem="LLP-FP-myl" secondAttribute="trailing" constant="10" id="mPL-hV-U0E"/>
                                                 <constraint firstItem="LLP-FP-myl" firstAttribute="top" secondItem="HP8-QP-s0c" secondAttribute="top" id="pa3-uz-pn6"/>
                                                 <constraint firstItem="qM0-AI-MI1" firstAttribute="leading" secondItem="HP8-QP-s0c" secondAttribute="leading" constant="10" id="uc1-mA-PMN"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="loginButton" destination="5W1-lW-Rop" id="QNc-bh-j2b"/>
+                                            <outlet property="loginErrorLabel" destination="KL5-fY-v0y" id="2RB-gV-7ud"/>
+                                            <outlet property="loginTextField" destination="wzD-JK-V5U" id="MRj-zq-Mw5"/>
+                                            <outlet property="passwordErrorLabel" destination="lf2-z7-5eJ" id="0Mv-Dn-n5d"/>
+                                            <outlet property="passwordTextField" destination="eaw-1q-x6j" id="7yi-Xd-sTx"/>
+                                            <outlet property="progressIndicator" destination="uE8-Dg-faS" id="g4Y-BE-nAS"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="registerCell" rowHeight="184" id="Ymz-nv-cmg">
                                         <rect key="frame" x="0.0" y="124" width="343" height="184"/>
@@ -118,6 +152,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="loginFormNavigation" destination="yqP-is-G27" id="IsP-uH-nbt"/>
                         <outlet property="loginFormTableView" destination="ApV-AD-UOM" id="5TT-M5-nEJ"/>
                         <segue destination="w9I-AF-Uiu" kind="show" identifier="loginChatSegue" id="0C7-s1-GcJ"/>
                         <segue destination="APO-Jb-EcS" kind="show" identifier="loginProfileSegue" id="hmo-Ze-8aT"/>
@@ -134,6 +169,15 @@
                     <view key="view" contentMode="scaleToFill" id="eWJ-C8-OC9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="User profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6KL-kn-xfE">
+                                <rect key="frame" x="166" y="20" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="JTg-Vr-sta"/>
                     </view>
@@ -149,6 +193,15 @@
                     <view key="view" contentMode="scaleToFill" id="2Cy-bY-4kK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Chat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S4t-x7-aQU">
+                                <rect key="frame" x="166" y="20" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="9k6-4N-F02"/>
                     </view>

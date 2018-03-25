@@ -7,14 +7,43 @@
 //
 
 import UIKit
-
+import ReSwift
 /**
  *  Controller class for Login and Register forms
  */
-class LoginFormViewController: UIViewController {
+class LoginFormViewController: UIViewController, StoreSubscriber {
+    
+    typealias StoreSubscriberStateType = AppState
+    
 
     /// link to Table, which displays Login and Register forms inside it cells
     @IBOutlet weak var loginFormTableView: UITableView!
+    
+    @IBOutlet weak var loginFormNavigation: UISegmentedControl!
+    
+    /**
+     * Login Form mode segmented control click handler. Changes Login Form
+     * mode from "LOGIN" to "REGISTER" or vice versa
+     *
+     * - Parameter sender: Link to UISegmetedControl instance clicked
+     */
+    @IBAction func onChangeMode(_ sender: UISegmentedControl) {
+        if let mode = LoginFormMode(rawValue: sender.selectedSegmentIndex) {
+            appStore.dispatch(changeLoginFormModeAction(mode:mode))
+        }
+    }
+    
+    /**
+     * Redux state change callback. Executes when state changes. Used to update
+     * UI based on new state
+     *
+     * - Parameter state: Link to new updated state
+     */
+    func newState(state: LoginFormViewController.StoreSubscriberStateType) {
+        DispatchQueue.main.async {
+            self.loginFormTableView.reloadData()
+        }
+    }
     
     /**
      *  Callback function which executed after view constructed and before display
@@ -24,6 +53,15 @@ class LoginFormViewController: UIViewController {
         super.viewDidLoad()
         loginFormTableView.dataSource = self
         loginFormTableView.delegate = self
+        appStore.subscribe(self)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.onScreenTap)))
+    }
+    
+    /**
+     * Callback fired when user taps on screen. Used to hide onscreen keyboard
+     */
+    @objc func onScreenTap() {
+        view.endEditing(true)
     }
  }
 
@@ -55,11 +93,18 @@ extension LoginFormViewController: UITableViewDataSource, UITableViewDelegate {
      */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cellTemplateName = "loginCell"
+        if let cell = tableView.dequeueReusableCell(withIdentifier: cellTemplateName, for: indexPath) as? LoginFormCell {
+            cell.parent = self
+            return cell
+        }
         if appStore.state.loginForm.mode == .REGISTER {
             cellTemplateName = "registerCell"
+            if let cell = tableView.dequeueReusableCell(withIdentifier: cellTemplateName, for: indexPath) as? UITableViewCell {
+                return cell
+            }
+        } else {
+            return UITableViewCell()
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellTemplateName, for: indexPath)
-        return cell
     }
     
     /**
@@ -72,10 +117,6 @@ extension LoginFormViewController: UITableViewDataSource, UITableViewDelegate {
      * - Returns: Calculated cell height
      */
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var height: CGFloat = 95.0
-        if appStore.state.loginForm.mode == .REGISTER {
-            height = 180.0
-        }
-        return height
+        return 200.0
     }
 }

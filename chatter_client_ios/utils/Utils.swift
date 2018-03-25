@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 /**
  * Extension to string, used to validate email addresses
@@ -18,4 +19,16 @@ extension String {
         let emailTest  = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: self)
     }
+}
+
+/**
+ * Function used to construct and return simple Alert dialog with text message
+ *
+ * - Parameter message: Text message to display in dialog
+ * - Returns: constructed UIAlertController to display Alert box
+ */
+func showAlert(_ message:String) -> UIAlertController {
+    let dialog = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+    dialog.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+    return dialog
 }

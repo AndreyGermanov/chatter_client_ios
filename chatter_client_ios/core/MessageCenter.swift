@@ -249,7 +249,7 @@ class MessageCenter: NSObject, WebSocketDelegate {
                     var failed_to_send_message = false
                     if message_to_send.count>0 {
                         do {
-                            self.lastRequestText = (try String(data:JSONSerialization.data(withJSONObject: message_to_send, options: .sortedKeys),encoding: .utf8))!
+                            self.lastRequestText = (try String(data:JSONSerialization.data(withJSONObject: message_to_send),encoding: .utf8))!
                         } catch {
                             Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Failed to construct JSON from message",
                                        className:"MessageCenter",methodName:"processPendingRequests")

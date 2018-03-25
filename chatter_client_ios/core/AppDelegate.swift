@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Pods_chatter_client_iosTests
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

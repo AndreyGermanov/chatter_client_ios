@@ -20,8 +20,8 @@ enum AppScreens {
 /**
  *  Modes of Login Form screen
  */
-enum LoginFormMode {
-    case LOGIN, REGISTER
+enum LoginFormMode:Int {
+    case LOGIN=0, REGISTER=1
 }
 
 /**

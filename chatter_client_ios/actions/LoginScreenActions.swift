@@ -322,10 +322,14 @@ struct loginUserAction: LoginFormAction,MessageCenterResponseListener {
                 appStore.dispatch(changeUserBirthDateAction(birthDate:0))
                 appStore.dispatch(changeUserProfileBirthDateAction(birthDate:0))
                 if response["birthDate"] != nil {
-                    if let birthDate = Int(response["birthDate"] as! String) {
-                        appStore.dispatch(changeUserBirthDateAction(birthDate:birthDate))
-                        appStore.dispatch(changeUserProfileBirthDateAction(birthDate:birthDate))
+                    var birthDate = 0
+                    if response["birthDate"] is String {
+                        birthDate = Int(response["birthDate"] as! String)!
+                    } else if response["birthDate"] is NSNumber {
+                        birthDate = Int(truncating: response["birthDate"] as! NSNumber)
                     }
+                    appStore.dispatch(changeUserBirthDateAction(birthDate:birthDate))
+                    appStore.dispatch(changeUserProfileBirthDateAction(birthDate:birthDate))
                 }
                 appStore.dispatch(changeLoginFormShowProgressIndicatorAction(progressIndicator: false))
                 var rooms_to_apply = [[String:String]]()

@@ -2,25 +2,17 @@ PODS:
   - CryptoSwift (0.8.1)
   - ReSwift (4.0.1)
   - Starscream (3.0.4)
-  - XCTest-Gherkin (0.13.2):
-    - XCTest-Gherkin/Core (= 0.13.2)
-  - XCTest-Gherkin/Core (0.13.2)
-  - XCTest-Gherkin/Native (0.13.2):
-    - XCTest-Gherkin/Core
 
 DEPENDENCIES:
   - CryptoSwift
   - ReSwift
   - Starscream (~> 3.0.2)
-  - XCTest-Gherkin
-  - XCTest-Gherkin/Native
 
 SPEC CHECKSUMS:
   CryptoSwift: 4b07d5b508c1eb67bfa314a727b705f8048a85de
   ReSwift: f4012c613e13da7398827fe5aebdb938eaed40a3
   Starscream: f5da93fe6984c77b694366bf7299b7dc63a76f26
-  XCTest-Gherkin: 5b5b9c98baed1f889893a8222c47c76557eb705b
 
-PODFILE CHECKSUM: b467caf6dbe1e92979d297849bf971d982b29129
+PODFILE CHECKSUM: 2250deef005e14d13da549f5d2914dd4aa0902ce
 
 COCOAPODS: 1.3.1
