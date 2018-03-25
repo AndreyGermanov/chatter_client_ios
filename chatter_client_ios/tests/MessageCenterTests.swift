@@ -20,17 +20,17 @@ class MessageCenterTests: MessageCenterResponseListener {
     func testTransferImage() {
         self.messageCenter.connect()
         sleep(2)
-        do {
-            let bundle = Bundle.main
-            let path = bundle.path(forResource: "apple", ofType: "png")!
-            let data = try Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
-            var request:[String:Any] = [
+        
+            //let bundle = Bundle.main
+            //let path = bundle.path(forResource: "apple", ofType: "png")!
+            //let data = try Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
+            let request:[String:Any] = [
                 "sender": self,
                 "action": "login_user",
                 "login": "andrey",
                 "password": "123"
             ]
-            self.messageCenter.addToPendingRequests(request)
+            _ = self.messageCenter.addToPendingRequests(request)
             self.messageCenter.processPendingRequests()
             sleep(2)
             print(self.messageCenter.requestsWaitingResponses)
@@ -39,9 +39,7 @@ class MessageCenterTests: MessageCenterResponseListener {
                 Logger.log(level:LogLevel.DEBUG,message:"Received final response \(response)",
                     className:"MessageCenterTests",methodName: "testTransferImage")
             }
-        } catch  {
-            print(error)
-        }
+       
     }
     
     func handleWebSocketResponse(request_id: String, response: [String : Any]) {
@@ -59,14 +57,14 @@ class MessageCenterTests: MessageCenterResponseListener {
                         className:"MessageCenterTests",methodName:"handleWebSocketResponse")
                     var record = self.messageCenter.receivedFiles[checksum] as! [String:Any]
                     self.lastWebSocketResponse!["profile_image"] = record["data"] as! Data
-                    Logger.log(level:LogLevel.DEBUG,message:"Received final response \(self.lastWebSocketResponse)",
+                    Logger.log(level:LogLevel.DEBUG,message:"Received final response \(self.lastWebSocketResponse!)",
                         className:"MessageCenterTests",methodName: "testTransferImage")
-                    self.messageCenter.removeFromReceivedFiles(checksum)
+                    _ = self.messageCenter.removeFromReceivedFiles(checksum)
                 } else {
                     Logger.log(level:LogLevel.DEBUG,message:"Not Found file with checksum \(checksum) in receivedFiles",
                         className:"MessageCenterTests",methodName:"handleWebSocketResponse")
-                    self.messageCenter.addToResponsesWaitingFile(checksum: checksum, response: response)
-                    self.messageCenter.removeFromPendingRequests(request_id)
+                    _ = self.messageCenter.addToResponsesWaitingFile(checksum: checksum, response: response)
+                    _ = self.messageCenter.removeFromPendingRequests(request_id)
                 }
             } else {
                 Logger.log(level:LogLevel.DEBUG,message:"Could not get checksum in response handler for request \(request_id)",

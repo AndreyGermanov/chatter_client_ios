@@ -11,7 +11,7 @@
 		5777DEC4622A341745B54C76 /* Pods_chatter_client_iosUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE6E3430CFAE8DCA6FE69103 /* Pods_chatter_client_iosUITests.framework */; };
 		79435CA3CB52F41A67EE3451 /* Pods_chatter_client_iosTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A74BC346FFB6950FDD2F095C /* Pods_chatter_client_iosTests.framework */; };
 		CE0AB46C205FD39E0071DE82 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB46B205FD39E0071DE82 /* AppDelegate.swift */; };
-		CE0AB46E205FD39F0071DE82 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB46D205FD39F0071DE82 /* ViewController.swift */; };
+		CE0AB46E205FD39F0071DE82 /* LoginFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB46D205FD39F0071DE82 /* LoginFormViewController.swift */; };
 		CE0AB471205FD39F0071DE82 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB46F205FD39F0071DE82 /* Main.storyboard */; };
 		CE0AB473205FD39F0071DE82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB472205FD39F0071DE82 /* Assets.xcassets */; };
 		CE0AB476205FD39F0071DE82 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB474205FD39F0071DE82 /* LaunchScreen.storyboard */; };
@@ -64,7 +64,7 @@
 		BE6E3430CFAE8DCA6FE69103 /* Pods_chatter_client_iosUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_chatter_client_iosUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE0AB468205FD39D0071DE82 /* chatter_client_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chatter_client_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE0AB46B205FD39E0071DE82 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		CE0AB46D205FD39F0071DE82 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		CE0AB46D205FD39F0071DE82 /* LoginFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormViewController.swift; sourceTree = "<group>"; };
 		CE0AB470205FD39F0071DE82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CE0AB472205FD39F0071DE82 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE0AB475205FD39F0071DE82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -242,7 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				CE0AB46F205FD39F0071DE82 /* Main.storyboard */,
-				CE0AB46D205FD39F0071DE82 /* ViewController.swift */,
+				CE0AB46D205FD39F0071DE82 /* LoginFormViewController.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -602,7 +602,7 @@
 				CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */,
 				CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */,
 				CEC7C07820669F3E00D1302B /* UserProfileReducer.swift in Sources */,
-				CE0AB46E205FD39F0071DE82 /* ViewController.swift in Sources */,
+				CE0AB46E205FD39F0071DE82 /* LoginFormViewController.swift in Sources */,
 				CEC7C07C2066B0C700D1302B /* UserReducer.swift in Sources */,
 				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
 				CEC7C0762066930F00D1302B /* UserProfileActions.swift in Sources */,

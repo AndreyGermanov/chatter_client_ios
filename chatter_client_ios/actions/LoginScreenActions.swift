@@ -262,7 +262,7 @@ struct loginUserAction: LoginFormAction,MessageCenterResponseListener {
                     if response["checksum"] is String {
                         checksum = Int(response["checksum"] as! String)!
                     } else if response["checksum"] is NSNumber {
-                        checksum = Int(response["checksum"] as! NSNumber)
+                        checksum = Int(truncating: response["checksum"] as! NSNumber)
                     }
                     if let received_file = messageCenter.receivedFiles[checksum] as? [String:Any] {
                         Logger.log(level:LogLevel.DEBUG,message:"File witch checksum \(checksum) found in receivedFiles queue",
