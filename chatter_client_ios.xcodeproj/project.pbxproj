@@ -38,6 +38,8 @@
 		CEC7C0802066BE8300D1302B /* UserProfileActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */; };
 		CEC7C0822067995A00D1302B /* LoginFormCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0812067995A00D1302B /* LoginFormCell.swift */; };
 		CEC7C084206828E800D1302B /* RegisterFormCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C083206828E700D1302B /* RegisterFormCell.swift */; };
+		CEC7C0862068D17100D1302B /* profile.png in Resources */ = {isa = PBXBuildFile; fileRef = CEC7C0852068D17000D1302B /* profile.png */; };
+		CEC7C0882068D1CF00D1302B /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0872068D1CF00D1302B /* UserProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +101,8 @@
 		CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileActions.swift; sourceTree = "<group>"; };
 		CEC7C0812067995A00D1302B /* LoginFormCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormCell.swift; sourceTree = "<group>"; };
 		CEC7C083206828E700D1302B /* RegisterFormCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterFormCell.swift; sourceTree = "<group>"; };
+		CEC7C0852068D17000D1302B /* profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile.png; sourceTree = "<group>"; };
+		CEC7C0872068D1CF00D1302B /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		E0F16AFED45A6F03DC257112 /* Pods-chatter_client_iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_iosUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_iosUITests/Pods-chatter_client_iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F664BF2689A131E41171A79B /* Pods-chatter_client_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatter_client_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatter_client_ios/Pods-chatter_client_ios.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -189,6 +193,7 @@
 				CE0AB49B205FD86E0071DE82 /* store */,
 				CE0AB499205FD8540071DE82 /* actions */,
 				CE0AB472205FD39F0071DE82 /* Assets.xcassets */,
+				CEC7C0852068D17000D1302B /* profile.png */,
 				CE0AB4B4206420B20071DE82 /* apple.png */,
 				CE0AB474205FD39F0071DE82 /* LaunchScreen.storyboard */,
 				CE0AB477205FD3A10071DE82 /* Info.plist */,
@@ -253,6 +258,7 @@
 				CE0AB46D205FD39F0071DE82 /* LoginFormViewController.swift */,
 				CEC7C0812067995A00D1302B /* LoginFormCell.swift */,
 				CEC7C083206828E700D1302B /* RegisterFormCell.swift */,
+				CEC7C0872068D1CF00D1302B /* UserProfileViewController.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -428,6 +434,7 @@
 				CE0AB476205FD39F0071DE82 /* LaunchScreen.storyboard in Resources */,
 				CE0AB473205FD39F0071DE82 /* Assets.xcassets in Resources */,
 				CE0AB4B5206420B30071DE82 /* apple.png in Resources */,
+				CEC7C0862068D17100D1302B /* profile.png in Resources */,
 				CE0AB471205FD39F0071DE82 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -614,6 +621,7 @@
 				CE0AB46E205FD39F0071DE82 /* LoginFormViewController.swift in Sources */,
 				CEC7C07C2066B0C700D1302B /* UserReducer.swift in Sources */,
 				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
+				CEC7C0882068D1CF00D1302B /* UserProfileViewController.swift in Sources */,
 				CEC7C0762066930F00D1302B /* UserProfileActions.swift in Sources */,
 				CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */,
 				CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */,

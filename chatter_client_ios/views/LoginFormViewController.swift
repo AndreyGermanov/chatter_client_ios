@@ -14,11 +14,11 @@ import ReSwift
 class LoginFormViewController: UIViewController, StoreSubscriber {
     
     typealias StoreSubscriberStateType = AppState
-    
 
     /// link to Table, which displays Login and Register forms inside it cells
     @IBOutlet weak var loginFormTableView: UITableView!
     
+    /// link to form mode switcher between LOGIN and REGISTER
     @IBOutlet weak var loginFormNavigation: UISegmentedControl!
     
     /**
@@ -56,7 +56,7 @@ class LoginFormViewController: UIViewController, StoreSubscriber {
             if (self.needReloadTableView(state: state)) {
                 self.loginFormTableView.reloadData()
             }
-            self.loginFormNavigation.selectedSegmentIndex = appStore.state.loginForm.mode.rawValue            
+            self.loginFormNavigation.selectedSegmentIndex = appStore.state.loginForm.mode.rawValue
         }
     }
     
