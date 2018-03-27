@@ -164,6 +164,17 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
     }
     
     /**
+     * Function fires when user finishes edit text in text field and presses "Return" button
+     *
+     * - Parameter textField: Source text field component
+     * - Returns: true if allow to implement return action or false otherwise
+     */
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    /**
      * Enumeration to map "tag" codes of text fields to human readable IDs
      */
     enum textFields: Int {

@@ -334,6 +334,15 @@ struct loginUserAction: LoginFormAction,MessageCenterResponseListener {
                 appStore.dispatch(changeLoginFormShowProgressIndicatorAction(progressIndicator: false))
                 var rooms_to_apply = [[String:String]]()
                 appStore.dispatch(changeUserProfileRoomsAction(rooms: rooms_to_apply))
+                if response["rooms"] is String {
+                    do {
+                        let roomsStr = response["rooms"] as! String
+                        response["rooms"] = try JSONSerialization.jsonObject(with: roomsStr.data(using: String.Encoding.utf8)!)
+                    } catch {
+                        Logger.log(level:LogLevel.WARNING,message:"Could not parse rooms JSON string \(response["rooms"]!) for \(request_id)",
+                            className:"loginUserAction",methodName:"handleWebSocketResponse")
+                    }
+                }
                 if let rooms = response["rooms"] as? NSArray {
                     for room in rooms {
                         if let room = room as? [String:Any] {
