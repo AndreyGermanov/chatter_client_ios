@@ -316,7 +316,8 @@ struct loginUserAction: LoginFormAction,MessageCenterResponseListener {
                         appStore.dispatch(changeUserGenderAction(gender:gender))
                         appStore.dispatch(changeUserProfileGenderAction(gender:gender))
                     } else {
-                        Logger.log(level:LogLevel.DEBUG,message:"Could not parse gender for request \(request_id). Received gender: \(response["gender"]!)",
+                        Logger.log(level:LogLevel.DEBUG,
+                                   message:"Could not parse gender for request \(request_id). Received gender: \(response["gender"]!)",
                             className:"loginUserAction",methodName:"handleWebSocketResponse")
                     }                }
                 appStore.dispatch(changeUserBirthDateAction(birthDate:0))
@@ -339,7 +340,8 @@ struct loginUserAction: LoginFormAction,MessageCenterResponseListener {
                         let roomsStr = response["rooms"] as! String
                         response["rooms"] = try JSONSerialization.jsonObject(with: roomsStr.data(using: String.Encoding.utf8)!)
                     } catch {
-                        Logger.log(level:LogLevel.WARNING,message:"Could not parse rooms JSON string \(response["rooms"]!) for \(request_id)",
+                        Logger.log(level:LogLevel.WARNING,
+                                   message:"Could not parse rooms JSON string \(response["rooms"]!) for \(request_id)",
                             className:"loginUserAction",methodName:"handleWebSocketResponse")
                     }
                 }

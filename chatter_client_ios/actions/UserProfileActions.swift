@@ -126,6 +126,211 @@ struct changeUserProfileRoomsAction: UserProfileAction {
     let rooms: [[String:String]]
 }
 
+/**
+ * User profile update action. Used to validate User profile form, put user update request to MessageCenter
+ * queue and process response from server
+ */
+struct updateUserProfileAction: UserProfileAction,MessageCenterResponseListener {
+    
+    /// Link to message center instance, used to process request
+    var messageCenter: MessageCenter = (UIApplication.shared.delegate as! AppDelegate).msgCenter
+    
+    /**
+     * Method validates user profile form and send request to MessageCenter
+     */
+    func exec() -> [String:Any]? {
+        var errors:[String:UserProfileError] = [String:UserProfileError]()
+        let state = appStore.state.userProfile
+        let user = appStore.state.user
+        var request = [String:Any]()
+        appStore.dispatch(changeUserProfileErrorsAction(errors: errors))
+        if (user.user_id.count==0) {
+            errors["general"] = UserProfileError.RESULT_ERROR_INCORRECT_USER_ID
+        }
+        if (user.session_id.count==0) {
+            errors["general"] = UserProfileError.RESULT_ERROR_INCORRECT_SESSION_ID
+        }
+        if (errors.count>0) {
+            appStore.dispatch(changeUserProfileErrorsAction(errors:errors))
+            return nil
+        }
+        appStore.dispatch(changeUserProfileLoginAction(login:state.login.trimmingCharacters(in: .whitespacesAndNewlines)))
+        appStore.dispatch(changeUserProfileFirstNameAction(firstName:state.first_name.trimmingCharacters(in: .whitespacesAndNewlines)))
+        appStore.dispatch(changeUserProfileLastNameAction(lastName:state.last_name.trimmingCharacters(in: .whitespacesAndNewlines)))
+        appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom:state.default_room.trimmingCharacters(in: .whitespacesAndNewlines)))
+        if state.login.count == 0 {
+            errors["login"] = .RESULT_ERROR_FIELD_IS_EMPTY
+        } else if user.login != state.login {
+            request["login"] = state.login
+        }
+        if state.password.count != 0 || state.confirm_password.count != 0 {
+            if state.password != state.confirm_password {
+                errors["password"] = .RESULT_ERROR_PASSWORDS_SHOULD_MATCH
+            } else if state.password.count > 0 {
+                request["password"] = state.password
+                request["confirm_password"] = state.confirm_password
+            }
+        }
+        if state.first_name.count == 0 {
+            errors["first_name"] = .RESULT_ERROR_FIELD_IS_EMPTY
+        } else if user.first_name != state.first_name {
+            request["first_name"] = state.first_name
+        }
+        if state.last_name.count == 0 {
+            errors["last_name"] = .RESULT_ERROR_FIELD_IS_EMPTY
+        } else if user.last_name != state.last_name {
+            request["last_name"] = state.last_name
+        }
+        if state.gender != .M && state.gender != .F {
+            errors["gender"] = .RESULT_ERROR_INCORRECT_FIELD_VALUE
+        } else if state.gender != user.gender {
+            request["gender"] = state.gender
+        }
+        if state.birthDate == 0 || Double(state.birthDate) > Date().timeIntervalSince1970 {
+            errors["birthDate"] = .RESULT_ERROR_INCORRECT_FIELD_VALUE
+        } else if state.birthDate != user.birthDate {
+            request["birthDate"] = state.birthDate
+        }
+        if state.default_room.count == 0 {
+            errors["default_room"] = .RESULT_ERROR_FIELD_IS_EMPTY
+        } else if (state.rooms.filter { it in return it["_id"] == state.default_room }).count == 0 {
+            errors["default_room"] = .RESULT_ERROR_INCORRECT_FIELD_VALUE
+        } else if state.default_room != user.default_room {
+            request["default_room"] = state.default_room
+        }
+        if state.profileImage != nil {
+            let state_profile_checksum = Int(state.profileImage!.bytes.crc32())
+            var user_profile_checksum = 0
+            if user.profileImage != nil {
+                user_profile_checksum = Int(user.profileImage!.bytes.crc32())
+            }
+            if (state_profile_checksum != user_profile_checksum) {
+                request["profile_image_checksum"] = state_profile_checksum
+                request["profile_image"] = state.profileImage
+            }
+        }
+        if errors.count>0 {
+            appStore.dispatch(changeUserProfileErrorsAction(errors:errors))
+            Logger.log(level:LogLevel.DEBUG,message:"User Profile form validation errors: \(errors)",
+                className: "updateUserProfileAction", methodName:"exec")
+            return nil
+        }
+        if request.count == 0 {
+            errors = ["general":.RESULT_ERROR_EMPTY_REQUEST]
+            Logger.log(level:LogLevel.DEBUG,message:"User Profile form validation errors: \(errors)",
+                className: "updateUserProfileAction", methodName:"exec")
+            appStore.dispatch(changeUserProfileErrorsAction(errors:errors))
+            return nil
+        }
+        if !messageCenter.isConnected() {
+            Logger.log(level:LogLevel.WARNING,message:"Server connection error",
+                className: "updateUserProfileAction", methodName:"exec")
+            appStore.dispatch(changeUserProfileErrorsAction(errors:["general":.RESULT_ERROR_CONNECTION_ERROR]))
+            return nil
+        }
+        if state.show_progress_indicator {
+            Logger.log(level:LogLevel.DEBUG,message:"User profile update process already going",
+                       className:"updateUserProfileAction",methodName:"exec")
+            return nil;
+        }
+        request["user_id"] = user.user_id
+        request["session_id"] = user.session_id
+        request["sender"] = self
+        if let sent_request = messageCenter.addToPendingRequests(request) {
+            appStore.dispatch(changeUserProfileShowProgressIndicatorAction(showProgressIndicator: true))
+            Logger.log(level:LogLevel.DEBUG,message:"Added User Profile change request to Message Center Pending requests queue. Request body: \(sent_request)",
+                className:"updateUserProfileAction",methodName:"exec")
+        } else {
+            Logger.log(level:LogLevel.WARNING,message:"Error construction user profile change request: \(request)",
+                className:"updateUserProfileAction",methodName:"exec")
+        }
+        return request
+    }
+    
+    /**
+     * Callback function, which called when MessageCenter receives response to request, which sent in "exec" method
+     *
+     * - Parameter request_id: Request ID, to which responses received
+     * - Parameter response: Body of received response
+     */
+    func handleWebSocketResponse(request_id: String, response: [String : Any]) {
+        Logger.log(level:LogLevel.DEBUG,
+                   message:"Received response to user profile update request. Request ID: \(request_id), response body: \(response)",
+            className:"updateUserProfileAction",methodName:"handleWebSocketResponse")
+        appStore.dispatch(changeUserProfileShowProgressIndicatorAction(showProgressIndicator: false))
+        _ = self.messageCenter.removeFromRequestsWaitingResponses(request_id)
+        if let status = response["status"] as? String {
+            if status == "ok" {
+                let state = appStore.state.userProfile
+                appStore.dispatch(changeUserLoginAction(login:state.login))
+                appStore.dispatch(changeUserFirstNameAction(firstName: state.first_name))
+                appStore.dispatch(changeUserLastNameAction(lastName: state.last_name))
+                appStore.dispatch(changeUserGenderAction(gender:state.gender))
+                appStore.dispatch(changeUserDefaultRoomAction(default_room: state.default_room))
+                appStore.dispatch(changeUserProfileImageAction(profileImage: state.profileImage))
+                appStore.dispatch(changeUserProfilePasswordAction(password:""))
+                appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword: ""))
+                appStore.dispatch(ChangeActivityAction(activity: .CHAT))
+            } else if status == "error" {
+                if let status_code_string = response["status_code"] as? String {
+                    if let status_code = UserProfileError(rawValue: status_code_string) {
+                        var field = "general"
+                        if (response["field"] != nil) {
+                            field = response["field"] as! String
+                        }
+                        var errors = [String:UserProfileError]()
+                        errors[field] = status_code
+                        appStore.dispatch(changeUserProfileErrorsAction(errors:errors))
+                        Logger.log(level:LogLevel.DEBUG,message:"User profile update error: \(status_code.rawValue)",
+                            className:"updateUserProfileAction",methodName:"handleWebSocketResponse")
+                    } else {
+                        appStore.dispatch(changeUserProfileErrorsAction(errors:["general":.RESULT_ERROR_UNKNOWN]))
+                        Logger.log(level:LogLevel.DEBUG,message:"User profile update error: \(UserProfileError.RESULT_ERROR_UNKNOWN.rawValue)",
+                            className:"updateUserProfileAction",methodName:"handleWebSocketResponse")
+                    }
+                } else {
+                    appStore.dispatch(changeUserProfileErrorsAction(errors:["general":.RESULT_ERROR_UNKNOWN]))
+                    Logger.log(level:LogLevel.WARNING,message:"Server did not return correct status_code for request \(request_id)",
+                        className:"updateUserProfileAction",methodName:"handleWebSocketResponse")
+                }
+            } else {
+                appStore.dispatch(changeUserProfileErrorsAction(errors:["general":.RESULT_ERROR_UNKNOWN]))
+                Logger.log(level:LogLevel.WARNING,message:"Server did not return correct status to user profile update request \(request_id)",
+                    className:"registerUserAction",methodName:"handleWebSocketResponse")
+            }
+        } else {
+            Logger.log(level:LogLevel.DEBUG,message:"Response for request \(request_id) does not contain 'status' field",
+                className:"updateUserProfileAction",methodName:"handleWebSocketResponse")
+            appStore.dispatch(changeUserProfileErrorsAction(errors:["general":.RESULT_ERROR_UNKNOWN]))
+        }
+    }
+}
+
+/**
+ * User profile update cancel action. Used to revert changes on "User Profile" screen when
+ * user presses "Cancel button
+ */
+struct cancelUserProfileUpdateAction: UserProfileAction {
+    func exec() {
+        appStore.dispatch(changeUserProfileErrorsAction(errors:[String:UserProfileError]()))
+        if appStore.state.user.default_room.count  == 0 {
+            appStore.dispatch(changeUserProfileErrorsAction(errors:["default_room":UserProfileError.RESULT_ERROR_FIELD_IS_EMPTY]))
+        } else {
+            let state = appStore.state.user
+            appStore.dispatch(ChangeActivityAction(activity: .CHAT))
+            appStore.dispatch(changeUserProfileLoginAction(login: state.login))
+            appStore.dispatch(changeUserProfileFirstNameAction(firstName: state.first_name))
+            appStore.dispatch(changeUserProfileLastNameAction(lastName:state.last_name))
+            appStore.dispatch(changeUserProfileGenderAction(gender: state.gender))
+            appStore.dispatch(changeUserProfileBirthDateAction(birthDate:state.birthDate))
+            appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom: state.default_room))
+            appStore.dispatch(changeUserProfileProfileImageAction(profileImage: state.profileImage))
+            appStore.dispatch(changeUserProfilePasswordAction(password: ""))
+            appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword: ""))
+        }
+    }
+}
+    
 /// User Profile Screen error definitions
 enum UserProfileError:String {
     case RESULT_ERROR_FIELD_IS_EMPTY = "RESULT_ERROR_FIELD_IS_EMPTY"
