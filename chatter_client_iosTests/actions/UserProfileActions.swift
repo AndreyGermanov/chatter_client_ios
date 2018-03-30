@@ -330,7 +330,7 @@ class UserProfileActions: XCTestCase {
         messageCenter.testingMode = true
         let bundle = Bundle.main
         let path = bundle.path(forResource: "profile", ofType: "png")!
-        let d/Users/user/Desktop/chatter_client_ios/chatter_client_ios/reducers/RootReducer.swiftata = try! Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
+        let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
         appStore.dispatch(changeUserLoginAction(login:"test"))
         appStore.dispatch(changeUserFirstNameAction(firstName: "Bob"))
         appStore.dispatch(changeUserLastNameAction(lastName: "Johnson"))
