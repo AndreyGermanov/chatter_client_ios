@@ -47,6 +47,24 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
     /// Link to Default room picker component
     let defaultRoomPicker = UIPickerView()
     
+    /// Error label for Login field
+    @IBOutlet weak var loginErrorLabel: UILabel!
+    /// Error label from Password field
+    @IBOutlet weak var passwordErrorLabel: UILabel!
+    /// Error label for First Name field
+    @IBOutlet weak var firstNameErrorLabel: UILabel!
+    /// Error label for Last Name field
+    @IBOutlet weak var lastNameErrorLabel: UILabel!
+    /// Error label for Gender field
+    @IBOutlet weak var genderErrorLabel: UILabel!
+    /// Error label for birthDate field
+    @IBOutlet weak var birthDateErrorLabel: UILabel!
+    /// Error label for Default Room field
+    @IBOutlet weak var defaultRoomErrorLabel: UILabel!
+    
+    /// Progress indicator widget
+    @IBOutlet weak var progressIndicator: UIActivityIndicatorView!
+    
     /**
      * Callback function, which runs once after this screen constructed
      */
@@ -118,6 +136,78 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
             if filteredRooms.count == 1 {
                 self.defaultRoomTextField.text = filteredRooms[0]["name"]
             }
+        
+            let state = appStore.state.userProfile
+            
+            if state.errors["login"] != nil {
+                self.loginErrorLabel.text = state.errors["login"]?.message
+                self.loginErrorLabel.isHidden = false
+            } else {
+                self.loginErrorLabel.text = ""
+                self.loginErrorLabel.isHidden = true
+            }
+            if state.errors["password"] != nil {
+                self.passwordErrorLabel.text = state.errors["password"]?.message
+                self.passwordErrorLabel.isHidden = false
+            } else {
+                self.passwordErrorLabel.text = ""
+                self.passwordErrorLabel.isHidden = true
+            }
+            if state.errors["first_name"] != nil {
+                self.firstNameErrorLabel.text = state.errors["first_name"]?.message
+                self.firstNameErrorLabel.isHidden = false
+            } else {
+                self.firstNameErrorLabel.text = ""
+                self.firstNameErrorLabel.isHidden = true
+            }
+            if state.errors["last_name"] != nil {
+                self.lastNameErrorLabel.text = state.errors["last_name"]?.message
+                self.lastNameErrorLabel.isHidden = false
+            } else {
+                self.lastNameErrorLabel.text = ""
+                self.lastNameErrorLabel.isHidden = true
+            }
+            if state.errors["gender"] != nil {
+                self.genderErrorLabel.text = state.errors["gender"]?.message
+                self.genderErrorLabel.isHidden = false
+            } else {
+                self.genderErrorLabel.text = ""
+                self.genderErrorLabel.isHidden = true
+            }
+            if state.errors["birthDate"] != nil {
+                self.birthDateErrorLabel.text = state.errors["birthDate"]?.message
+                self.birthDateErrorLabel.isHidden = false
+            } else {
+                self.genderErrorLabel.text = ""
+                self.genderErrorLabel.isHidden = true
+            }
+            if state.errors["default_room"] != nil {
+                self.defaultRoomErrorLabel.text = state.errors["default_room"]?.message
+                self.defaultRoomErrorLabel.isHidden = false
+            } else {
+                self.defaultRoomErrorLabel.text = ""
+                self.defaultRoomErrorLabel.isHidden = true
+            }
+
+            if state.show_progress_indicator {
+                self.progressIndicator.isHidden = false
+                self.progressIndicator.startAnimating()
+            } else {
+                self.progressIndicator.isHidden = true
+            }
+            
+            if state.errors["general"] != nil {
+                var errors = state.errors
+                self.present(showAlert(state.errors["general"]!.message),animated:true)
+                errors["general"] = nil
+                appStore.dispatch(changeUserProfileErrorsAction(errors:errors))
+            }
+                
+            self.view.isUserInteractionEnabled = !state.show_progress_indicator
+            
+            if appStore.state.current_activity == .CHAT {
+                self.performSegue(withIdentifier: "profileChatSegue", sender: self.parent)
+            }
         }
     }
     
@@ -142,6 +232,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
      * - Parameter sender: Source button
      */
     @IBAction func onUpdateButtonClick(_ sender: UIButton) {
+        _ = updateUserProfileAction().exec()
     }
 
     /**
@@ -150,7 +241,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
      * - Parameter sender: Source button
      */
     @IBAction func onCancelButtonClick(_ sender: UIButton) {
-        
+        _ = cancelUserProfileUpdateAction().exec()
     }
     
     /**

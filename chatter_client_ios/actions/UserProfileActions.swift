@@ -184,7 +184,7 @@ struct updateUserProfileAction: UserProfileAction,MessageCenterResponseListener 
         if state.gender != .M && state.gender != .F {
             errors["gender"] = .RESULT_ERROR_INCORRECT_FIELD_VALUE
         } else if state.gender != user.gender {
-            request["gender"] = state.gender
+            request["gender"] = state.gender.rawValue
         }
         if state.birthDate == 0 || Double(state.birthDate) > Date().timeIntervalSince1970 {
             errors["birthDate"] = .RESULT_ERROR_INCORRECT_FIELD_VALUE
@@ -235,6 +235,7 @@ struct updateUserProfileAction: UserProfileAction,MessageCenterResponseListener 
         }
         request["user_id"] = user.user_id
         request["session_id"] = user.session_id
+        request["action"] = "update_user"
         request["sender"] = self
         if let sent_request = messageCenter.addToPendingRequests(request) {
             appStore.dispatch(changeUserProfileShowProgressIndicatorAction(showProgressIndicator: true))
