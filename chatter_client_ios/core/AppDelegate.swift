@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let msgCenter = MessageCenter(host: "192.168.0.184", port: 8080, endpoint: "websocket")
+    let msgCenter = MessageCenter(host: "192.168.0.214", port: 8080, endpoint: "websocket")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
