@@ -26,6 +26,7 @@ struct AppState: StateType {
     var loginForm = LoginFormState()
     var userProfile = UserProfileState()
     var user = UserState()
+    var chat = ChatState()
     
     /**
      * Action used to change current application screen

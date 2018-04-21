@@ -28,6 +28,8 @@ func rootReducer(action:Action,state:AppState?) -> AppState {
         newState.user = userReducer(action: action, state: newState.user)
     case let action as UserProfileAction:
         newState.userProfile = userProfileReducer(action: action, state: newState.userProfile)
+    case let action as ChatAction:
+        newState.chat = chatScreenReducer(action: action, state: newState.chat)
     default:
         break
     }

@@ -27,6 +27,8 @@
 		CE0AB4B32063804C0071DE82 /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */; };
 		CE0AB4B5206420B30071DE82 /* apple.png in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB4B4206420B20071DE82 /* apple.png */; };
 		CE9BC092208A67720056081A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC091208A67720056081A /* ChatViewController.swift */; };
+		CE9BC094208BA9280056081A /* ChatState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC093208BA9280056081A /* ChatState.swift */; };
+		CE9BC096208BBE920056081A /* ChatScreenReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC095208BBE920056081A /* ChatScreenReducer.swift */; };
 		CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */; };
 		CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06F20656D4900D1302B /* LoginFormActions.swift */; };
 		CEC7C0742066215600D1302B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0732066215600D1302B /* Utils.swift */; };
@@ -90,6 +92,8 @@
 		CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CE0AB4B4206420B20071DE82 /* apple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple.png; sourceTree = "<group>"; };
 		CE9BC091208A67720056081A /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		CE9BC093208BA9280056081A /* ChatState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatState.swift; sourceTree = "<group>"; };
+		CE9BC095208BBE920056081A /* ChatScreenReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatScreenReducer.swift; sourceTree = "<group>"; };
 		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CEC7C06F20656D4900D1302B /* LoginFormActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormActions.swift; sourceTree = "<group>"; };
 		CEC7C0732066215600D1302B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -227,6 +231,7 @@
 				CEC7C0752066930F00D1302B /* UserProfileState.swift */,
 				CE0AB4A32060310A0071DE82 /* LoginFormState.swift */,
 				CE0AB49F205FE2D10071DE82 /* AppStore.swift */,
+				CE9BC093208BA9280056081A /* ChatState.swift */,
 			);
 			path = store;
 			sourceTree = "<group>";
@@ -238,6 +243,7 @@
 				CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */,
 				CEC7C07720669F3E00D1302B /* UserProfileReducer.swift */,
 				CEC7C07B2066B0C700D1302B /* UserReducer.swift */,
+				CE9BC095208BBE920056081A /* ChatScreenReducer.swift */,
 			);
 			path = reducers;
 			sourceTree = "<group>";
@@ -606,6 +612,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE9BC096208BBE920056081A /* ChatScreenReducer.swift in Sources */,
 				CEC7C084206828E800D1302B /* RegisterFormCell.swift in Sources */,
 				CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */,
 				CEC7C07820669F3E00D1302B /* UserProfileReducer.swift in Sources */,
@@ -622,6 +629,7 @@
 				CEC7C0822067995A00D1302B /* LoginFormCell.swift in Sources */,
 				CEC7C07A2066A25D00D1302B /* UserState.swift in Sources */,
 				CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */,
+				CE9BC094208BA9280056081A /* ChatState.swift in Sources */,
 				CE0AB4A42060310A0071DE82 /* LoginFormState.swift in Sources */,
 				CE0AB46C205FD39E0071DE82 /* AppDelegate.swift in Sources */,
 			);
