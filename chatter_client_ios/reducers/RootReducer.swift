@@ -20,7 +20,7 @@ func rootReducer(action:Action,state:AppState?) -> AppState {
     var newState = state ?? AppState()
     Logger.log(level:LogLevel.DEBUG_REDUX,message:"RootReducer: Received action \(action)",className:"rootReducer",methodName:"rootReducer")
     switch action {
-    case let action as ChangeActivityAction:
+    case let action as AppState.ChangeActivityAction:
         newState.current_activity = action.activity
     case let action as LoginFormAction:
         newState.loginForm = loginFormReducer(action: action, state: newState.loginForm)

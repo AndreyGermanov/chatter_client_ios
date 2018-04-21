@@ -29,7 +29,7 @@ class LoginFormViewController: UIViewController, StoreSubscriber {
      */
     @IBAction func onChangeMode(_ sender: UISegmentedControl) {
         if let mode = LoginFormMode(rawValue: sender.selectedSegmentIndex) {
-            appStore.dispatch(changeLoginFormModeAction(mode:mode))
+            appStore.dispatch(LoginFormState.changeLoginFormModeAction(mode:mode))
         }
     }
     

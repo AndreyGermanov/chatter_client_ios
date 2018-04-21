@@ -19,9 +19,8 @@
 		CE0AB48C205FD3A20071DE82 /* chatter_client_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB48B205FD3A20071DE82 /* chatter_client_iosUITests.swift */; };
 		CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB49F205FE2D10071DE82 /* AppStore.swift */; };
 		CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A120600DF90071DE82 /* RootReducer.swift */; };
-		CE0AB4A42060310A0071DE82 /* LoginScreenActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A32060310A0071DE82 /* LoginScreenActions.swift */; };
+		CE0AB4A42060310A0071DE82 /* LoginFormState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A32060310A0071DE82 /* LoginFormState.swift */; };
 		CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */; };
-		CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4A7206035640071DE82 /* RootActions.swift */; };
 		CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */; };
 		CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AC20613A380071DE82 /* MessageCenter.swift */; };
 		CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0AB4AF2062CA090071DE82 /* Logger.swift */; };
@@ -31,9 +30,9 @@
 		CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */; };
 		CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06F20656D4900D1302B /* LoginFormActions.swift */; };
 		CEC7C0742066215600D1302B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0732066215600D1302B /* Utils.swift */; };
-		CEC7C0762066930F00D1302B /* UserProfileActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0752066930F00D1302B /* UserProfileActions.swift */; };
+		CEC7C0762066930F00D1302B /* UserProfileState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0752066930F00D1302B /* UserProfileState.swift */; };
 		CEC7C07820669F3E00D1302B /* UserProfileReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07720669F3E00D1302B /* UserProfileReducer.swift */; };
-		CEC7C07A2066A25D00D1302B /* UserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0792066A25D00D1302B /* UserActions.swift */; };
+		CEC7C07A2066A25D00D1302B /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0792066A25D00D1302B /* UserState.swift */; };
 		CEC7C07C2066B0C700D1302B /* UserReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07B2066B0C700D1302B /* UserReducer.swift */; };
 		CEC7C07E2066B5A000D1302B /* UserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07D2066B5A000D1302B /* UserActions.swift */; };
 		CEC7C0802066BE8300D1302B /* UserProfileActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */; };
@@ -83,9 +82,8 @@
 		CE0AB48D205FD3A20071DE82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE0AB49F205FE2D10071DE82 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		CE0AB4A120600DF90071DE82 /* RootReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootReducer.swift; sourceTree = "<group>"; };
-		CE0AB4A32060310A0071DE82 /* LoginScreenActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenActions.swift; sourceTree = "<group>"; };
+		CE0AB4A32060310A0071DE82 /* LoginFormState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormState.swift; sourceTree = "<group>"; };
 		CE0AB4A52060325B0071DE82 /* LoginScreenReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenReducer.swift; sourceTree = "<group>"; };
-		CE0AB4A7206035640071DE82 /* RootActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootActions.swift; sourceTree = "<group>"; };
 		CE0AB4AA20603A7C0071DE82 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		CE0AB4AC20613A380071DE82 /* MessageCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenter.swift; sourceTree = "<group>"; };
 		CE0AB4AF2062CA090071DE82 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -95,9 +93,9 @@
 		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CEC7C06F20656D4900D1302B /* LoginFormActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormActions.swift; sourceTree = "<group>"; };
 		CEC7C0732066215600D1302B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		CEC7C0752066930F00D1302B /* UserProfileActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileActions.swift; sourceTree = "<group>"; };
+		CEC7C0752066930F00D1302B /* UserProfileState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileState.swift; sourceTree = "<group>"; };
 		CEC7C07720669F3E00D1302B /* UserProfileReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileReducer.swift; sourceTree = "<group>"; };
-		CEC7C0792066A25D00D1302B /* UserActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActions.swift; sourceTree = "<group>"; };
+		CEC7C0792066A25D00D1302B /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
 		CEC7C07B2066B0C700D1302B /* UserReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReducer.swift; sourceTree = "<group>"; };
 		CEC7C07D2066B5A000D1302B /* UserActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActions.swift; sourceTree = "<group>"; };
 		CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileActions.swift; sourceTree = "<group>"; };
@@ -193,7 +191,6 @@
 				CE0AB49D205FD8810071DE82 /* views */,
 				CE0AB49C205FD8770071DE82 /* reducers */,
 				CE0AB49B205FD86E0071DE82 /* store */,
-				CE0AB499205FD8540071DE82 /* actions */,
 				CE0AB472205FD39F0071DE82 /* Assets.xcassets */,
 				CEC7C0852068D17000D1302B /* profile.png */,
 				CE0AB4B4206420B20071DE82 /* apple.png */,
@@ -223,20 +220,12 @@
 			path = chatter_client_iosUITests;
 			sourceTree = "<group>";
 		};
-		CE0AB499205FD8540071DE82 /* actions */ = {
-			isa = PBXGroup;
-			children = (
-				CE0AB4A32060310A0071DE82 /* LoginScreenActions.swift */,
-				CE0AB4A7206035640071DE82 /* RootActions.swift */,
-				CEC7C0752066930F00D1302B /* UserProfileActions.swift */,
-				CEC7C0792066A25D00D1302B /* UserActions.swift */,
-			);
-			path = actions;
-			sourceTree = "<group>";
-		};
 		CE0AB49B205FD86E0071DE82 /* store */ = {
 			isa = PBXGroup;
 			children = (
+				CEC7C0792066A25D00D1302B /* UserState.swift */,
+				CEC7C0752066930F00D1302B /* UserProfileState.swift */,
+				CE0AB4A32060310A0071DE82 /* LoginFormState.swift */,
 				CE0AB49F205FE2D10071DE82 /* AppStore.swift */,
 			);
 			path = store;
@@ -619,22 +608,21 @@
 			files = (
 				CEC7C084206828E800D1302B /* RegisterFormCell.swift in Sources */,
 				CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */,
-				CE0AB4A8206035640071DE82 /* RootActions.swift in Sources */,
 				CEC7C07820669F3E00D1302B /* UserProfileReducer.swift in Sources */,
 				CE0AB46E205FD39F0071DE82 /* LoginFormViewController.swift in Sources */,
 				CEC7C07C2066B0C700D1302B /* UserReducer.swift in Sources */,
 				CE0AB4A62060325B0071DE82 /* LoginScreenReducer.swift in Sources */,
 				CEC7C0882068D1CF00D1302B /* UserProfileViewController.swift in Sources */,
-				CEC7C0762066930F00D1302B /* UserProfileActions.swift in Sources */,
+				CEC7C0762066930F00D1302B /* UserProfileState.swift in Sources */,
 				CE0AB4B02062CA090071DE82 /* Logger.swift in Sources */,
 				CE0AB4AD20613A380071DE82 /* MessageCenter.swift in Sources */,
 				CE9BC092208A67720056081A /* ChatViewController.swift in Sources */,
 				CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */,
 				CEC7C0742066215600D1302B /* Utils.swift in Sources */,
 				CEC7C0822067995A00D1302B /* LoginFormCell.swift in Sources */,
-				CEC7C07A2066A25D00D1302B /* UserActions.swift in Sources */,
+				CEC7C07A2066A25D00D1302B /* UserState.swift in Sources */,
 				CE0AB4A220600DF90071DE82 /* RootReducer.swift in Sources */,
-				CE0AB4A42060310A0071DE82 /* LoginScreenActions.swift in Sources */,
+				CE0AB4A42060310A0071DE82 /* LoginFormState.swift in Sources */,
 				CE0AB46C205FD39E0071DE82 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

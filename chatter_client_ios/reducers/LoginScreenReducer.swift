@@ -19,22 +19,22 @@ func loginFormReducer(action:Action,state:LoginFormState) -> LoginFormState {
     var newState = state
     Logger.log(level:LogLevel.DEBUG_REDUX,message:"LoginFormReducer: Received action \(action)",className:"loginFormReducer",methodName:"loginFormReducer")
     switch action {
-    case let action as changeLoginAction:
+    case let action as LoginFormState.changeLoginAction:
         newState.login = action.login
-    case let action as changePasswordAction:
+    case let action as LoginFormState.changePasswordAction:
         newState.password = action.password
-    case let action as changeLoginFormConfirmPasswordAction:
+    case let action as LoginFormState.changeLoginFormConfirmPasswordAction:
         newState.confirm_password = action.confirmPassword
-    case let action as changeLoginFormModeAction:
+    case let action as LoginFormState.changeLoginFormModeAction:
         newState.mode = action.mode
         newState.errors = [String:LoginFormError]()
-    case let action as changeEmailAction:
+    case let action as LoginFormState.changeEmailAction:
         newState.email = action.email
-    case let action as changeLoginFormErrorsAction:
+    case let action as LoginFormState.changeLoginFormErrorsAction:
         newState.errors = action.errors
-    case let action as changeLoginFormShowProgressIndicatorAction:
+    case let action as LoginFormState.changeLoginFormShowProgressIndicatorAction:
         newState.show_progress_indicator = action.progressIndicator
-    case let action as changeLoginFormPopupMessageAction:
+    case let action as LoginFormState.changeLoginFormPopupMessageAction:
         newState.popup_message = action.popupMessage
     default:
         break

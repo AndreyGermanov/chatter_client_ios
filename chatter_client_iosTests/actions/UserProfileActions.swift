@@ -18,20 +18,20 @@ class UserProfileActions: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        appStore.dispatch(changeUserProfileLoginAction(login:""))
-        appStore.dispatch(changeUserProfileFirstNameAction(firstName: ""))
-        appStore.dispatch(changeUserProfileLastNameAction(lastName: ""))
-        appStore.dispatch(changeUserProfileGenderAction(gender: .M))
-        appStore.dispatch(changeUserProfileBirthDateAction(birthDate: 0))
-        appStore.dispatch(changeUserProfileProfileImageAction(profileImage: nil))
-        appStore.dispatch(changeUserProfilePasswordAction(password: ""))
-        appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword: ""))
-        appStore.dispatch(changeUserProfileShowProgressIndicatorAction(showProgressIndicator: false))
-        appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom: ""))
-        appStore.dispatch(changeUserProfileRoomsAction(rooms: [[String:String]]()))
-        appStore.dispatch(changeUserProfileErrorsAction(errors: [String:UserProfileError]()))
-        appStore.dispatch(changeUserProfilePopupMessageAction(popupMessage: ""))
-        appStore.dispatch(ChangeActivityAction(activity: .USER_PROFILE))
+        appStore.dispatch(UserProfileState.changeUserProfileLoginAction(login:""))
+        appStore.dispatch(UserProfileState.changeUserProfileFirstNameAction(firstName: ""))
+        appStore.dispatch(UserProfileState.changeUserProfileLastNameAction(lastName: ""))
+        appStore.dispatch(UserProfileState.changeUserProfileGenderAction(gender: .M))
+        appStore.dispatch(UserProfileState.changeUserProfileBirthDateAction(birthDate: 0))
+        appStore.dispatch(UserProfileState.changeUserProfileProfileImageAction(profileImage: nil))
+        appStore.dispatch(UserProfileState.changeUserProfilePasswordAction(password: ""))
+        appStore.dispatch(UserProfileState.changeUserProfileConfirmPasswordAction(confirmPassword: ""))
+        appStore.dispatch(UserProfileState.changeUserProfileShowProgressIndicatorAction(showProgressIndicator: false))
+        appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom: ""))
+        appStore.dispatch(UserProfileState.changeUserProfileRoomsAction(rooms: [[String:String]]()))
+        appStore.dispatch(UserProfileState.changeUserProfileErrorsAction(errors: [String:UserProfileError]()))
+        appStore.dispatch(UserProfileState.changeUserProfilePopupMessageAction(popupMessage: ""))
+        appStore.dispatch(AppState.ChangeActivityAction(activity: .USER_PROFILE))
         messageCenter.testingMode = true
         messageCenter.testingModeConnected = false
         messageCenter.lastRequestText = ""
@@ -46,57 +46,57 @@ class UserProfileActions: XCTestCase {
     
     //MARK: Unit tests
     func testChangeLoginFieldAction() {
-        appStore.dispatch(changeUserProfileLoginAction(login:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfileLoginAction(login:"test"))
         XCTAssertEqual("test",appStore.state.userProfile.login)
     }
     
     func testChangePopupMessageFieldAction() {
-        appStore.dispatch(changeUserProfilePopupMessageAction(popupMessage:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfilePopupMessageAction(popupMessage:"test"))
         XCTAssertEqual("test",appStore.state.userProfile.popup_message)
     }
     
     func testChangeFirstNameFieldAction() {
-        appStore.dispatch(changeUserProfileFirstNameAction(firstName:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfileFirstNameAction(firstName:"test"))
         XCTAssertEqual("test",appStore.state.userProfile.first_name)
     }
     
     func testChangeLastNameFieldAction() {
-        appStore.dispatch(changeUserProfileLastNameAction(lastName:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfileLastNameAction(lastName:"test"))
         XCTAssertEqual("test",appStore.state.userProfile.last_name)
     }
     
     func testChangeGenderFieldAction() {
-        appStore.dispatch(changeUserProfileGenderAction(gender:.F))
+        appStore.dispatch(UserProfileState.changeUserProfileGenderAction(gender:.F))
         XCTAssertEqual(Gender.F,appStore.state.userProfile.gender)
     }
     
     func testChangeBirthDateFieldAction() {
-        appStore.dispatch(changeUserProfileBirthDateAction(birthDate:1234567890))
+        appStore.dispatch(UserProfileState.changeUserProfileBirthDateAction(birthDate:1234567890))
         XCTAssertEqual(1234567890,appStore.state.userProfile.birthDate)
     }
     
     func testChangeShowProgressIndicatorFieldAction() {
-        appStore.dispatch(changeUserProfileShowProgressIndicatorAction(showProgressIndicator:true))
+        appStore.dispatch(UserProfileState.changeUserProfileShowProgressIndicatorAction(showProgressIndicator:true))
         XCTAssertEqual(true,appStore.state.userProfile.show_progress_indicator)
     }
     
     func testChangeShowDatePickerDialogFieldAction() {
-        appStore.dispatch(changeUserProfileShowDatePickerDialogAction(showDatePickerDialog:true))
+        appStore.dispatch(UserProfileState.changeUserProfileShowDatePickerDialogAction(showDatePickerDialog:true))
         XCTAssertEqual(true,appStore.state.userProfile.show_date_picker_dialog)
     }
     
     func testChangeDefaultRoomFieldAction() {
-        appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom:"test"))
         XCTAssertEqual("test",appStore.state.userProfile.default_room)
     }
     
     func testChangePasswordFieldAction() {
-        appStore.dispatch(changeUserProfilePasswordAction(password:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfilePasswordAction(password:"test"))
         XCTAssertEqual("test",appStore.state.userProfile.password)
     }
     
     func testChangeConfirmPasswordFieldAction() {
-        appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfileConfirmPasswordAction(confirmPassword:"test"))
         XCTAssertEqual("test",appStore.state.userProfile.confirm_password)
     }
     
@@ -106,7 +106,7 @@ class UserProfileActions: XCTestCase {
             let path = bundle.path(forResource: "apple", ofType: "png")!
             let data = try Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
             let checksum = data.crc32()
-            appStore.dispatch(changeUserProfileImageAction(profileImage:data))
+            appStore.dispatch(UserState.changeUserProfileImageAction(profileImage:data))
             XCTAssertEqual(checksum, appStore.state.user.profileImage?.crc32())
         } catch {
             XCTFail("Could not load image from resource")
@@ -114,13 +114,13 @@ class UserProfileActions: XCTestCase {
     }
     
     func testChangeRoomsFieldAction() {
-        appStore.dispatch(changeUserProfileRoomsAction(rooms:[["_id":"r1","name":"Room1"],["_id":"r2","name":"Room 2"],["_id":"r3","name":"Room 3"]]))
+        appStore.dispatch(UserProfileState.changeUserProfileRoomsAction(rooms:[["_id":"r1","name":"Room1"],["_id":"r2","name":"Room 2"],["_id":"r3","name":"Room 3"]]))
         XCTAssertEqual(3, appStore.state.userProfile.rooms.count)
         XCTAssertEqual("r2",appStore.state.userProfile.rooms[1]["_id"])
     }
     
     func testErrorsFieldAction() {
-        appStore.dispatch(changeUserProfileErrorsAction(errors:["general":.RESULT_ERROR_CONNECTION_ERROR]))
+        appStore.dispatch(UserProfileState.changeUserProfileErrorsAction(errors:["general":.RESULT_ERROR_CONNECTION_ERROR]))
         XCTAssertEqual(UserProfileError.RESULT_ERROR_CONNECTION_ERROR, appStore.state.userProfile.errors["general"])
     }
     
@@ -133,51 +133,51 @@ class UserProfileActions: XCTestCase {
         let bundle = Bundle.main
         var path = bundle.path(forResource: "profile", ofType: "png")!
         var data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
-        appStore.dispatch(changeUserLoginAction(login:"test"))
-        appStore.dispatch(changeUserFirstNameAction(firstName: "Bob"))
-        appStore.dispatch(changeUserLastNameAction(lastName: "Johnson"))
-        appStore.dispatch(changeUserGenderAction(gender: .M))
-        appStore.dispatch(changeUserBirthDateAction(birthDate: 1234567890))
-        appStore.dispatch(changeUserProfileImageAction(profileImage: nil))
-        appStore.dispatch(changeUserDefaultRoomAction(default_room: "r1"))
-        appStore.dispatch(changeUserProfileImageAction(profileImage: data))
+        appStore.dispatch(UserState.changeUserLoginAction(login:"test"))
+        appStore.dispatch(UserState.changeUserFirstNameAction(firstName: "Bob"))
+        appStore.dispatch(UserState.changeUserLastNameAction(lastName: "Johnson"))
+        appStore.dispatch(UserState.changeUserGenderAction(gender: .M))
+        appStore.dispatch(UserState.changeUserBirthDateAction(birthDate: 1234567890))
+        appStore.dispatch(UserState.changeUserProfileImageAction(profileImage: nil))
+        appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: "r1"))
+        appStore.dispatch(UserState.changeUserProfileImageAction(profileImage: data))
         // Form validation tests
-        appStore.dispatch(changeUserProfileLoginAction(login:"test"))
-        appStore.dispatch(changeUserProfileFirstNameAction(firstName: "Bob"))
-        appStore.dispatch(changeUserProfileLastNameAction(lastName: "Johnson"))
-        appStore.dispatch(changeUserProfileGenderAction(gender: .M))
-        appStore.dispatch(changeUserProfileBirthDateAction(birthDate: 1234567890))
-        appStore.dispatch(changeUserProfileProfileImageAction(profileImage: nil))
-        appStore.dispatch(changeUserProfilePasswordAction(password: ""))
-        appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword: ""))
-        appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom: "r1"))
-        appStore.dispatch(changeUserProfileRoomsAction(rooms: [["_id":"r1","name":"Room 1"],["_id":"r2","name":"Room 2"],["_id":"r3","name":"Room 3"]]))
-        _ = updateUserProfileAction().exec()
+        appStore.dispatch(UserProfileState.changeUserProfileLoginAction(login:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfileFirstNameAction(firstName: "Bob"))
+        appStore.dispatch(UserProfileState.changeUserProfileLastNameAction(lastName: "Johnson"))
+        appStore.dispatch(UserProfileState.changeUserProfileGenderAction(gender: .M))
+        appStore.dispatch(UserProfileState.changeUserProfileBirthDateAction(birthDate: 1234567890))
+        appStore.dispatch(UserProfileState.changeUserProfileProfileImageAction(profileImage: nil))
+        appStore.dispatch(UserProfileState.changeUserProfilePasswordAction(password: ""))
+        appStore.dispatch(UserProfileState.changeUserProfileConfirmPasswordAction(confirmPassword: ""))
+        appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom: "r1"))
+        appStore.dispatch(UserProfileState.changeUserProfileRoomsAction(rooms: [["_id":"r1","name":"Room 1"],["_id":"r2","name":"Room 2"],["_id":"r3","name":"Room 3"]]))
+        _ = UserProfileState.updateUserProfileAction().exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_INCORRECT_SESSION_ID, appStore.state.userProfile.errors["general"]!,
                        "Should return incorrect user_id error if user did not login")
-        appStore.dispatch(changeUserSessionIdAction(session_id:"12345"))
-        _ = updateUserProfileAction().exec()
+        appStore.dispatch(UserState.changeUserSessionIdAction(session_id:"12345"))
+        _ = UserProfileState.updateUserProfileAction().exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_INCORRECT_USER_ID, appStore.state.userProfile.errors["general"]!,
                        "Should return incorrect session_id if user did not login")
-        appStore.dispatch(changeUserUserIdAction(user_id: "54321"))
-        _ = updateUserProfileAction().exec()
+        appStore.dispatch(UserState.changeUserUserIdAction(user_id: "54321"))
+        _ = UserProfileState.updateUserProfileAction().exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_EMPTY_REQUEST, appStore.state.userProfile.errors["general"]!,
                        "Should return 'Empty request error if user submit without changing anything")
-        _ = updateUserProfileAction().exec()
-        appStore.dispatch(changeUserProfileLoginAction(login:""))
-        _ = updateUserProfileAction().exec()
+        _ = UserProfileState.updateUserProfileAction().exec()
+        appStore.dispatch(UserProfileState.changeUserProfileLoginAction(login:""))
+        _ = UserProfileState.updateUserProfileAction().exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_FIELD_IS_EMPTY, appStore.state.userProfile.errors["login"]!,
                        "Should not submit if login no specified")
-        appStore.dispatch(changeUserProfileLoginAction(login:"test"))
-        appStore.dispatch(changeUserProfileFirstNameAction(firstName: ""))
-        _ = updateUserProfileAction().exec()
+        appStore.dispatch(UserProfileState.changeUserProfileLoginAction(login:"test"))
+        appStore.dispatch(UserProfileState.changeUserProfileFirstNameAction(firstName: ""))
+        _ = UserProfileState.updateUserProfileAction().exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_FIELD_IS_EMPTY, appStore.state.userProfile.errors["first_name"]!,
                        "Should not submit if no fist_name specified")
-        appStore.dispatch(changeUserProfileLastNameAction(lastName: ""))
-        appStore.dispatch(changeUserProfileBirthDateAction(birthDate: 0))
-        appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom: ""))
-        appStore.dispatch(changeUserProfilePasswordAction(password: "3434"))
-        _ = updateUserProfileAction().exec()
+        appStore.dispatch(UserProfileState.changeUserProfileLastNameAction(lastName: ""))
+        appStore.dispatch(UserProfileState.changeUserProfileBirthDateAction(birthDate: 0))
+        appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom: ""))
+        appStore.dispatch(UserProfileState.changeUserProfilePasswordAction(password: "3434"))
+        _ = UserProfileState.updateUserProfileAction().exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_FIELD_IS_EMPTY, appStore.state.userProfile.errors["last_name"]!,
                        "Should not submit if no last_name specified")
         XCTAssertEqual(UserProfileError.RESULT_ERROR_INCORRECT_FIELD_VALUE, appStore.state.userProfile.errors["birthDate"]!,
@@ -186,28 +186,28 @@ class UserProfileActions: XCTestCase {
                        "Should not submit without default_rooom")
         XCTAssertEqual(UserProfileError.RESULT_ERROR_PASSWORDS_SHOULD_MATCH, appStore.state.userProfile.errors["password"]!,
                        "Should one of password and confirm password is empty")
-        appStore.dispatch(changeUserProfileFirstNameAction(firstName:"John"))
-        appStore.dispatch(changeUserProfileLastNameAction(lastName:"Johnson"))
-        appStore.dispatch(changeUserProfileGenderAction(gender:.M))
-        appStore.dispatch(changeUserProfileBirthDateAction(birthDate:1234567890))
-        appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom:"r7"))
-        appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword:"3435"))
-        _ = updateUserProfileAction(messageCenter:messageCenter).exec()
+        appStore.dispatch(UserProfileState.changeUserProfileFirstNameAction(firstName:"John"))
+        appStore.dispatch(UserProfileState.changeUserProfileLastNameAction(lastName:"Johnson"))
+        appStore.dispatch(UserProfileState.changeUserProfileGenderAction(gender:.M))
+        appStore.dispatch(UserProfileState.changeUserProfileBirthDateAction(birthDate:1234567890))
+        appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom:"r7"))
+        appStore.dispatch(UserProfileState.changeUserProfileConfirmPasswordAction(confirmPassword:"3435"))
+        _ = UserProfileState.updateUserProfileAction(messageCenter:messageCenter).exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_INCORRECT_FIELD_VALUE, appStore.state.userProfile.errors["default_room"]!,
                        "Should not submit if specified default_room is not in list of available rooms")
         XCTAssertEqual(UserProfileError.RESULT_ERROR_PASSWORDS_SHOULD_MATCH, appStore.state.userProfile.errors["password"]!,
                        "Should not submit if specified confirm_password is not equal to password")
-        appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword:"3434"))
-        appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom:"r2"))
-        _ = updateUserProfileAction(messageCenter:messageCenter).exec()
+        appStore.dispatch(UserProfileState.changeUserProfileConfirmPasswordAction(confirmPassword:"3434"))
+        appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom:"r2"))
+        _ = UserProfileState.updateUserProfileAction(messageCenter:messageCenter).exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_CONNECTION_ERROR,appStore.state.userProfile.errors["general"]!,
                        "Should return connection error if not connected to server")
         // Request building and sending to server tests
         messageCenter.testingModeConnected = true
         path = bundle.path(forResource: "apple", ofType: "png")!
         data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
-        appStore.dispatch(changeUserProfileProfileImageAction(profileImage: data))
-        let request_to_send = updateUserProfileAction(messageCenter:messageCenter).exec()!
+        appStore.dispatch(UserProfileState.changeUserProfileProfileImageAction(profileImage: data))
+        let request_to_send = UserProfileState.updateUserProfileAction(messageCenter:messageCenter).exec()!
         XCTAssertEqual(appStore.state.user.user_id, request_to_send["user_id"] as! String,
                        "Should set correct user_id to request")
         XCTAssertEqual(appStore.state.user.session_id,request_to_send["session_id"] as! String,
@@ -249,7 +249,7 @@ class UserProfileActions: XCTestCase {
         XCTAssertEqual(false,appStore.state.userProfile.show_progress_indicator,"Should remove progress indicator after receive error")
         XCTAssertEqual(UserProfileError.RESULT_ERROR_UNKNOWN,appStore.state.userProfile.errors["general"]!,
                        "Should receive UNKNOWN_ERROR if status of responses does not exist")
-        _ = updateUserProfileAction(messageCenter:messageCenter).exec()
+        _ = UserProfileState.updateUserProfileAction(messageCenter:messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
@@ -261,7 +261,7 @@ class UserProfileActions: XCTestCase {
         XCTAssertEqual(false,appStore.state.userProfile.show_progress_indicator,"Should remove progress indicator after receive error")
         XCTAssertEqual(UserProfileError.RESULT_ERROR_UNKNOWN,appStore.state.userProfile.errors["general"]!,
                        "Should receive UNKNOWN_ERROR if status_code of response is incorrect")
-        _ = updateUserProfileAction(messageCenter:messageCenter).exec()
+        _ = UserProfileState.updateUserProfileAction(messageCenter:messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
@@ -274,7 +274,7 @@ class UserProfileActions: XCTestCase {
         XCTAssertEqual(UserProfileError.INTERNAL_ERROR, appStore.state.userProfile.errors["general"]!,
                        "Should receive correct error object if status_code is correct")
         
-        _ = updateUserProfileAction(messageCenter:messageCenter).exec()
+        _ = UserProfileState.updateUserProfileAction(messageCenter:messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
@@ -287,7 +287,7 @@ class UserProfileActions: XCTestCase {
         XCTAssertEqual(UserProfileError.RESULT_ERROR_IMAGE_UPLOAD, appStore.state.userProfile.errors["general"]!,
                        "Should receive correct error object if status_code is correct")
         
-        _ = updateUserProfileAction(messageCenter:messageCenter).exec()
+        _ = UserProfileState.updateUserProfileAction(messageCenter:messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
@@ -298,11 +298,10 @@ class UserProfileActions: XCTestCase {
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
         XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses after receive error")
         XCTAssertEqual(false,appStore.state.userProfile.show_progress_indicator,"Should remove progress indicator after receive error")
-        print(appStore.state.userProfile.errors)
         XCTAssertEqual(UserProfileError.RESULT_ERROR_PASSWORDS_SHOULD_MATCH, appStore.state.userProfile.errors["password"]!,
                        "Should receive correct error object if status_code is correct")
 
-        _ = updateUserProfileAction(messageCenter:messageCenter).exec()
+        _ = UserProfileState.updateUserProfileAction(messageCenter:messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
@@ -331,25 +330,25 @@ class UserProfileActions: XCTestCase {
         let bundle = Bundle.main
         let path = bundle.path(forResource: "profile", ofType: "png")!
         let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
-        appStore.dispatch(changeUserLoginAction(login:"test"))
-        appStore.dispatch(changeUserFirstNameAction(firstName: "Bob"))
-        appStore.dispatch(changeUserLastNameAction(lastName: "Johnson"))
-        appStore.dispatch(changeUserGenderAction(gender: .M))
-        appStore.dispatch(changeUserBirthDateAction(birthDate: 1234567890))
-        appStore.dispatch(changeUserProfileImageAction(profileImage: data))
-        appStore.dispatch(changeUserDefaultRoomAction(default_room: ""))
-        appStore.dispatch(changeUserProfileImageAction(profileImage: data))
+        appStore.dispatch(UserState.changeUserLoginAction(login:"test"))
+        appStore.dispatch(UserState.changeUserFirstNameAction(firstName: "Bob"))
+        appStore.dispatch(UserState.changeUserLastNameAction(lastName: "Johnson"))
+        appStore.dispatch(UserState.changeUserGenderAction(gender: .M))
+        appStore.dispatch(UserState.changeUserBirthDateAction(birthDate: 1234567890))
+        appStore.dispatch(UserState.changeUserProfileImageAction(profileImage: data))
+        appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: ""))
+        appStore.dispatch(UserState.changeUserProfileImageAction(profileImage: data))
         // Test error responses
-        cancelUserProfileUpdateAction().exec()
+        UserProfileState.cancelUserProfileUpdateAction().exec()
         XCTAssertEqual(UserProfileError.RESULT_ERROR_FIELD_IS_EMPTY, appStore.state.userProfile.errors["default_room"]!,
                        "Should return error about empty default_room field")
         XCTAssertEqual(AppScreens.USER_PROFILE, appStore.state.current_activity,
                        "Should not allow to move away from User profile screen in case of errors")
         // Test successfull response
-        appStore.dispatch(changeUserDefaultRoomAction(default_room: "r2"))
-        appStore.dispatch(changeUserProfilePasswordAction(password: "12345"))
-        appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword: "52134"))
-        cancelUserProfileUpdateAction().exec()
+        appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: "r2"))
+        appStore.dispatch(UserProfileState.changeUserProfilePasswordAction(password: "12345"))
+        appStore.dispatch(UserProfileState.changeUserProfileConfirmPasswordAction(confirmPassword: "52134"))
+        UserProfileState.cancelUserProfileUpdateAction().exec()
         XCTAssertEqual(AppScreens.CHAT,appStore.state.current_activity,"Should move to CHAT screen")
         let state = appStore.state.userProfile
         XCTAssertEqual("test", state.login,"Should revert login field")

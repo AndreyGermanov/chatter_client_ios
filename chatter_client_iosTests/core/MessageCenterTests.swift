@@ -22,7 +22,7 @@ class MessageCenterTests: XCTestCase,MessageCenterResponseListener {
     
     override func setUp() {
         super.setUp()
-        messageCenter = MessageCenter.init(host:"192.168.0.184",port:8080,endpoint:"websocket")
+        messageCenter = MessageCenter.init(host:"192.168.0.214",port:8080,endpoint:"websocket")
         messageCenter.pendingRequests.removeAll()
         messageCenter.requestsWaitingResponses.removeAll()
         messageCenter.receivedFiles.removeAll()
@@ -64,20 +64,5 @@ class MessageCenterTests: XCTestCase,MessageCenterResponseListener {
         } else {
             XCTFail("Should return not nil")
         }
-    }
-    
-    func testSendRequestToServerWithFailure() {
-        self.messageCenter.connect()
-        sleep(2)
-        self.messageCenter.run()
-        sleep(1)
-        let request:[String:Any] = ["sender":self,"action":"register_user"]
-        var result = messageCenter.addToPendingRequests(request)
-        wait(for: [self.expect],timeout:5)
-        XCTAssertEqual(self.lastWebSocketResponse!["request_id"]! as! String,result!["request_id"]! as! String,
-                       "Response should contain the same request_id as sent request")
-        XCTAssertNotNil(self.lastWebSocketResponse!["request"]!,"Should contain original request inside response")
-    }
-    
-    
+    }    
 }

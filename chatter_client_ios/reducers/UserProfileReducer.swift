@@ -20,33 +20,33 @@ func userProfileReducer(action:Action,state:UserProfileState) -> UserProfileStat
     Logger.log(level:LogLevel.DEBUG_REDUX,message:"UserProfileReducer: Received action \(action)",
         className:"userProfileReducer",methodName:"userProfileReducer")
     switch action {
-    case let action as changeUserProfileErrorsAction:
+    case let action as UserProfileState.changeUserProfileErrorsAction:
         newState.errors = action.errors
-    case let action as changeUserProfileShowProgressIndicatorAction:
+    case let action as UserProfileState.changeUserProfileShowProgressIndicatorAction:
         newState.show_progress_indicator = action.showProgressIndicator
-    case let action as changeUserProfilePopupMessageAction:
+    case let action as UserProfileState.changeUserProfilePopupMessageAction:
         newState.popup_message = action.popupMessage
-    case let action as changeUserProfileLoginAction:
+    case let action as UserProfileState.changeUserProfileLoginAction:
         newState.login = action.login
-    case let action as changeUserProfilePasswordAction:
+    case let action as UserProfileState.changeUserProfilePasswordAction:
         newState.password = action.password
-    case let action as changeUserProfileConfirmPasswordAction:
+    case let action as UserProfileState.changeUserProfileConfirmPasswordAction:
         newState.confirm_password = action.confirmPassword
-    case let action as changeUserProfileFirstNameAction:
+    case let action as UserProfileState.changeUserProfileFirstNameAction:
         newState.first_name = action.firstName
-    case let action as changeUserProfileLastNameAction:
+    case let action as UserProfileState.changeUserProfileLastNameAction:
         newState.last_name = action.lastName
-    case let action as changeUserProfileGenderAction:
+    case let action as UserProfileState.changeUserProfileGenderAction:
         newState.gender = action.gender
-    case let action as changeUserProfileBirthDateAction:
+    case let action as UserProfileState.changeUserProfileBirthDateAction:
         newState.birthDate = action.birthDate
-    case let action as changeUserProfileProfileImageAction:
+    case let action as UserProfileState.changeUserProfileProfileImageAction:
         newState.profileImage = action.profileImage
-    case let action as changeUserProfileDefaultRoomAction:
+    case let action as UserProfileState.changeUserProfileDefaultRoomAction:
         newState.default_room = action.defaultRoom
-    case let action as changeUserProfileShowDatePickerDialogAction:
+    case let action as UserProfileState.changeUserProfileShowDatePickerDialogAction:
         newState.show_date_picker_dialog = action.showDatePickerDialog
-    case let action as changeUserProfileRoomsAction:
+    case let action as UserProfileState.changeUserProfileRoomsAction:
         newState.rooms = action.rooms
     default:
         break

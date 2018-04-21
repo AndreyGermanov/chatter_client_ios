@@ -45,9 +45,9 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
      */
     @IBAction func onLoginButtonClick(_ sender: UIButton) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appStore.dispatch(changeLoginAction(login:loginTextField.text!))
-        appStore.dispatch(changePasswordAction(password:passwordTextField.text!))
-        loginUserAction(messageCenter:appDelegate.msgCenter).exec()
+        appStore.dispatch(LoginFormState.changeLoginAction(login:loginTextField.text!))
+        appStore.dispatch(LoginFormState.changePasswordAction(password:passwordTextField.text!))
+        LoginFormState.loginUserAction(messageCenter:appDelegate.msgCenter).exec()
     }
     
     /**
@@ -99,13 +99,13 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         if let parent = self.parent {
             if state.loginForm.popup_message.count>0 {
                 parent.present(showAlert(state.loginForm.popup_message),animated: true)
-                appStore.dispatch(changeLoginFormPopupMessageAction(popupMessage: ""))
+                appStore.dispatch(LoginFormState.changeLoginFormPopupMessageAction(popupMessage: ""))
             }
             if state.loginForm.errors["general"] != nil {
                 var errors = state.loginForm.errors
                 parent.present(showAlert(state.loginForm.errors["general"]!.message),animated:true)
                 errors["general"] = nil
-                appStore.dispatch(changeLoginFormErrorsAction(errors:errors))
+                appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors:errors))
             }
             if state.current_activity != .LOGIN_FORM {
                 switch state.current_activity {
@@ -144,8 +144,8 @@ class LoginFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         var text = textField.text!
         text.replaceSubrange(Range<String.Index>.init(range, in: text)!, with: string)
         switch textField.tag {
-        case textFields.LOGIN.rawValue: appStore.dispatch(changeLoginAction(login: text))
-        case textFields.PASSWORD.rawValue: appStore.dispatch(changePasswordAction(password: text))
+        case textFields.LOGIN.rawValue: appStore.dispatch(LoginFormState.changeLoginAction(login: text))
+        case textFields.PASSWORD.rawValue: appStore.dispatch(LoginFormState.changePasswordAction(password: text))
         default: break
         }
         return true

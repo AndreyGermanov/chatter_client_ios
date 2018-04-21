@@ -51,7 +51,7 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
      */
     @IBAction func registerButtonClick(_ sender: UIButton) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        registerUserAction(messageCenter: appDelegate.msgCenter).exec()
+        LoginFormState.registerUserAction(messageCenter: appDelegate.msgCenter).exec()
     }
     
     
@@ -113,13 +113,13 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         if let parent = self.parent {
             if state.loginForm.popup_message.count>0 {
                 parent.present(showAlert(state.loginForm.popup_message),animated: true)
-                appStore.dispatch(changeLoginFormPopupMessageAction(popupMessage: ""))
+                appStore.dispatch(LoginFormState.changeLoginFormPopupMessageAction(popupMessage: ""))
             }
             if state.loginForm.errors["general"] != nil {
                 var errors = state.loginForm.errors
                 parent.present(showAlert(state.loginForm.errors["general"]!.message),animated:true)
                 errors["general"] = nil
-                appStore.dispatch(changeLoginFormErrorsAction(errors:errors))
+                appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors:errors))
             }
             
             parent.view.isUserInteractionEnabled = !state.loginForm.show_progress_indicator
@@ -154,10 +154,10 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         var text = textField.text!
         text.replaceSubrange(Range<String.Index>.init(range, in: text)!, with: string)
         switch textField.tag {
-        case textFields.LOGIN.rawValue: appStore.dispatch(changeLoginAction(login: text))
-        case textFields.EMAIL.rawValue: appStore.dispatch(changeEmailAction(email: text))
-        case textFields.PASSWORD.rawValue: appStore.dispatch(changePasswordAction(password: text))
-            case textFields.CONFIRM_PASSWORD.rawValue: appStore.dispatch(changeLoginFormConfirmPasswordAction(confirmPassword: text))
+        case textFields.LOGIN.rawValue: appStore.dispatch(LoginFormState.changeLoginAction(login: text))
+        case textFields.EMAIL.rawValue: appStore.dispatch(LoginFormState.changeEmailAction(email: text))
+        case textFields.PASSWORD.rawValue: appStore.dispatch(LoginFormState.changePasswordAction(password: text))
+            case textFields.CONFIRM_PASSWORD.rawValue: appStore.dispatch(LoginFormState.changeLoginFormConfirmPasswordAction(confirmPassword: text))
         default: break
         }
         return true

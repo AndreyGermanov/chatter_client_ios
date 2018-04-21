@@ -200,7 +200,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
                 var errors = state.errors
                 self.present(showAlert(state.errors["general"]!.message),animated:true)
                 errors["general"] = nil
-                appStore.dispatch(changeUserProfileErrorsAction(errors:errors))
+                appStore.dispatch(UserProfileState.changeUserProfileErrorsAction(errors:errors))
             }
                 
             self.view.isUserInteractionEnabled = !state.show_progress_indicator
@@ -223,7 +223,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
         case 1: gender = .F
         default: break
         }
-        appStore.dispatch(changeUserProfileGenderAction(gender: gender))
+        appStore.dispatch(UserProfileState.changeUserProfileGenderAction(gender: gender))
     }
     
     /**
@@ -232,7 +232,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
      * - Parameter sender: Source button
      */
     @IBAction func onUpdateButtonClick(_ sender: UIButton) {
-        _ = updateUserProfileAction().exec()
+        _ = UserProfileState.updateUserProfileAction().exec()
     }
 
     /**
@@ -241,7 +241,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
      * - Parameter sender: Source button
      */
     @IBAction func onCancelButtonClick(_ sender: UIButton) {
-        _ = cancelUserProfileUpdateAction().exec()
+        _ = UserProfileState.cancelUserProfileUpdateAction().exec()
     }
     
     /**
@@ -282,7 +282,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
         let date = Double(sender.date.timeIntervalSince1970)
         print(date)
         if date > 0 {
-            appStore.dispatch(changeUserProfileBirthDateAction(birthDate: Int(date)))
+            appStore.dispatch(UserProfileState.changeUserProfileBirthDateAction(birthDate: Int(date)))
         }
     }
     
@@ -308,7 +308,7 @@ extension UserProfileViewController: UIImagePickerControllerDelegate, UINavigati
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             if let data = UIImagePNGRepresentation(image) {
-                appStore.dispatch(changeUserProfileProfileImageAction(profileImage: data))
+                appStore.dispatch(UserProfileState.changeUserProfileProfileImageAction(profileImage: data))
                 picker.dismiss(animated: true, completion: nil)
             }
         }
@@ -367,7 +367,7 @@ extension UserProfileViewController: UIPickerViewDelegate, UIPickerViewDataSourc
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if row < appStore.state.userProfile.rooms.count {
             let room = appStore.state.userProfile.rooms[row]
-            appStore.dispatch(changeUserProfileDefaultRoomAction(defaultRoom: room["_id"]!))
+            appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom: room["_id"]!))
         }
     }
 }
@@ -389,11 +389,11 @@ extension UserProfileViewController: UITextFieldDelegate {
         var text = textField.text!
         text.replaceSubrange(Range<String.Index>.init(range, in: text)!, with: string)
         switch textField.tag {
-        case textFields.LOGIN.rawValue: appStore.dispatch(changeUserProfileLoginAction(login: text))
-        case textFields.CONFIRM_PASSWORD.rawValue: appStore.dispatch(changeUserProfileConfirmPasswordAction(confirmPassword: text))
-        case textFields.PASSWORD.rawValue: appStore.dispatch(changeUserProfilePasswordAction(password: text))
-        case textFields.FIRST_NAME.rawValue: appStore.dispatch(changeUserProfileFirstNameAction(firstName: text))
-        case textFields.LAST_NAME.rawValue: appStore.dispatch(changeUserProfileLastNameAction(lastName: text))
+        case textFields.LOGIN.rawValue: appStore.dispatch(UserProfileState.changeUserProfileLoginAction(login: text))
+        case textFields.CONFIRM_PASSWORD.rawValue: appStore.dispatch(UserProfileState.changeUserProfileConfirmPasswordAction(confirmPassword: text))
+        case textFields.PASSWORD.rawValue: appStore.dispatch(UserProfileState.changeUserProfilePasswordAction(password: text))
+        case textFields.FIRST_NAME.rawValue: appStore.dispatch(UserProfileState.changeUserProfileFirstNameAction(firstName: text))
+        case textFields.LAST_NAME.rawValue: appStore.dispatch(UserProfileState.changeUserProfileLastNameAction(lastName: text))
         case textFields.BIRTHDATE.rawValue: return false
         case textFields.DEFAULT_ROOM.rawValue: return false
         default: break

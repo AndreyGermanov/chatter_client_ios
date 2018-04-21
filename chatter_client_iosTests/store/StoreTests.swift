@@ -20,7 +20,7 @@ class StoreTests: XCTestCase,StoreSubscriber {
 
     override func setUp() {
         super.setUp()
-        appStore.dispatch(ChangeActivityAction(activity:AppScreens.LOGIN_FORM))
+        appStore.dispatch(AppState.ChangeActivityAction(activity:AppScreens.LOGIN_FORM))
         appStore.subscribe(self)
     }
 
@@ -29,7 +29,7 @@ class StoreTests: XCTestCase,StoreSubscriber {
     }
     
     func testChangeActivity() {
-        appStore.dispatch(ChangeActivityAction(activity:AppScreens.USER_PROFILE))
+        appStore.dispatch(AppState.ChangeActivityAction(activity:AppScreens.USER_PROFILE))
         XCTAssertEqual(AppScreens.USER_PROFILE, appStore.state.current_activity)
     }
 }
