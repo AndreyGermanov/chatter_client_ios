@@ -28,76 +28,6 @@ enum PrivateChatScreenMode:Int {
 }
 
 /**
- * Structure represents Chat room
- */
-class ChatRoom: Codable {
-    /// Unique ID of room
-    let id: String
-    /// Name of room
-    var name: String
-}
-
-/**
- * Structure represents chat message, which sent "from_user" either to specified "to_room"
- * or to private chat if no room specified
- */
-class ChatMessage: Codable {
-    /// Unique ID of message
-    let id: String
-    /// Time of message
-    let timestamp: Int
-    /// Link to user sender of message
-    let from_user: ChatUser
-    /// Link to user receiver of message
-    let to_user: ChatUser? 
-    /// Link to room, to which message sent (optional)
-    let room: ChatRoom?
-    /// Message text (optional)
-    let message: String?
-    /// Attached image (optional)
-    var attachment: Data?
-    /// True if message is unread by current user
-    var unread: Bool = true
-}
-
-/***
- * Definitions of user roles
- */
-enum UserRole:Int {
-    case USER = 1, ADMIN = 2
-}
-
-/**
- * Structure represents user in chat
- */
-class ChatUser: Codable {
-    /// Unique ID of user
-    let id: String
-    /// User login name
-    var login: String
-    /// User email
-    var email: String
-    /// User First Name
-    var first_name: String
-    /// User Last Name
-    var last_name: String
-    /// User Gender
-    var gender: String
-    /// Date of Birth of user
-    var birthDate: Int
-    /// Last activity time of user (when he send last message), or login or logout
-    var lastActivityTime: Int
-    /// Room, in which user currently presents
-    var room: ChatRoom?
-    /// Is user login and active right now
-    var isLogin: Bool = false
-    /// Role of user
-    var role: Int
-    /// Profile image
-    var profileImage: Data?
-}
-
-/**
  * Holds Redux application state for Chat screen
  */
 struct ChatState {
@@ -106,9 +36,9 @@ struct ChatState {
      * State variables *
      *******************/
     
-    var rooms: [ChatRoom]? = nil
-    var users: [ChatUser]? = nil
-    var messages: [ChatMessage]? = nil
+    var rooms = [ChatRoom]()
+    var users = [ChatUser]()
+    var messages = [ChatMessage]()
     
     var currentRoom: ChatRoom? = nil
     var selectedUser: ChatUser? = nil
@@ -178,28 +108,6 @@ struct ChatState {
     
     struct changeErrors: ChatAction {
         let errors: [String:ChatScreenError]
-    }
-    
-    /******************
-     * Helper methods *
-     ******************/
-    
-    /**
-     * Method returns room by id
-     *
-     * - Parameter id: ID of room to find
-     * - Returns 'ChatRoom' object with specified ID or nil if not found
-     */
-    func getRoomById(id:String) -> ChatRoom? {
-        if let rooms = self.rooms {
-            let selectedRooms = rooms.filter { it in
-                it.id == id
-            }
-            if selectedRooms.count == 1 {
-                return selectedRooms[0]
-            }
-        }
-        return nil
     }
 }
 
