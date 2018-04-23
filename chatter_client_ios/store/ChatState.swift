@@ -115,6 +115,8 @@ struct ChatState {
 enum ChatScreenError: String {
     case RESULT_OK = "RESULT_OK"
     case RESULT_ERROR_CONNECTION_ERROR = "RESULT_ERROR_CONNECTION_ERROR"
+    case INTERNAL_ERROR = "INTERNAL ERROR"
+    case AUTHENTICATION_ERROR = "AUTHENTICATION_ERROR"
     case RESULT_ERROR_UNKNOWN_ERROR = "RESULT_ERROR_UNKNOWN_ERROR"
 }
 
@@ -125,6 +127,8 @@ extension ChatScreenError: RawRepresentable {
         switch self {
         case .RESULT_ERROR_CONNECTION_ERROR: return "Connection error."
         case .RESULT_ERROR_UNKNOWN_ERROR: return "Unknown error. Please, call support"
+        case .INTERNAL_ERROR: return "System error. Please, call support"
+        case .AUTHENTICATION_ERROR: return "Authentication error. Please, login again"
         case .RESULT_OK: return ""
         }
     }

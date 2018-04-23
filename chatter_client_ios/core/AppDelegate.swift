@@ -18,10 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         msgCenter.run()
+        if let user_id = UserDefaults.standard.string(forKey: "user_id") {
+            if let session_id = UserDefaults.standard.string(forKey: "session_id") {
+                LoginFormState.loginUserAction().exec(user_id:user_id,session_id:session_id)
+            }
+        }
         //let tester = MessageCenterTests(msgCenter:msgCenter)
         //tester.testTransferImage()
-        
-        // Override point for customization after application launch.
         return true
     }
 
