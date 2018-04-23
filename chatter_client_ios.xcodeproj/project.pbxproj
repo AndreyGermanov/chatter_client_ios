@@ -36,6 +36,8 @@
 		CE9BC0A2208C83690056081A /* ModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC0A1208C83690056081A /* ModelTest.swift */; };
 		CE9BC0A4208D0A260056081A /* ChatUserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC0A3208D0A260056081A /* ChatUserTests.swift */; };
 		CE9BC0A6208D1D160056081A /* ChatRoomTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC0A5208D1D150056081A /* ChatRoomTests.swift */; };
+		CE9BC0A8208DF6E60056081A /* ChatMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC0A7208DF6E50056081A /* ChatMessageTests.swift */; };
+		CE9BC0AA208E5DA10056081A /* ChatActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC0A9208E5DA10056081A /* ChatActions.swift */; };
 		CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */; };
 		CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06F20656D4900D1302B /* LoginFormActions.swift */; };
 		CEC7C0742066215600D1302B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0732066215600D1302B /* Utils.swift */; };
@@ -108,6 +110,8 @@
 		CE9BC0A1208C83690056081A /* ModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTest.swift; sourceTree = "<group>"; };
 		CE9BC0A3208D0A260056081A /* ChatUserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUserTests.swift; sourceTree = "<group>"; };
 		CE9BC0A5208D1D150056081A /* ChatRoomTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomTests.swift; sourceTree = "<group>"; };
+		CE9BC0A7208DF6E50056081A /* ChatMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageTests.swift; sourceTree = "<group>"; };
+		CE9BC0A9208E5DA10056081A /* ChatActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatActions.swift; sourceTree = "<group>"; };
 		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CEC7C06F20656D4900D1302B /* LoginFormActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormActions.swift; sourceTree = "<group>"; };
 		CEC7C0732066215600D1302B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -328,6 +332,7 @@
 				CE9BC0A1208C83690056081A /* ModelTest.swift */,
 				CE9BC0A3208D0A260056081A /* ChatUserTests.swift */,
 				CE9BC0A5208D1D150056081A /* ChatRoomTests.swift */,
+				CE9BC0A7208DF6E50056081A /* ChatMessageTests.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -346,6 +351,7 @@
 				CEC7C06F20656D4900D1302B /* LoginFormActions.swift */,
 				CEC7C07D2066B5A000D1302B /* UserActions.swift */,
 				CEC7C07F2066BE8300D1302B /* UserProfileActions.swift */,
+				CE9BC0A9208E5DA10056081A /* ChatActions.swift */,
 			);
 			path = actions;
 			sourceTree = "<group>";
@@ -683,10 +689,12 @@
 				CEC7C07E2066B5A000D1302B /* UserActions.swift in Sources */,
 				CE0AB4B32063804C0071DE82 /* MessageCenterTests.swift in Sources */,
 				CE0AB4AB20603A7C0071DE82 /* StoreTests.swift in Sources */,
+				CE9BC0AA208E5DA10056081A /* ChatActions.swift in Sources */,
 				CE9BC0A2208C83690056081A /* ModelTest.swift in Sources */,
 				CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */,
 				CE9BC0A4208D0A260056081A /* ChatUserTests.swift in Sources */,
 				CE9BC0A6208D1D160056081A /* ChatRoomTests.swift in Sources */,
+				CE9BC0A8208DF6E60056081A /* ChatMessageTests.swift in Sources */,
 				CEC7C0802066BE8300D1302B /* UserProfileActions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -118,6 +118,30 @@ struct UserState {
         /// New default_room field value
         let default_room: String
     }
+    
+    /**
+     * Utility function which cleans all user information
+     * and logs him out
+     */
+    static func logoutUser() {
+        appStore.dispatch(UserState.changeUserEmailAction(email: ""))
+        appStore.dispatch(UserState.changeUserLoginAction(login: ""))
+        appStore.dispatch(UserState.changeUserGenderAction(gender: .M))
+        appStore.dispatch(UserState.changeUserBirthDateAction(birthDate: 0))
+        appStore.dispatch(UserState.changeUserUserIdAction(user_id: ""))
+        appStore.dispatch(UserState.changeUserSessionIdAction(session_id:""))
+        appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: ""))
+        appStore.dispatch(UserState.changeUserFirstNameAction(firstName: ""))
+        appStore.dispatch(UserState.changeUserLastNameAction(lastName:""))
+        appStore.dispatch(UserState.changeUserIsLoginAction(isLogin: false))
+        appStore.dispatch(UserState.changeUserProfileImageAction(profileImage: nil))
+        UserDefaults.standard.removeObject(forKey: "user_id")
+        UserDefaults.standard.removeObject(forKey: "session_id")
+        if (appStore.state.current_activity != .LOGIN_FORM) {
+            appStore.dispatch(AppState.ChangeActivityAction(activity: .LOGIN_FORM))
+        }
+        appStore.dispatch(LoginFormState.changeLoginFormShowProgressIndicatorAction(progressIndicator: false))
+    }
 }
 
 

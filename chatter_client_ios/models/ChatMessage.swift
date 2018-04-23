@@ -69,5 +69,20 @@ class ChatMessage: Model {
     static func getById(_ id:String) -> ChatMessage? {
         return getModelById(id: id, collection: appStore.state.chat.messages)
     }
+    
+    /**
+     * Method returns total number of unread messages, sent to active user or to
+     * room of current user
+     *
+     * Returns: Int, number of unread messages
+     */
+    static func getUnreadCount() -> Int {
+        var result = 0
+        if let user = ChatUser.getById(appStore.state.user.user_id) {
+            result = appStore.state.chat.messages.filter {$0.unread == true &&
+                ($0.to_user != nil && $0.to_user!.id == user.id) || ($0.room != nil && $0.room!.id == user.room!.id)}.count
+        }
+        return result
+    }
 
 }

@@ -203,6 +203,12 @@ class MessageCenter: NSObject, WebSocketDelegate {
             return nil
         } else {
             request["request_timestamp"] = request_timestamp
+            if (!appStore.state.user.user_id.isEmpty) {
+                request["user_id"] = appStore.state.user.user_id
+            }
+            if (!appStore.state.user.session_id.isEmpty) {
+                request["session_id"] = appStore.state.user.session_id
+            }
             Logger.log(level:LogLevel.DEBUG,message:"Added request with \(request_id) to pendingRequests queue",
                 className:"MessageCenter",methodName:"addToPendingRequests")
             self.pendingRequests[request_id] = request
@@ -233,61 +239,66 @@ class MessageCenter: NSObject, WebSocketDelegate {
      */
     func processPendingRequests() {
         for (request_id,request) in self.pendingRequests {
-            if let request = request as? [String:Any] {
-                if let sender = request["sender"] as? MessageCenterResponseListener {
-                    var message_to_send = [String:Any]()
-                    var files_to_send = [Data]()
-                    for (field_index,field) in request {
-                        if (field_index != "sender") {
-                            if (field is Data) {
-                                files_to_send.append(field as! Data)
-                            } else {
-                                message_to_send[field_index] = field
-                            }
-                        }
-                    }
-                    var failed_to_send_message = false
-                    if message_to_send.count>0 {
-                        do {
-                            self.lastRequestText = (try String(data:JSONSerialization.data(withJSONObject: message_to_send),encoding: .utf8))!
-                        } catch {
-                            Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Failed to construct JSON from message",
-                                       className:"MessageCenter",methodName:"processPendingRequests")
-                            sender.handleWebSocketResponse(request_id: request_id, response: [
-                                "status": "error",
-                                "status_code": MessageCenterErrorCodes.RESULT_ERROR_REQUEST_PARSE_ERROR,
-                                "request": request
-                            ])
-                            failed_to_send_message = true
-                        }
-                    }
-                    if (!failed_to_send_message) {
-                        self.lastRequestObject = message_to_send
-                        _ = self.addToRequestsWaitingResponses(request)
-                        if self.isConnected() && !self.testingMode {
-                            self.ws.write(string:self.lastRequestText)
-                            if (files_to_send.count>0 && !failed_to_send_message) {
-                                for binary in files_to_send {
-                                    self.ws.write(data: binary)
-                                }
-                            }
-                            Logger.log(level:LogLevel.DEBUG,message:"Sent request to WebSocketServer - "+self.lastRequestText,
-                                       className:"MessageCenter",methodName:"processPendingRequests")
-                            _ = self.removeFromPendingRequests(request_id)
-                        } else if self.testingMode {
-                            _ = self.removeFromPendingRequests(request_id)                            
-                        }
+            guard let request = request as? [String:Any] else {
+                continue
+            }
+            guard let sender = request["sender"] as? MessageCenterResponseListener else {
+                Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Incorrect sender. Request: \(request)",
+                           className:"MessageCenter",methodName:"processPendingRequests")
+                _ = self.removeFromPendingRequests(request_id)
+                continue
+            }
+            var message_to_send = [String:Any]()
+            var files_to_send = [Data]()
+            for (field_index,field) in request {
+                if (field_index != "sender") {
+                    if (field is Data) {
+                        files_to_send.append(field as! Data)
                     } else {
-                        Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Message is empty",
-                                   className:"MessageCenter",methodName:"processPendingRequests")
-                        _ = self.removeFromPendingRequests(request_id)
+                        message_to_send[field_index] = field
                     }
-                } else {
-                    Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Incorrect sender",
-                               className:"MessageCenter",methodName:"processPendingRequests")
-                    _ = self.removeFromPendingRequests(request_id)
                 }
             }
+            var failed_to_send_message = false
+            if (message_to_send.count == 0) {
+                continue
+            }
+            do {
+                self.lastRequestText = (try String(data:JSONSerialization.data(withJSONObject: message_to_send),encoding: .utf8))!
+            } catch {
+                Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Failed to construct JSON from message \(message_to_send)",
+                           className:"MessageCenter",methodName:"processPendingRequests")
+                sender.handleWebSocketResponse(request_id: request_id, response: [
+                    "status": "error",
+                    "status_code": MessageCenterErrorCodes.RESULT_ERROR_REQUEST_PARSE_ERROR,
+                    "request": request
+                ])
+                failed_to_send_message = true
+            }
+            if (failed_to_send_message) {
+                Logger.log(level:LogLevel.WARNING,message:"Failed to send message. Message is empty",
+                           className:"MessageCenter",methodName:"processPendingRequests")
+                _ = self.removeFromPendingRequests(request_id)
+                continue
+            }
+            if (!self.isConnected()) {
+                continue
+            }
+            self.lastRequestObject = message_to_send
+             _ = self.addToRequestsWaitingResponses(request)
+            if (self.testingMode) {
+                _ = self.removeFromPendingRequests(request_id)
+                continue
+            }
+            self.ws.write(string:self.lastRequestText)
+            if (files_to_send.count>0 && !failed_to_send_message) {
+                for binary in files_to_send {
+                    self.ws.write(data: binary)
+                }
+            }
+            Logger.log(level:LogLevel.DEBUG,message:"Sent request to WebSocketServer - "+self.lastRequestText,
+                       className:"MessageCenter",methodName:"processPendingRequests")
+            _ = self.removeFromPendingRequests(request_id)
         }
     }
 
@@ -509,48 +520,64 @@ class MessageCenter: NSObject, WebSocketDelegate {
      */
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
         self.lastResponseText = text
-        if (text.count>0) {
-            Logger.log(level:LogLevel.DEBUG,message:"Received response from WebSocketServer "+self.lastResponseText,
-                       className:"MessageCenter",methodName:"websocketDidReceiveMessage")
-            do {
-                let result = try JSONSerialization.jsonObject(with: text.data(using: .utf8)!,
-                                                              options: JSONSerialization.ReadingOptions.mutableContainers)
-                if var response = result as? [String:Any] {
-                    self.lastResponseObject = response
-                    if response["request_id"] != nil {
-                        let request_id = response["request_id"] as! String
-                        if let request = self.requestsWaitingResponses[request_id] as? [String:Any] {
-                            response["request"] = request
-                            if let sender = request["sender"] as? MessageCenterResponseListener {
-                                Logger.log(level:LogLevel.DEBUG,message:"Run handler for request \(request_id) for incoming text message",
-                                    className:"MessageCenter",methodName:"websocketDidReceiveMessage")
-                                sender.handleWebSocketResponse(request_id: request_id, response: response)
-                            } else {
-                                Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) does not have correct correct handler -"+self.lastResponseText,
-                                           className:"MessageCenter",methodName:"websocketDidReceiveMessage")
-                            }
-                        } else {
-                            Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) not found in waiting requests queue -"+self.lastResponseText+". Queue content: \(self.requestsWaitingResponses).",
-                                       className:"MessageCenter",methodName:"websocketDidReceiveMessage")
-                        }
-                    } else {
-                        Logger.log(level:LogLevel.WARNING,message:"No request_id in received JSON response - "+self.lastResponseText,
-                                   className:"MessageCenter", methodName:"websocketDidReceiveMessage")
-                    }
-                } else {
-                    self.lastResponseObject = nil
-                    Logger.log(level:LogLevel.WARNING,message:"Incorrect JSON in last response received - "+self.lastResponseText,
-                               className:"MessageCenter", methodName:"websocketDidReceiveMessage")
-                }
-            } catch {
-                Logger.log(level:LogLevel.WARNING,message:"Incorrect JSON in last response received - "+self.lastResponseText,
-                           className:"MessageCenter", methodName:"websocketDidReceiveMessage")
-            }
-        } else {
+        if text.isEmpty {
             Logger.log(level:LogLevel.WARNING,message:"Empty WebSocket response received",
                        className:"MessageCenter", methodName:"websocketDidReceiveMessage")
+            return
         }
-    }
+        Logger.log(level:LogLevel.DEBUG,message:"Received response from WebSocketServer "+self.lastResponseText,
+                   className:"MessageCenter",methodName:"websocketDidReceiveMessage")
+        var result:Any?
+        do {
+            result = try JSONSerialization.jsonObject(with: text.data(using: .utf8)!,
+                                                          options: JSONSerialization.ReadingOptions.mutableContainers)
+        } catch {
+            Logger.log(level:LogLevel.WARNING,message:"Incorrect JSON in last response received - "+self.lastResponseText,
+                       className:"MessageCenter", methodName:"websocketDidReceiveMessage")
+            return
+        }
+        var response = result as? [String:Any]
+        if response == nil {
+            self.lastResponseObject = nil
+            Logger.log(level:LogLevel.WARNING,message:"Incorrect JSON in last response received - "+self.lastResponseText,
+                       className:"MessageCenter", methodName:"websocketDidReceiveMessage")
+            return
+        }
+        guard let status_code = response!["status_code"] as? String else {
+            Logger.log(level:LogLevel.WARNING,message:"Response does not contain 'status_code",
+                       className:"MessageCenter",methodName:"websocketDidReceiveMessage")
+            return
+        }
+        if status_code == "AUTHENTICATION_ERROR" {
+            UserState.logoutUser()
+            return
+        }
+        self.lastResponseObject = response
+        if response!["request_id"] == nil {
+            Logger.log(level:LogLevel.WARNING,message:"No request_id in received JSON response - "+self.lastResponseText,
+                       className:"MessageCenter", methodName:"websocketDidReceiveMessage")
+            return
+        }
+        let request_id = response!["request_id"] as! String
+        let request = self.requestsWaitingResponses[request_id] as? [String:Any]
+        if request == nil {
+            Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) not found in waiting requests queue - " +
+                self.lastResponseText+". Queue content: \(self.requestsWaitingResponses).",
+                className:"MessageCenter",methodName:"websocketDidReceiveMessage")
+            return
+        }
+        let sender = request!["sender"] as? MessageCenterResponseListener
+        if sender == nil {
+            Logger.log(level:LogLevel.WARNING,message:"Response with request_id \(request_id) does not have correct correct handler - \(self.lastResponseText)",
+                       className:"MessageCenter",methodName:"websocketDidReceiveMessage")
+            return
+        }
+        
+        response!["request"] = request
+        Logger.log(level:LogLevel.DEBUG,message:"Run handler for request \(request_id) for incoming text message",
+            className:"MessageCenter",methodName:"websocketDidReceiveMessage")
+        sender!.handleWebSocketResponse(request_id: request_id, response: response!)
+     }
     
     /**
      * Executes when Message center receives binary file from server
@@ -563,37 +590,41 @@ class MessageCenter: NSObject, WebSocketDelegate {
         _ = self.addToReceivedFiles(data)
         Logger.log(level:LogLevel.DEBUG,message:"Received binary data with checksum \(checksum)",
             className:"MessageCenter",methodName:"websocketDidReceiveData")
-        if let responseObj = self.responsesWaitingFile[checksum] as? [String:Any] {
-            Logger.log(level:LogLevel.DEBUG,message:"Found response for \(checksum) in responsesWaitingFile queue",
-                className:"MessageCenter",methodName:"websocketDidReceiveData")
-            if let response = responseObj["response"] as? [String:Any] {
-                if let request = response["request"] as? [String:Any] {
-                    if (request["request_id"] != nil) {
-                        let request_id = String(describing:request["request_id"])
-                        if let sender = request["sender"] as? MessageCenterResponseListener {
-                            Logger.log(level:LogLevel.DEBUG,message:"Run hander for request \(request_id) for incoming binary data",
-                                className:"MessageCenter",methodName:"websocketDidReceiveData")
-                            sender.handleWebSocketResponse(request_id: request_id, response: response)
-                        } else {
-                            Logger.log(level:LogLevel.WARNING,message:"Response with \(request_id) does not have correct handler",
-                                className:"MessageCenter",methodName:"websocketDidReceiveData")
-                        }
-                    } else {
-                        Logger.log(level:LogLevel.WARNING,message:"Response for file \(checksum) does not have correct request_id",
-                            className:"MessageCenter",methodName:"websocketDidReceiveData")
-                    }
-                } else {
-                    Logger.log(level:LogLevel.WARNING,message:"Could not find link to request for file \(checksum)",
-                        className:"MessageCenter",methodName:"websocketDidReceiveData")
-                }
-            } else {
-                Logger.log(level:LogLevel.WARNING,message:"Could not find link to response object for file \(checksum)",
-                    className:"MessageCenter",methodName:"websocketDidReceiveData")
-            }
-        } else {
+        let responseObj = self.responsesWaitingFile[checksum] as? [String:Any]
+        if responseObj == nil {
             Logger.log(level:LogLevel.DEBUG,message:"Could not find waiting response for file with checksum \(checksum) in responsesWaitingFile queue",
                 className:"MessageCenter",methodName:"websocketDidReceiveData")
+            return
         }
+        Logger.log(level:LogLevel.DEBUG,message:"Found response for \(checksum) in responsesWaitingFile queue",
+            className:"MessageCenter",methodName:"websocketDidReceiveData")
+        let response = responseObj!["response"] as? [String:Any]
+        if (response == nil) {
+            Logger.log(level:LogLevel.WARNING,message:"Could not find link to response object for file \(checksum)",
+                className:"MessageCenter",methodName:"websocketDidReceiveData")
+            return
+        }
+        let request = response!["request"] as? [String:Any]
+        if request == nil {
+            Logger.log(level:LogLevel.WARNING,message:"Could not find link to request for file \(checksum)",
+                className:"MessageCenter",methodName:"websocketDidReceiveData")
+            return
+        }
+        if request!["request_id"] == nil {
+            Logger.log(level:LogLevel.WARNING,message:"Response for file \(checksum) does not have correct request_id",
+                className:"MessageCenter",methodName:"websocketDidReceiveData")
+            return
+        }
+        let request_id = String(describing:request!["request_id"])
+        let sender = request!["sender"] as? MessageCenterResponseListener
+        if sender == nil {
+            Logger.log(level:LogLevel.WARNING,message:"Response with \(request_id) does not have correct handler",
+                className:"MessageCenter",methodName:"websocketDidReceiveData")
+            return
+        }
+        Logger.log(level:LogLevel.DEBUG,message:"Run hander for request \(request_id) for incoming binary data",
+            className:"MessageCenter",methodName:"websocketDidReceiveData")
+        sender!.handleWebSocketResponse(request_id: request_id, response: response!)
     }
 }
 
@@ -625,5 +656,6 @@ protocol MessageCenterResponseListener {
  *  Message Center errors definitions
  */
 enum MessageCenterErrorCodes:String {
+    case AUTHENTICATION_ERROR = "Authentication error. Please, login again"
     case RESULT_ERROR_REQUEST_PARSE_ERROR = "Could not encode request to send to server"
 }

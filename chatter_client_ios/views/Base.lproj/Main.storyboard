@@ -617,24 +617,49 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hzw-Sr-2wW">
-                                <rect key="frame" x="63" y="20" width="248" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Abx-IQ-8p2">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <items>
+                                    <navigationItem title="Chat" id="jfT-R9-W8H">
+                                        <barButtonItem key="rightBarButtonItem" title="Logout" id="Rgs-Cn-Kln">
+                                            <connections>
+                                                <action selector="logoutBtnClick:" destination="w9I-AF-Uiu" id="4tW-Ko-53J"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vXM-Os-2el">
+                                <rect key="frame" x="16" y="106" width="343" height="561"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hzw-Sr-2wW">
+                                <rect key="frame" x="64" y="70" width="247" height="29"/>
                                 <segments>
                                     <segment title="Public"/>
                                     <segment title="Private"/>
                                     <segment title="Profile"/>
                                 </segments>
                             </segmentedControl>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vXM-Os-2el">
-                                <rect key="frame" x="16" y="56" width="343" height="611"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="9k6-4N-F02" firstAttribute="trailing" secondItem="hzw-Sr-2wW" secondAttribute="trailing" constant="64" id="4uq-c8-5kI"/>
+                            <constraint firstItem="Abx-IQ-8p2" firstAttribute="leading" secondItem="9k6-4N-F02" secondAttribute="leading" id="NUZ-h2-H9s"/>
+                            <constraint firstItem="9k6-4N-F02" firstAttribute="trailing" secondItem="vXM-Os-2el" secondAttribute="trailing" constant="16" id="Pfg-NB-j7l"/>
+                            <constraint firstItem="hzw-Sr-2wW" firstAttribute="top" secondItem="Abx-IQ-8p2" secondAttribute="bottom" constant="6" id="SDW-je-IRn"/>
+                            <constraint firstItem="vXM-Os-2el" firstAttribute="top" secondItem="hzw-Sr-2wW" secondAttribute="bottom" constant="8" id="X3b-Pw-75n"/>
+                            <constraint firstItem="Abx-IQ-8p2" firstAttribute="trailing" secondItem="9k6-4N-F02" secondAttribute="trailing" id="had-mD-bKc"/>
+                            <constraint firstItem="hzw-Sr-2wW" firstAttribute="leading" secondItem="9k6-4N-F02" secondAttribute="leading" constant="64" id="kJ5-3w-itF"/>
+                            <constraint firstItem="vXM-Os-2el" firstAttribute="leading" secondItem="9k6-4N-F02" secondAttribute="leading" constant="16" id="pWu-0p-wvo"/>
+                            <constraint firstItem="Abx-IQ-8p2" firstAttribute="top" secondItem="9k6-4N-F02" secondAttribute="top" id="v8h-yn-vc5"/>
+                            <constraint firstItem="vXM-Os-2el" firstAttribute="bottom" secondItem="9k6-4N-F02" secondAttribute="bottom" id="wfJ-uW-tuR"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="9k6-4N-F02"/>
                     </view>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="chatLoginSegue" id="6OW-Sc-9zU"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ehr-hQ-635" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -645,6 +670,6 @@
         <image name="profile.png" width="539" height="527"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0C7-s1-GcJ"/>
+        <segue reference="N8A-Vo-4Tz"/>
     </inferredMetricsTieBreakers>
 </document>
