@@ -43,6 +43,8 @@ class ChatUser: Model {
     var role: Int = 1
     /// Profile image
     var profileImage: Data? = nil
+    /// Profile image checksum
+    var profileImageChecksum: Int = 0
     
     /**
      * Method returns instance of this class by ID

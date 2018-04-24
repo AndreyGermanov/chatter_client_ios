@@ -572,7 +572,6 @@ class MessageCenter: NSObject, WebSocketDelegate {
                        className:"MessageCenter",methodName:"websocketDidReceiveMessage")
             return
         }
-        
         response!["request"] = request
         Logger.log(level:LogLevel.DEBUG,message:"Run handler for request \(request_id) for incoming text message",
             className:"MessageCenter",methodName:"websocketDidReceiveMessage")

@@ -32,3 +32,24 @@ func showAlert(_ message:String) -> UIAlertController {
     dialog.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     return dialog
 }
+
+/**
+ * Parses integer field from Any and returns either integer or nil
+ *
+ * - Parameter obj: Object to parse
+ * - Returns: Int value or nil
+ */
+func parseAnyToInt(_ obj:Any?) -> Int? {
+    if let obj = obj {
+        if obj is String {
+            if let result = Int(obj as! String) {
+                return result
+            }
+        }
+        if obj is NSNumber {
+            return Int(truncating:obj as! NSNumber)
+        }
+        Logger.log(level:LogLevel.WARNING,message:"Could not convert \(obj) to Int",className:"",methodName:"parseAnyToInt")
+    }
+    return nil
+}
