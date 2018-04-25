@@ -173,15 +173,20 @@ struct ChatState {
      * Action used to load users list from server, with session information
      * and profile images
      */
-    struct loadUsers: ChatAction, MessageCenterResponseListener {
+    class loadUsers: ChatAction, MessageCenterResponseListener {
         
         /// Link to message center instance, used to process request
         var messageCenter: MessageCenter = (UIApplication.shared.delegate as! AppDelegate).msgCenter
         
+        /// Callback function, which executes after successfull response received
+        var callback: (()->())?
+        
         /**
          * Action executor. Used to create request to WebSocket server and place it to pendingRequests queue
+         *
+         * - Parameter callback: Lambda function which executed after successfull response to this action received
          */
-        func exec() {
+        func exec(callback: (()->())?=nil) {
             Logger.log(level:LogLevel.DEBUG,message:"Started 'load users' action.",className:"ChatState",methodName:"loadUsers.exec")
             if (appStore.state.chat.showProgressIndicator) {
                 Logger.log(level:LogLevel.WARNING,message:"Request already going. Could not send until finish",className:"ChatState",methodName:"loadUsers.exec")
@@ -198,6 +203,7 @@ struct ChatState {
                 Logger.log(level:LogLevel.WARNING,message:"Could not prepare request to MessageCenter",className:"ChatState",methodName:"loadUsers.exec")
                 return
             }
+            self.callback = callback
             appStore.dispatch(ChatState.changeShowProgressIndicator(showProgressIndicator: true))
             Logger.log(level:LogLevel.DEBUG,message:"Sent request to MessageCenter. Request body: \(request)",className:"ChatState",methodName:"loadUsers.exec")
         }
@@ -239,6 +245,11 @@ struct ChatState {
                 Logger.log(level:LogLevel.DEBUG,message:"No changes in users list after loading data. No need to update chat screen state",
                             className:"ChatState",methodName:"loadUsers.handleWebSocketResponse")
             }
+            _ = messageCenter.removeFromRequestsWaitingResponses(request_id)
+            if callback != nil {
+                callback!()
+            }
+            self.callback = nil
         }
         
         /**
@@ -326,11 +337,11 @@ struct ChatState {
             if let status_code_string = response["status_code"] as? String {
                 if let status_code = ChatScreenError(rawValue: status_code_string) {
                     appStore.dispatch(ChatState.changeErrors(errors:["general":status_code]))
-                    Logger.log(level:LogLevel.DEBUG,message:"User login error: \(status_code.rawValue)",
+                    Logger.log(level:LogLevel.DEBUG,message:"Found Error: \(status_code.rawValue)",
                         className:"ChatState",methodName:"validateResponse")
                 } else {
                     appStore.dispatch(ChatState.changeErrors(errors:["general":.RESULT_ERROR_UNKNOWN_ERROR]))
-                    Logger.log(level:LogLevel.DEBUG,message:"User login error: \(ChatScreenError.RESULT_ERROR_UNKNOWN_ERROR.rawValue)",
+                    Logger.log(level:LogLevel.DEBUG,message:"Unknown error: \(ChatScreenError.RESULT_ERROR_UNKNOWN_ERROR.rawValue)",
                         className:"ChatState",methodName:"validateResponse")
                 }
             } else {
@@ -366,23 +377,18 @@ struct ChatState {
             users.append(user)
             result = true
         }
-        guard let login = data["login"] as? String else {
-            Logger.log(level:LogLevel.WARNING,message:"No login field in user data. Could not process it. Data: \(data)",
-                className:"ChatState",methodName:"updateUser")
-            return false
+        appStore.state.chat.users = users
+        if let login = data["login"] as? String {
+            if user.login != login && !login.isEmpty {
+                user.login = login
+                result = true
+            }
         }
-        if user.login != login {
-            user.login = login
-            result = true
-        }
-        guard let email = data["email"] as? String else {
-            Logger.log(level:LogLevel.WARNING,message:"No email field in user data. Could not process it. Data: \(data)",
-                className:"ChatState",methodName:"updateUser")
-            return false
-        }
-        if user.email != email {
-            user.email = email
-            result = true
+        if let email = data["email"] as? String {
+            if user.email != email && !email.isEmpty {
+                user.email = email
+                result = true
+            }
         }
         if let room_id = data["room"] as? String {
             if let room = ChatRoom.getById(room_id) {
@@ -408,19 +414,19 @@ struct ChatState {
             }
         }
         if let first_name = data["first_name"] as? String {
-            if user.first_name != first_name {
+            if user.first_name != first_name && !first_name.isEmpty {
                 user.first_name = first_name
                 result = true
             }
         }
         if let last_name = data["last_name"] as? String {
-            if user.last_name != last_name {
+            if user.last_name != last_name && !last_name.isEmpty {
                 user.last_name = last_name
                 result = true
             }
         }
         if let gender = data["gender"] as? String {
-            if user.gender != gender {
+            if user.gender != gender && ["M","F"].contains(gender) {
                 user.gender = gender
                 result = true
             }
@@ -436,30 +442,47 @@ struct ChatState {
                 user.isLogin = isLogin
                 result = true
             }
+        } else if let isLoginString = data["isLogin"] as? String {
+            let isLogin = isLoginString.boolValue
+            if user.isLogin != isLogin {
+                user.isLogin = isLogin
+            }
         }
         if let lastActivityTime = parseAnyToInt(data["lastActivityTime"]) {
-            if user.lastActivityTime != lastActivityTime {
+            if user.lastActivityTime != lastActivityTime && lastActivityTime>0 {
                 user.lastActivityTime = lastActivityTime
                 result = true
             }
         }
         if let profileImageChecksum = parseAnyToInt(data["profileImageChecksum"]) {
-            if user.profileImageChecksum != profileImageChecksum {
+            if user.profileImageChecksum != profileImageChecksum && profileImageChecksum>0 {
                 user.profileImageChecksum = profileImageChecksum
             }
         }
-        if (user.profileImageChecksum>0 && response != nil) {
-            if (user.profileImage == nil || Int(user.profileImage!.bytes.crc32()) != user.profileImageChecksum) {
-                if let profileImage =  messageCenter.receivedFiles[user.profileImageChecksum] as? Data {
-                    user.profileImage = profileImage
-                    result = true
-                } else {
-                    let request = messageCenter.addToResponsesWaitingFile(checksum: user.profileImageChecksum, response: response!)
-                    Logger.log(level:LogLevel.DEBUG,message:"Added response to 'responsesWaitingFileQueue' to wait profile image for user. " +
-                        "Response body: \(request)",className:"ChatState",methodName:"updateUser")
-                }
-            }
+        if (user.profileImageChecksum == 0 || response == nil ||
+            (user.profileImage != nil && Int(user.profileImage!.bytes.crc32()) == user.profileImageChecksum)) {
+            return result
         }
+        guard let profileImageRecord = messageCenter.receivedFiles[user.profileImageChecksum] as? [String:Any]  else {
+            let request = messageCenter.addToResponsesWaitingFile(checksum: user.profileImageChecksum, response: response!)
+            Logger.log(level:LogLevel.DEBUG,message:"Added response to 'responsesWaitingFileQueue' to wait profile image for \(user.login). " +
+                "Response body: \(request)",className:"ChatState",methodName:"updateUser")
+            return result
+        }
+        guard let profileImage =  profileImageRecord["data"] as? Data else {
+            Logger.log(level:LogLevel.DEBUG,message:"Could not parse profileImage for checksum \(user.profileImageChecksum)",
+                className:"ChatState",methodName:"updateUser")
+            _ = messageCenter.removeFromReceivedFiles(user.profileImageChecksum)
+            return result
+        }
+        Logger.log(level:LogLevel.DEBUG,message:"Set received file with checksum \(user.profileImageChecksum) as profile image for \(user.login)",
+            className:"ChatState",methodName:"updateUser")
+        user.profileImage = profileImage
+        result = true
+        if messageCenter.responsesWaitingFile[user.profileImageChecksum] != nil {
+            _ = messageCenter.removeFromResponsesWaitingFile(user.profileImageChecksum)
+        }
+        _ = messageCenter.removeFromReceivedFiles(user.profileImageChecksum)
         return result
     }
 }
@@ -468,7 +491,7 @@ struct ChatState {
 enum ChatScreenError: String {
     case RESULT_OK = "RESULT_OK"
     case RESULT_ERROR_CONNECTION_ERROR = "RESULT_ERROR_CONNECTION_ERROR"
-    case INTERNAL_ERROR = "INTERNAL ERROR"
+    case INTERNAL_ERROR = "INTERNAL_ERROR"
     case AUTHENTICATION_ERROR = "AUTHENTICATION_ERROR"
     case RESULT_ERROR_UNKNOWN_ERROR = "RESULT_ERROR_UNKNOWN_ERROR"
 }

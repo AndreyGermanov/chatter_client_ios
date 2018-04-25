@@ -53,3 +53,13 @@ func parseAnyToInt(_ obj:Any?) -> Int? {
     }
     return nil
 }
+
+/**
+ * Extension to String class which converts String to Bool
+ */
+extension String {
+    var boolValue: Bool {
+        return NSString(string: self).boolValue
+    }
+}
+

@@ -38,6 +38,16 @@
 		CE9BC0A6208D1D160056081A /* ChatRoomTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC0A5208D1D150056081A /* ChatRoomTests.swift */; };
 		CE9BC0A8208DF6E60056081A /* ChatMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC0A7208DF6E50056081A /* ChatMessageTests.swift */; };
 		CE9BC0AA208E5DA10056081A /* ChatActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC0A9208E5DA10056081A /* ChatActions.swift */; };
+		CE9BC0AE209063040056081A /* simp1.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0AD209063030056081A /* simp1.png */; };
+		CE9BC0B32090631A0056081A /* simp4.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0AF209063190056081A /* simp4.png */; };
+		CE9BC0B42090631A0056081A /* simp5.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0B0209063190056081A /* simp5.png */; };
+		CE9BC0B52090631A0056081A /* simp2.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0B1209063190056081A /* simp2.png */; };
+		CE9BC0B62090631A0056081A /* simp3.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0B22090631A0056081A /* simp3.png */; };
+		CE9BC0B7209079240056081A /* simp2.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0B1209063190056081A /* simp2.png */; };
+		CE9BC0B82090792A0056081A /* simp3.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0B22090631A0056081A /* simp3.png */; };
+		CE9BC0B92090792D0056081A /* simp4.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0AF209063190056081A /* simp4.png */; };
+		CE9BC0BA209079300056081A /* simp5.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0B0209063190056081A /* simp5.png */; };
+		CE9BC0BB209079330056081A /* simp1.png in Resources */ = {isa = PBXBuildFile; fileRef = CE9BC0AD209063030056081A /* simp1.png */; };
 		CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */; };
 		CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06F20656D4900D1302B /* LoginFormActions.swift */; };
 		CEC7C0742066215600D1302B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0732066215600D1302B /* Utils.swift */; };
@@ -112,6 +122,11 @@
 		CE9BC0A5208D1D150056081A /* ChatRoomTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomTests.swift; sourceTree = "<group>"; };
 		CE9BC0A7208DF6E50056081A /* ChatMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageTests.swift; sourceTree = "<group>"; };
 		CE9BC0A9208E5DA10056081A /* ChatActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatActions.swift; sourceTree = "<group>"; };
+		CE9BC0AD209063030056081A /* simp1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = simp1.png; sourceTree = "<group>"; };
+		CE9BC0AF209063190056081A /* simp4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = simp4.png; sourceTree = "<group>"; };
+		CE9BC0B0209063190056081A /* simp5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = simp5.png; sourceTree = "<group>"; };
+		CE9BC0B1209063190056081A /* simp2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = simp2.png; sourceTree = "<group>"; };
+		CE9BC0B22090631A0056081A /* simp3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = simp3.png; sourceTree = "<group>"; };
 		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CEC7C06F20656D4900D1302B /* LoginFormActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormActions.swift; sourceTree = "<group>"; };
 		CEC7C0732066215600D1302B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -226,6 +241,7 @@
 		CE0AB47F205FD3A20071DE82 /* chatter_client_iosTests */ = {
 			isa = PBXGroup;
 			children = (
+				CE9BC0AC209062E30056081A /* images */,
 				CE9BC0A0208C83460056081A /* models */,
 				CEC7C06C20656CE000D1302B /* actions */,
 				CE0AB4B1206380160071DE82 /* core */,
@@ -337,9 +353,21 @@
 			path = models;
 			sourceTree = "<group>";
 		};
+		CE9BC0AC209062E30056081A /* images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
 		CEC7C06920653B2E00D1302B /* tests */ = {
 			isa = PBXGroup;
 			children = (
+				CE9BC0AD209063030056081A /* simp1.png */,
+				CE9BC0B1209063190056081A /* simp2.png */,
+				CE9BC0B22090631A0056081A /* simp3.png */,
+				CE9BC0AF209063190056081A /* simp4.png */,
+				CE9BC0B0209063190056081A /* simp5.png */,
 				CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */,
 			);
 			path = tests;
@@ -473,9 +501,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0AB476205FD39F0071DE82 /* LaunchScreen.storyboard in Resources */,
+				CE9BC0BA209079300056081A /* simp5.png in Resources */,
+				CE9BC0B92090792D0056081A /* simp4.png in Resources */,
+				CE9BC0B7209079240056081A /* simp2.png in Resources */,
 				CE0AB473205FD39F0071DE82 /* Assets.xcassets in Resources */,
 				CE0AB4B5206420B30071DE82 /* apple.png in Resources */,
+				CE9BC0BB209079330056081A /* simp1.png in Resources */,
 				CEC7C0862068D17100D1302B /* profile.png in Resources */,
+				CE9BC0B82090792A0056081A /* simp3.png in Resources */,
 				CE0AB471205FD39F0071DE82 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -484,6 +517,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE9BC0AE209063040056081A /* simp1.png in Resources */,
+				CE9BC0B42090631A0056081A /* simp5.png in Resources */,
+				CE9BC0B62090631A0056081A /* simp3.png in Resources */,
+				CE9BC0B32090631A0056081A /* simp4.png in Resources */,
+				CE9BC0B52090631A0056081A /* simp2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
