@@ -376,4 +376,209 @@ class ChatActions: XCTestCase {
             XCTAssertEqual("User \(i)",user.login,"Should set correct login for user\(i)")
         }
     }
+    
+    func testLoadRooms() {
+        appStore.dispatch(ChatState.changeRooms(rooms: [ChatRoom]()))
+        /// Request sending sequence tests
+        ChatState.loadRooms().exec()
+        XCTAssertEqual(ChatScreenError.RESULT_ERROR_CONNECTION_ERROR,appStore.state.chat.errors["general"],
+                       "Should return connection error if disconnected")
+        messageCenter.testingModeConnected = true
+        ChatState.loadRooms().exec()
+        XCTAssertEqual(1,messageCenter.pendingRequests.count,"Should place request to pendingRequests queue")
+        messageCenter.processPendingRequests()
+        XCTAssertEqual(0,messageCenter.pendingRequests.count,"Should remove request from pending requests queue")
+        XCTAssertEqual(1,messageCenter.requestsWaitingResponses.count,"Should place request to requests waiting responses queue")
+        XCTAssertTrue(appStore.state.chat.showProgressIndicator,"Should show progress indicator")
+        /// Server responses processing tests
+        var request_id = messageCenter.lastRequestObject["request_id"]!
+        var responseText = """
+        {
+            "request_id":"\(request_id)",
+            "action":"get_rooms_list",
+            "status":"error",
+            "status_code":"INTERNAL_ERROR"
+        }
+        """
+        messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
+        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses queue")
+        XCTAssertFalse(appStore.state.chat.showProgressIndicator,"Should hide progress indicator")
+        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR,appStore.state.chat.errors["general"],"Should parse error messages correctly")
+        ChatState.loadRooms().exec()
+        messageCenter.processPendingRequests()
+        request_id = messageCenter.lastRequestObject["request_id"]!
+        responseText = """
+        {
+            "request_id":"\(request_id)",
+            "action":"get_rooms_list",
+            "status":"ok",
+            "status_code":"RESULT_OK",
+            "list":"#%$..!"
+        }
+        """
+        messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
+        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses queue")
+        XCTAssertFalse(appStore.state.chat.showProgressIndicator,"Should hide progress indicator")
+        XCTAssertEqual(0,appStore.state.chat.rooms.count,"Should not load any rooms if rooms list has incorrect format")
+        
+        ChatState.loadRooms().exec()
+        messageCenter.processPendingRequests()
+        request_id = messageCenter.lastRequestObject["request_id"]!
+        responseText = """
+        {
+            "request_id":"\(request_id)",
+            "action":"get_rooms_list",
+            "status":"ok",
+            "status_code":"RESULT_OK",
+            "list":"[{},[],{}]"
+        }
+        """
+        messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
+        XCTAssertEqual(0,appStore.state.chat.rooms.count,"Should not load any rooms if rooms list has incorrect format")
+        
+        ChatState.loadRooms().exec()
+        messageCenter.processPendingRequests()
+        request_id = messageCenter.lastRequestObject["request_id"]!
+        var roomsListText = """
+            [{"_id":"r1"}]
+        """.trimmingCharacters(in: .whitespacesAndNewlines)
+        responseText = """
+        {
+            "request_id":"\(request_id)",
+            "action":"get_rooms_list",
+            "status":"ok",
+            "status_code":"RESULT_OK",
+            "list":\(roomsListText)
+        }
+        """
+        messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
+        XCTAssertEqual(0,appStore.state.chat.rooms.count,"Should not add room without 'name' field")
+ 
+        ChatState.loadRooms().exec()
+        messageCenter.processPendingRequests()
+        request_id = messageCenter.lastRequestObject["request_id"]!
+        roomsListText = """
+            [{"_id":"r1","name":"Room"}]
+        """.trimmingCharacters(in: .whitespacesAndNewlines)
+        responseText = """
+        {
+            "request_id":"\(request_id)",
+            "action":"get_rooms_list",
+            "status":"ok",
+            "status_code":"RESULT_OK",
+            "list":\(roomsListText)
+        }
+        """
+        messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
+        XCTAssertEqual(1,appStore.state.chat.rooms.count,"Should add new room")
+        var room = ChatRoom.getById("r1")!;
+        XCTAssertEqual("Room",room.name,"Should set correct 'name' for new added room")
+
+        ChatState.loadRooms().exec()
+        messageCenter.processPendingRequests()
+        request_id = messageCenter.lastRequestObject["request_id"]!
+        roomsListText = """
+            [{
+                "_id":"r1",
+                "name":"Room 1",
+            }]
+        """.trimmingCharacters(in: .whitespacesAndNewlines)
+        responseText = """
+        {
+            "request_id":"\(request_id)",
+            "action":"get_rooms_list",
+            "status":"ok",
+            "status_code":"RESULT_OK",
+            "list":\(roomsListText)
+        }
+        """
+        messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
+        XCTAssertEqual(1,appStore.state.chat.rooms.count,"Should update room, not add new one: \(appStore.state.chat.rooms)")
+        room = ChatRoom.getById("r1")!
+        XCTAssertEqual("Room 1",room.name,"Should update 'name' correctly")
+        
+        ChatState.loadRooms().exec() {
+            print("CALLBACK STARTED")
+        }
+        messageCenter.processPendingRequests()
+        request_id = messageCenter.lastRequestObject["request_id"]!
+        roomsListText = """
+            [
+                {
+                    "_id":"r1",
+                    "name":"Room 1",
+                },
+                {
+                    "_id":"r2",
+                    "name":"Room 2",
+                },
+                {
+                    "_id":"r3",
+                    "name":"Room 3",
+                },
+                {
+                    "_id":"r4",
+                    "name":"Room 4",
+                },
+                {
+                    "_id":"r5",
+                    "name":"Room 5",
+                }
+            ]
+            """.trimmingCharacters(in: .whitespacesAndNewlines)
+        responseText = """
+        {
+            "request_id":"\(request_id)",
+            "action":"get_rooms_list",
+            "status":"ok",
+            "status_code":"RESULT_OK",
+            "list":\(roomsListText)
+        }
+        """
+        messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
+        XCTAssertEqual(5,appStore.state.chat.rooms.count,"Should receive all rooms")
+        let room1 = ChatRoom.getById("r1")!
+        let room2 = ChatRoom.getById("r2")!
+        let room3 = ChatRoom.getById("r3")!
+        let room4 = ChatRoom.getById("r4")!
+        let room5 = ChatRoom.getById("r5")!
+        XCTAssertEqual("Room 1",room1.name,"Should set correct 'name' for room1")
+        XCTAssertEqual("Room 2",room2.name,"Should set correct 'name' for room2")
+        XCTAssertEqual("Room 3",room3.name,"Should set correct 'name' for room3")
+        XCTAssertEqual("Room 4",room4.name,"Should set correct 'name' for room4")
+        XCTAssertEqual("Room 5",room5.name,"Should set correct 'name' for room5")
+        
+        /// High Load test
+        ChatState.loadRooms().exec() {
+            print("CALLBACK STARTED")
+        }
+        messageCenter.processPendingRequests()
+        request_id = messageCenter.lastRequestObject["request_id"]!
+        var rooms = [String]()
+        let numberOfRooms = 1000
+        for i in 1...numberOfRooms {
+            rooms.append("""
+                {
+                "_id":"r\(i)",
+                "name":"Room \(i)",
+                }
+                """)
+        }
+        roomsListText = rooms.joined(separator:",")
+        responseText = """
+        {
+            "request_id":"\(request_id)",
+            "action":"get_rooms_list",
+            "status":"ok",
+            "status_code":"RESULT_OK",
+            "list":[\(roomsListText)]
+        }
+        """
+        messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
+        XCTAssertEqual(numberOfRooms,appStore.state.chat.rooms.count,"Should contain correct number of received rooms")
+        for i in 1...numberOfRooms {
+            let room = ChatRoom.getById("r\(i)")!
+            XCTAssertEqual("Room \(i)",room.name,"Should set correct name for room\(i)")
+        }
+    }
 }

@@ -222,7 +222,7 @@ struct ChatState {
                 _ = messageCenter.removeFromRequestsWaitingResponses(request_id)
                 return
             }
-            let users = self.getUsersList(response)
+            let users = ChatState.getListFromResponse(response)
             if users.count == 0 {
                 Logger.log(level:LogLevel.DEBUG,message:"Users list in this response is empty. Response: \(response)",
                     className:"ChatState",methodName:"loadusers.handleWebSocketResponse")
@@ -251,65 +251,181 @@ struct ChatState {
             }
             self.callback = nil
         }
+    }
+
+    /**
+     * Action used to load rooms list from server
+     */
+    class loadRooms: ChatAction, MessageCenterResponseListener {
+        
+        /// Link to message center instance, used to process request
+        var messageCenter: MessageCenter = (UIApplication.shared.delegate as! AppDelegate).msgCenter
+        
+        /// Callback function, which executes after successfull response received
+        var callback: (()->())?
         
         /**
-         * Utility function which used to get 'list' of users from response
-         * and convert it to [[String:Any]] array
+         * Action executor. Used to create request to WebSocket server and place it to pendingRequests queue
          *
-         * - Parameter response: Response body to parse
-         * - Returns Array of users data. Each user item is Hashmap [String:Any
+         * - Parameter callback: Lambda function which executed after successfull response to this action received
          */
-        func getUsersList(_ response:[String : Any]) -> [[String:Any]] {
-            Logger.log(level:LogLevel.DEBUG,message:"Begin extracting 'list' of users from response: \(response)",
-                className:"ChatState",methodName:"loadUsers.getUsersList")
-            var result = [[String:Any]]()
-            guard let listObj = response["list"] else {
-                Logger.log(level:LogLevel.WARNING,message:"Response does not contain 'list' field with results. Response body: \(response).",
-                    className:"ChatState",methodName:"loadUsers.getUsersList")
-                return result
+        func exec(callback: (()->())?=nil) {
+            Logger.log(level:LogLevel.DEBUG,message:"Started 'load rooms' action.",className:"ChatState",methodName:"loadRooms.exec")
+            if (appStore.state.chat.showProgressIndicator) {
+                Logger.log(level:LogLevel.WARNING,message:"Request already going. Could not send until finish",className:"ChatState",methodName:"loadRooms.exec")
+                return
             }
-            if !(listObj is String) && !(listObj is NSArray) {
-                Logger.log(level:LogLevel.WARNING,message:"'list' is not in correct format: \(listObj)",
-                    className:"ChatState",methodName:"loadUsers.getUsersList")
-                return result
+            if (!messageCenter.isConnected()) {
+                Logger.log(level:LogLevel.WARNING,message:"No connection to server.",className:"ChatState",methodName:"loadRooms.exec")
+                appStore.dispatch(ChatState.changeErrors(errors:["general":ChatScreenError.RESULT_ERROR_CONNECTION_ERROR]))
+                return
             }
-            Logger.log(level:LogLevel.DEBUG,message:"Extracted 'list' item from response: \(listObj)",
-                className:"ChatState",methodName:"loadUsers.getUsersList")
-            var list = NSArray()
-            if listObj is String {
-                do {
-                    let listStr = listObj as! String
-                    list = try JSONSerialization.jsonObject(with: listStr.data(using: String.Encoding.utf8)!) as! NSArray
-                } catch {
-                    Logger.log(level:LogLevel.WARNING,message:"Could not parse list of users as JSON string \(listObj)",
-                        className:"ChatState",methodName:"loadUsers.getUsersList")
-                    return result
+            Logger.log(level:LogLevel.DEBUG,message:"Prepare request to MessageCenter",className:"ChatState",methodName:"loadRooms.exec")
+            let message:[String:Any] = ["action":"get_rooms_list","sender":self]
+            guard let request = messageCenter.addToPendingRequests(message) else {
+                Logger.log(level:LogLevel.WARNING,message:"Could not prepare request to MessageCenter",className:"ChatState",methodName:"loadRooms.exec")
+                return
+            }
+            self.callback = callback
+            appStore.dispatch(ChatState.changeShowProgressIndicator(showProgressIndicator: true))
+            Logger.log(level:LogLevel.DEBUG,message:"Sent request to MessageCenter. Request body: \(request)",className:"ChatState",methodName:"loadRooms.exec")
+        }
+        
+        /**
+         * Method which MessageCenter invokes when receives response for loadRooms action.
+         *
+         * - Parameter request_id: ID of request from requestsWaitingResponses queue
+         * - Parameter response: Body of response
+         */
+        func handleWebSocketResponse(request_id: String, response: [String : Any]) {
+            Logger.log(level:LogLevel.DEBUG,message:"Received 'loadRooms' response for request_id:\(request_id). Response body: \(response)",
+                className:"ChatState",methodName:"loadRooms.handleWebSocketResponse")
+            appStore.dispatch(ChatState.changeShowProgressIndicator(showProgressIndicator: false))
+            if (!ChatState.validateResponse(request_id: request_id, response: response)) {
+                _ = messageCenter.removeFromRequestsWaitingResponses(request_id)
+                return
+            }
+            let rooms = ChatState.getListFromResponse(response)
+            if rooms.count == 0 {
+                Logger.log(level:LogLevel.DEBUG,message:"Rooms list in this response is empty. Response: \(response)",
+                    className:"ChatState",methodName:"loadRooms.handleWebSocketResponse")
+                _ = messageCenter.removeFromRequestsWaitingResponses(request_id)
+                return
+            }
+            Logger.log(level:LogLevel.DEBUG,message:"Begin update rooms data from list: \(rooms)",
+                className:"ChatState",methodName:"loadRooms.handleWebSocketResponse")
+            var changed = false
+            for room in rooms {
+                if (self.updateRoom(data:room)) {
+                    changed = true
                 }
-            } else if (listObj is NSArray) {
-                list = listObj as! NSArray
             }
-            if (list.count==0) {
-                Logger.log(level:LogLevel.WARNING,message:"Empty list returned after parsing \(listObj)",
-                    className:"ChatState",methodName:"loadUsers.getUsersList")
+            if changed {
+                Logger.log(level:LogLevel.DEBUG,message:"Updating chat screen state with changed information about rooms",
+                           className:"ChatState",methodName:"loadRooms.handleWebSocketResponse")
+                appStore.dispatch(ChatState.changeRooms(rooms: appStore.state.chat.rooms))
+            } else {
+                Logger.log(level:LogLevel.DEBUG,message:"No changes in rooms list after loading data. No need to update chat screen state",
+                           className:"ChatState",methodName:"loadRooms.handleWebSocketResponse")
+            }
+            _ = messageCenter.removeFromRequestsWaitingResponses(request_id)
+            if callback != nil {
+                callback!()
+            }
+            self.callback = nil
+        }
+        
+        /**
+         * Utility function used to create or update ChatRoom instance which is in 'rooms' list from provided HashMap
+         *
+         * - Parameter data: Dictionary with values to update
+         * - Returns: true if user updated or false otherwise
+         */
+         func updateRoom(data:[String:Any]) -> Bool {
+            var result = false
+            guard let room_id = data["_id"] as? String else {
+                Logger.log(level:LogLevel.WARNING,message:"Room record \(data) does not contain '_id' field. Could not process",
+                    className:"ChatState",methodName:"loadRooms.updateRoom")
                 return result
             }
-            Logger.log(level:LogLevel.DEBUG,message:"Beginning to parse users list: \(list)",
-                className:"ChatState",methodName:"loadUsers.getUsersList")
-            for item in list {
-                guard let user = item as? [String:Any] else {
-                    Logger.log(level:LogLevel.WARNING,message:"Could not parse user \(item)",
-                        className:"ChatState",methodName:"loadUsers.getUsersList")
-                    continue
-                }
-                result.append(user)
-                
+            guard let name = data["name"] as? String else {
+                Logger.log(level:LogLevel.WARNING,message:"Room record \(data) does not contain 'name' field. Could not process",
+                    className:"ChatState",methodName:"loadRooms.updateRoom")
+                return result
             }
-            Logger.log(level:LogLevel.DEBUG,message:"Returning resulting users list: \(result)",
-                className:"ChatState",methodName:"loadUsers.getUsersList")
+            var rooms = appStore.state.chat.rooms
+            var room = ChatRoom(id:room_id,name:name)
+            if ChatRoom.getById(room_id) != nil {
+                room = ChatRoom.getById(room_id)!
+            } else {
+                rooms.append(room)
+                result = true
+            }
+            appStore.state.chat.rooms = rooms
+            if room.name != name && !name.isEmpty {
+                room.name = name
+                result = true
+            }
             return result
         }
     }
-    
+
+    /**
+     * Utility function which used to get 'list' of items from response
+     * and convert it to [[String:Any]] array
+     *
+     * - Parameter response: Response body to parse
+     * - Returns Array of data. Each item is Hashmap [String:Any]
+     */
+    static func getListFromResponse(_ response:[String : Any]) -> [[String:Any]] {
+        Logger.log(level:LogLevel.DEBUG,message:"Begin extracting 'list' of from response: \(response)",
+            className:"ChatState",methodName:"getListFromResponse")
+        var result = [[String:Any]]()
+        guard let listObj = response["list"] else {
+            Logger.log(level:LogLevel.WARNING,message:"Response does not contain 'list' field with results. Response body: \(response).",
+                className:"ChatState",methodName:"getListFromResponse")
+            return result
+        }
+        if !(listObj is String) && !(listObj is NSArray) {
+            Logger.log(level:LogLevel.WARNING,message:"'list' is not in correct format: \(listObj)",
+                className:"ChatState",methodName:"getListFromResponse")
+            return result
+        }
+        Logger.log(level:LogLevel.DEBUG,message:"Extracted 'list' item from response: \(listObj)",
+            className:"ChatState",methodName:"getListFromResponse")
+        var list = NSArray()
+        if listObj is String {
+            do {
+                let listStr = listObj as! String
+                list = try JSONSerialization.jsonObject(with: listStr.data(using: String.Encoding.utf8)!) as! NSArray
+            } catch {
+                Logger.log(level:LogLevel.WARNING,message:"Could not parse list as JSON string \(listObj)",
+                    className:"ChatState",methodName:"getListFromResponse")
+                return result
+            }
+        } else if (listObj is NSArray) {
+            list = listObj as! NSArray
+        }
+        if (list.count==0) {
+            Logger.log(level:LogLevel.WARNING,message:"Empty list returned after parsing \(listObj)",
+                className:"ChatState",methodName:"getListFromResponse")
+            return result
+        }
+        Logger.log(level:LogLevel.DEBUG,message:"Beginning to parse list: \(list)",
+            className:"ChatState",methodName:"getListFromResponse")
+        for itemObj in list {
+            guard let item = itemObj as? [String:Any] else {
+                Logger.log(level:LogLevel.WARNING,message:"Could not parse item \(itemObj)",
+                    className:"ChatState",methodName:"getListFromResponse")
+                continue
+            }
+            result.append(item)
+        }
+        Logger.log(level:LogLevel.DEBUG,message:"Returning resulting list: \(result)",
+            className:"ChatState",methodName:"getListFromResponse")
+        return result
+    }
+
     /**
      * Utility function which used to validate response and make needed state
      * updates if response contains errors
