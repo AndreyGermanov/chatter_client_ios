@@ -14,7 +14,11 @@ import Foundation
 class Logger {
     
     /// Which log levels to display
-    static var displayLevels: [LogLevel] = [LogLevel.INFO,LogLevel.ERROR,LogLevel.WARNING,LogLevel.DEBUG]
+    static var displayLevels: [LogLevel] = [LogLevel.INFO,
+                                            LogLevel.ERROR,
+                                            LogLevel.WARNING,
+                                            LogLevel.DEBUG,
+                                            LogLevel.DEBUG_UI]
     
     /**
      * Function used to log message
@@ -50,4 +54,5 @@ enum LogLevel:String {
     case ERROR = "ERROR"
     case DEBUG = "DEBUG"
     case DEBUG_REDUX = "DEBUG_REDUX"
+    case DEBUG_UI = "DEBUG_UI"
 }

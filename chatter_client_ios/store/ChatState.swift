@@ -18,7 +18,18 @@ protocol ChatAction: Action {}
 enum ChatScreenMode:Int {
     case ROOM = 1, PRIVATE = 2, PROFILE = 3
 }
-
+extension ChatScreenMode: RawRepresentable {
+    typealias  RawValue = Int
+    /// Extension calculated variable used to get cell ID of tableView cell, which shows
+    /// UI for this mode on Chat screen
+    var cellID: String {
+        switch self {
+        case .PRIVATE: return "ChatPrivateCell"
+        case .ROOM: return "ChatPublicCell"
+        case .PROFILE: return "ChatProfileCell"
+        }
+    }
+}
 /**
  * Possible models of "private chat" screen. It either shows list of users to chat with (USERS),
  * or chat screen with with selected User
@@ -26,7 +37,17 @@ enum ChatScreenMode:Int {
 enum PrivateChatScreenMode:Int {
     case USERS = 1, CHAT = 2
 }
-
+extension PrivateChatScreenMode: RawRepresentable {
+    typealias  RawValue = Int
+    /// Extension calculated variable used to get cell ID of tableView cell, which shows
+    /// UI for this mode on Chat screen
+    var cellID: String {
+        switch self {
+        case .USERS: return "ChatPrivateUsersListCell"
+        case .CHAT: return "ChatPrivateChatCell"
+        }
+    }
+}
 /**
  * Holds Redux application state for Chat screen
  */

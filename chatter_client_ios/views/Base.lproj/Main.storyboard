@@ -621,6 +621,7 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <items>
                                     <navigationItem title="Chat" id="jfT-R9-W8H">
+                                        <barButtonItem key="leftBarButtonItem" title="Back" id="ZdO-c4-Buc"/>
                                         <barButtonItem key="rightBarButtonItem" title="Logout" id="Rgs-Cn-Kln">
                                             <connections>
                                                 <action selector="logoutBtnClick:" destination="w9I-AF-Uiu" id="4tW-Ko-53J"/>
@@ -632,6 +633,90 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vXM-Os-2el">
                                 <rect key="frame" x="16" y="106" width="343" height="561"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPublicCell" rowHeight="138" id="Psc-zI-5uT" customClass="ChatPublicCell" customModule="chatter_client_ios">
+                                        <rect key="frame" x="0.0" y="28" width="343" height="138"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Psc-zI-5uT" id="hLw-g8-7Vf">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="137.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPrivateCell" rowHeight="249" id="PLW-jS-Q0t" customClass="ChatPrivateCell" customModule="chatter_client_ios">
+                                        <rect key="frame" x="0.0" y="166" width="343" height="249"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PLW-jS-Q0t" id="odB-cP-buz">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="248.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nHg-pt-8yI">
+                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="248.5"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <prototypes>
+                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPrivateChatCell" rowHeight="163" id="fYD-ge-c8g" customClass="ChatPrivateChatCell" customModule="chatter_client_ios">
+                                                            <rect key="frame" x="0.0" y="28" width="343" height="163"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fYD-ge-c8g" id="ymt-Q4-zMV">
+                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="162.5"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </tableViewCellContentView>
+                                                        </tableViewCell>
+                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPrivateUsersListCell" rowHeight="60" id="LnE-tE-6tF" customClass="ChatPrivateUsersListCell" customModule="chatter_client_ios" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="191" width="343" height="60"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LnE-tE-6tF" id="0Zd-AW-XgR">
+                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="59.5"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                <subviews>
+                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile.png" translatesAutoresizingMaskIntoConstraints="NO" id="lDy-r6-PI6">
+                                                                        <rect key="frame" x="25" y="11" width="38" height="38"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="38" id="OGA-c5-Lyg"/>
+                                                                            <constraint firstAttribute="height" constant="38" id="hPj-do-A5J"/>
+                                                                        </constraints>
+                                                                    </imageView>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="John Johnson" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CWc-60-yAb">
+                                                                        <rect key="frame" x="67" y="19" width="276" height="21"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="21" id="qXT-o0-1tt"/>
+                                                                        </constraints>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                                <constraints>
+                                                                    <constraint firstItem="CWc-60-yAb" firstAttribute="leading" secondItem="lDy-r6-PI6" secondAttribute="trailing" constant="4" id="0Yq-QY-GIC"/>
+                                                                    <constraint firstItem="lDy-r6-PI6" firstAttribute="top" secondItem="0Zd-AW-XgR" secondAttribute="topMargin" id="Mdk-nt-Gaz"/>
+                                                                    <constraint firstItem="CWc-60-yAb" firstAttribute="centerY" secondItem="0Zd-AW-XgR" secondAttribute="centerY" id="Q9X-fQ-I8n"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="CWc-60-yAb" secondAttribute="trailing" id="W4d-gm-s6W"/>
+                                                                    <constraint firstItem="lDy-r6-PI6" firstAttribute="leading" secondItem="0Zd-AW-XgR" secondAttribute="leadingMargin" constant="10" id="m1m-Xz-npv"/>
+                                                                </constraints>
+                                                            </tableViewCellContentView>
+                                                        </tableViewCell>
+                                                    </prototypes>
+                                                </tableView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="nHg-pt-8yI" secondAttribute="bottom" id="09o-lV-ufa"/>
+                                                <constraint firstItem="nHg-pt-8yI" firstAttribute="leading" secondItem="odB-cP-buz" secondAttribute="leading" id="E3D-ve-anT"/>
+                                                <constraint firstAttribute="trailing" secondItem="nHg-pt-8yI" secondAttribute="trailing" id="bDN-Tu-61C"/>
+                                                <constraint firstItem="nHg-pt-8yI" firstAttribute="top" secondItem="odB-cP-buz" secondAttribute="top" id="zJs-yO-bYd"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="chatPrivateTableView" destination="nHg-pt-8yI" id="Co9-OR-jlA"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatProfileCell" id="Zlk-Ur-sz7" customClass="ChatProfileCell" customModule="chatter_client_ios">
+                                        <rect key="frame" x="0.0" y="415" width="343" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Zlk-Ur-sz7" id="Kaw-us-LXc">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hzw-Sr-2wW">
                                 <rect key="frame" x="64" y="70" width="247" height="29"/>
@@ -640,6 +725,9 @@
                                     <segment title="Private"/>
                                     <segment title="Profile"/>
                                 </segments>
+                                <connections>
+                                    <action selector="chatModesClick:" destination="w9I-AF-Uiu" eventType="valueChanged" id="2PY-Zc-ZTf"/>
+                                </connections>
                             </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -658,6 +746,8 @@
                         <viewLayoutGuide key="safeArea" id="9k6-4N-F02"/>
                     </view>
                     <connections>
+                        <outlet property="chatModesSegmentedControl" destination="hzw-Sr-2wW" id="lC6-G4-TcS"/>
+                        <outlet property="chatTableView" destination="vXM-Os-2el" id="jrp-Ze-BuV"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="chatLoginSegue" id="6OW-Sc-9zU"/>
                     </connections>
                 </viewController>
