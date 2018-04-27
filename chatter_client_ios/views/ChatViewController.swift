@@ -111,10 +111,15 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      * Returns: true if need to redraw tableView or false otherwise
      */
     func shouldUpdateTableView(newState:ChatState) -> Bool {
+        var result = false
         if state.chatMode != newState.chatMode {
-            return true
+            result = true
         }
-        return false
+        switch state.chatMode {
+        case .PRIVATE: return result || ChatPrivateChatCell.shouldUpdateTableView(newState:newState)
+        case .ROOM: return result
+        case .PROFILE: return result
+        }
     }
     
     /**
@@ -170,7 +175,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
                    className:"ChatViewController",methodName:"setupChatPublicCell")
         return cell
     }
-
+    
     /**
      * Function used to setup tableView cell as Profile Chat cell depending on current Chat state
      *
@@ -188,7 +193,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 /**
- * Progocol which each cell inside chatTableView must implmenent
+ * Protocol which each cell inside chatTableView must implmenent
  */
 protocol ChatViewControllerCell {
     /// Link to view controller, which manages tableView of this cell

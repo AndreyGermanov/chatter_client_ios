@@ -78,4 +78,35 @@ class ChatRoom: Model {
         }
         return result
     }
+    
+    /**
+     * Function returns copy of room object
+     * - Returns: ChatRoom object copy of current one
+     */
+    func copy() -> ChatRoom {
+        return ChatRoom(id:self.id,name:self.name)
+    }
+    
+    /**
+     * Compares current object with provided and returns
+     * true if they are equal and false otherwise
+     *
+     * - Parameter obj: Object to compare
+     * - Returns: true if they are equal and false otherwise
+     */
+    func equals(obj:Any?) -> Bool {
+        guard let room = obj as? ChatRoom else {
+            return false
+        }
+        return room.id == self.id && room.name == self.name
+    }
+    
+    /**
+     * Function converts object to HashMap
+     *
+     * - Returns: Dictionary with object properties
+     */
+    func toHashMap() -> [String:String] {
+        return ["id":self.id,"name":self.name]
+    }
 }

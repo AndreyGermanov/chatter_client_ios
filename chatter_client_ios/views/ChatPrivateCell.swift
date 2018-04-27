@@ -67,10 +67,13 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
      * Returns: true if need to redraw tableView or false otherwise
      */
     func shouldUpdateTableView(newState:ChatState) -> Bool {
+        var result = false
         if state?.privateChatMode != newState.privateChatMode {
-            return true
+            result = true
         }
-        return false
+        return result ||
+            ChatPrivateUsersListCell.shouldUpdateTableView(newState:newState) ||
+            ChatPrivateChatCell.shouldUpdateTableView(newState:newState)
     }
     
     /**
@@ -82,7 +85,7 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
     }
 
     /**
-     * Function, which chatPrivateTableView calls whenever it need to redraw cell
+     * Function, which tableView calls whenever it need to redraw cell
      *
      * - Parameter tableView: source tableView, which need to update
      * - Parameter indexPath: coordinates of cell which need to redraw

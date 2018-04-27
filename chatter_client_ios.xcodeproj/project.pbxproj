@@ -53,6 +53,7 @@
 		CEB219882091A73600138754 /* ChatProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB219872091A73600138754 /* ChatProfileCell.swift */; };
 		CEB2198A2091A81700138754 /* ChatPrivateUsersListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB219892091A81700138754 /* ChatPrivateUsersListCell.swift */; };
 		CEB2198C2091A86200138754 /* ChatPrivateChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB2198B2091A86200138754 /* ChatPrivateChatCell.swift */; };
+		CEB2198E2092F68600138754 /* ChatUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB2198D2092F68500138754 /* ChatUserCell.swift */; };
 		CEC7C06B20653B5300D1302B /* MessageCenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */; };
 		CEC7C07020656D4900D1302B /* LoginFormActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C06F20656D4900D1302B /* LoginFormActions.swift */; };
 		CEC7C0742066215600D1302B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC7C0732066215600D1302B /* Utils.swift */; };
@@ -137,6 +138,7 @@
 		CEB219872091A73600138754 /* ChatProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatProfileCell.swift; sourceTree = "<group>"; };
 		CEB219892091A81700138754 /* ChatPrivateUsersListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPrivateUsersListCell.swift; sourceTree = "<group>"; };
 		CEB2198B2091A86200138754 /* ChatPrivateChatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPrivateChatCell.swift; sourceTree = "<group>"; };
+		CEB2198D2092F68500138754 /* ChatUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUserCell.swift; sourceTree = "<group>"; };
 		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CEC7C06F20656D4900D1302B /* LoginFormActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormActions.swift; sourceTree = "<group>"; };
 		CEC7C0732066215600D1302B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				CEC7C0872068D1CF00D1302B /* UserProfileViewController.swift */,
 				CE9BC091208A67720056081A /* ChatViewController.swift */,
 				CEB219832091A62100138754 /* ChatPublicCell.swift */,
+				CEB2198D2092F68500138754 /* ChatUserCell.swift */,
 				CEB219852091A69000138754 /* ChatPrivateCell.swift */,
 				CEB219892091A81700138754 /* ChatPrivateUsersListCell.swift */,
 				CEB2198B2091A86200138754 /* ChatPrivateChatCell.swift */,
@@ -710,6 +713,7 @@
 			files = (
 				CE9BC096208BBE920056081A /* ChatScreenReducer.swift in Sources */,
 				CEC7C084206828E800D1302B /* RegisterFormCell.swift in Sources */,
+				CEB2198E2092F68600138754 /* ChatUserCell.swift in Sources */,
 				CE0AB4A0205FE2D10071DE82 /* AppStore.swift in Sources */,
 				CEC7C07820669F3E00D1302B /* UserProfileReducer.swift in Sources */,
 				CE0AB46E205FD39F0071DE82 /* LoginFormViewController.swift in Sources */,

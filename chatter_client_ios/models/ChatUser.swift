@@ -89,4 +89,67 @@ class ChatUser: Model {
         }
         return result
     }
+    
+    /**
+     * Function returns copy of room object
+     * - Returns: ChatRoom object copy of current one
+     */
+    func copy() -> ChatUser {
+        var result = ChatUser(id: self.id)
+        result.email = self.email
+        result.login = self.login
+        result.birthDate = self.birthDate
+        result.first_name = self.first_name
+        result.last_name = self.last_name
+        result.gender = self.gender
+        result.isLogin = self.isLogin
+        result.lastActivityTime = self.lastActivityTime
+        result.profileImage = self.profileImage
+        result.profileImageChecksum = self.profileImageChecksum
+        result.role = self.role
+        result.room = self.room
+        return result
+    }
+    
+    /**
+     * Compares current object with provided and returns
+     * true if they are equal and false otherwise
+     *
+     * - Parameter obj: Object to compare
+     * - Returns: true if they are equal and false otherwise
+     */
+    func equals(obj:Any?) -> Bool {
+        guard let user = obj as? ChatUser else {
+            return false
+        }
+        return self.toHashMap().isEqual(user.toHashMap())
+    }
+    
+    /**
+     * Function converts object to HashMap
+     *
+     * - Returns: Dictionary with object properties
+     */
+    func toHashMap() -> [String:Any] {
+        var result:[String:Any] =  ["id":self.id,
+                                    "login":self.login,
+                                    "email":self.email,
+                                    "first_name":self.first_name,
+                                    "last_name":self.last_name,
+                                    "gender":self.gender,
+                                    "birthDate":self.birthDate,
+                                    "role":self.role,
+                                    "lastActivityTime":self.lastActivityTime,
+                                    "isLogin": self.isLogin,
+                                    "profileImageChecsum": self.profileImageChecksum
+        ]
+        if self.room != nil {
+            result["room"] = self.room
+        }
+        if self.profileImage != nil {
+            result["profileImage"] = self.profileImage
+        }
+        return result
+    }
+
 }

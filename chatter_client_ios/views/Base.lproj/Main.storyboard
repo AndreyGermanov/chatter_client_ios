@@ -653,46 +653,75 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="343" height="248.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <prototypes>
-                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPrivateChatCell" rowHeight="163" id="fYD-ge-c8g" customClass="ChatPrivateChatCell" customModule="chatter_client_ios">
-                                                            <rect key="frame" x="0.0" y="28" width="343" height="163"/>
+                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPrivateChatCell" rowHeight="114" id="fYD-ge-c8g" customClass="ChatPrivateChatCell" customModule="chatter_client_ios">
+                                                            <rect key="frame" x="0.0" y="28" width="343" height="114"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fYD-ge-c8g" id="ymt-Q4-zMV">
-                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="162.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="113.5"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </tableViewCellContentView>
                                                         </tableViewCell>
-                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPrivateUsersListCell" rowHeight="60" id="LnE-tE-6tF" customClass="ChatPrivateUsersListCell" customModule="chatter_client_ios" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="191" width="343" height="60"/>
+                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPrivateUsersListCell" rowHeight="109" id="LnE-tE-6tF" customClass="ChatPrivateUsersListCell" customModule="chatter_client_ios" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="142" width="343" height="109"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LnE-tE-6tF" id="0Zd-AW-XgR">
-                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="59.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="108.5"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
-                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile.png" translatesAutoresizingMaskIntoConstraints="NO" id="lDy-r6-PI6">
-                                                                        <rect key="frame" x="25" y="11" width="38" height="38"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="width" constant="38" id="OGA-c5-Lyg"/>
-                                                                            <constraint firstAttribute="height" constant="38" id="hPj-do-A5J"/>
-                                                                        </constraints>
-                                                                    </imageView>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="John Johnson" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CWc-60-yAb">
-                                                                        <rect key="frame" x="67" y="19" width="276" height="21"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="height" constant="21" id="qXT-o0-1tt"/>
-                                                                        </constraints>
-                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                        <nil key="textColor"/>
-                                                                        <nil key="highlightedColor"/>
-                                                                    </label>
+                                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mah-70-vMH">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="343" height="109"/>
+                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <prototypes>
+                                                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatUserCell" rowHeight="62" id="dju-vA-McQ" customClass="ChatUserCell" customModule="chatter_client_ios">
+                                                                                <rect key="frame" x="0.0" y="28" width="343" height="62"/>
+                                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dju-vA-McQ" id="dGb-J5-A45">
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="61.5"/>
+                                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                                    <subviews>
+                                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile.png" translatesAutoresizingMaskIntoConstraints="NO" id="EHp-m4-tsp">
+                                                                                            <rect key="frame" x="7" y="9" width="44" height="44"/>
+                                                                                            <constraints>
+                                                                                                <constraint firstAttribute="width" constant="44" id="gSX-fu-42L"/>
+                                                                                                <constraint firstAttribute="height" constant="44" id="rnw-38-eUm"/>
+                                                                                            </constraints>
+                                                                                        </imageView>
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ki-gd-LYJ">
+                                                                                            <rect key="frame" x="66" y="20" width="277" height="21"/>
+                                                                                            <constraints>
+                                                                                                <constraint firstAttribute="height" constant="21" id="ZdQ-te-VMH"/>
+                                                                                            </constraints>
+                                                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                                            <nil key="textColor"/>
+                                                                                            <nil key="highlightedColor"/>
+                                                                                        </label>
+                                                                                    </subviews>
+                                                                                    <constraints>
+                                                                                        <constraint firstItem="EHp-m4-tsp" firstAttribute="leading" secondItem="dGb-J5-A45" secondAttribute="leading" constant="7" id="0Yr-Dc-3qt"/>
+                                                                                        <constraint firstItem="EHp-m4-tsp" firstAttribute="centerY" secondItem="dGb-J5-A45" secondAttribute="centerY" id="Erx-PC-ssc"/>
+                                                                                        <constraint firstItem="2Ki-gd-LYJ" firstAttribute="leading" secondItem="EHp-m4-tsp" secondAttribute="trailing" constant="15" id="JES-bw-P2D"/>
+                                                                                        <constraint firstAttribute="trailing" secondItem="2Ki-gd-LYJ" secondAttribute="trailing" id="PAi-pS-2eg"/>
+                                                                                        <constraint firstItem="2Ki-gd-LYJ" firstAttribute="centerY" secondItem="dGb-J5-A45" secondAttribute="centerY" id="qQE-t0-90H"/>
+                                                                                    </constraints>
+                                                                                </tableViewCellContentView>
+                                                                                <connections>
+                                                                                    <outlet property="userNameLabel" destination="2Ki-gd-LYJ" id="l80-2w-Tqw"/>
+                                                                                    <outlet property="userProfileImageView" destination="EHp-m4-tsp" id="HLA-pH-x3g"/>
+                                                                                </connections>
+                                                                            </tableViewCell>
+                                                                        </prototypes>
+                                                                    </tableView>
                                                                 </subviews>
                                                                 <constraints>
-                                                                    <constraint firstItem="CWc-60-yAb" firstAttribute="leading" secondItem="lDy-r6-PI6" secondAttribute="trailing" constant="4" id="0Yq-QY-GIC"/>
-                                                                    <constraint firstItem="lDy-r6-PI6" firstAttribute="top" secondItem="0Zd-AW-XgR" secondAttribute="topMargin" id="Mdk-nt-Gaz"/>
-                                                                    <constraint firstItem="CWc-60-yAb" firstAttribute="centerY" secondItem="0Zd-AW-XgR" secondAttribute="centerY" id="Q9X-fQ-I8n"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="CWc-60-yAb" secondAttribute="trailing" id="W4d-gm-s6W"/>
-                                                                    <constraint firstItem="lDy-r6-PI6" firstAttribute="leading" secondItem="0Zd-AW-XgR" secondAttribute="leadingMargin" constant="10" id="m1m-Xz-npv"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="mah-70-vMH" secondAttribute="trailing" id="1nL-pz-vbJ"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="mah-70-vMH" secondAttribute="bottom" id="6Xm-ig-N8O"/>
+                                                                    <constraint firstItem="mah-70-vMH" firstAttribute="top" secondItem="0Zd-AW-XgR" secondAttribute="top" id="759-FZ-dy1"/>
+                                                                    <constraint firstItem="mah-70-vMH" firstAttribute="leading" secondItem="0Zd-AW-XgR" secondAttribute="leading" id="xGw-Xb-u1P"/>
                                                                 </constraints>
                                                             </tableViewCellContentView>
+                                                            <connections>
+                                                                <outlet property="usersTableView" destination="mah-70-vMH" id="qYd-p3-kdY"/>
+                                                            </connections>
                                                         </tableViewCell>
                                                     </prototypes>
                                                 </tableView>
