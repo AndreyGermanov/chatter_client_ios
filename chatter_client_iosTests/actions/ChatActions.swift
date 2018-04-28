@@ -36,7 +36,6 @@ class ChatActions: XCTestCase {
         do {
             for i in 1...5 {
                 images["simp\(i)"] =  try Data.init(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "simp\(i)", ofType: "png")!, isDirectory: false))
-                print(images["simp\(i)"]?.bytes.crc32())
             }
         } catch {}
         let room1 = ChatRoom(id: "r1", name: "Room 1")

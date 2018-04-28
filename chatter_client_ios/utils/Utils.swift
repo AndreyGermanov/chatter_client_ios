@@ -62,19 +62,3 @@ extension String {
         return NSString(string: self).boolValue
     }
 }
-
-/**
- * Extension functions for HashMaps
- */
-extension Dictionary {
-    /**
-     * Operator used to compare two Dictionaries of type [String:Any]
-     *
-     * - Parameter dict: Dictionary to compare
-     * - Returns: true if dict is equal to self and false otherwise
-     */
-    public func isEqual(_ dict:[String:Any]) -> Bool {
-        return NSDictionary(dictionary:dict).isEqual(to:self)
-    }
-}
-

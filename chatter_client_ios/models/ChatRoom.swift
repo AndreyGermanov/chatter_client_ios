@@ -41,13 +41,18 @@ class ChatRoom: Model {
     /**
      * Method returns array of users which are currently in this room
      *
+     * - Parameter: Collection of users to search in (optional)
      * - Returns: [ChatUser] array of users
      */
-    func getUsers() -> [ChatUser] {
+    func getUsers(_ collection:[ChatUser]?=nil) -> [ChatUser] {
         var result = [ChatUser]()
-        if let me = ChatUser.getById(appStore.state.user.user_id) {
-            result = appStore.state.chat.users.filter {$0.room != nil && $0.room!.id == self.id && $0.isLogin && $0.id != me.id}
-                .sorted {$0.lastActivityTime > $1.lastActivityTime}
+        var users = collection
+        if users == nil {
+            users = appStore.state.chat.users
+        }
+        if let me = ChatUser.getById(appStore.state.user.user_id,collection:users!) {
+            result = users!.filter {$0.room != nil && $0.room!.id == self.id && $0.isLogin && $0.id != me.id}
+                .sorted {$0.lastActivityTime > $1.lastActivityTime}.map { $0.copy() }
         }
         return result
     }
@@ -55,12 +60,22 @@ class ChatRoom: Model {
     /**
      * Method returns number of unread messages in this room
      *
+     * - Parameter collection: Collection of messages to search in (optional)
+     * - Parameter users: Collection of users to use as a base
      * - Returns: Int Number of messages
      */
-    func getUnreadMessagesCount() -> Int {
+    func getUnreadMessagesCount(_ collection:[ChatMessage]?=nil,users:[ChatUser]?=nil) -> Int {
         var result = 0
-        if let me = ChatUser.getById(appStore.state.user.user_id) {
-            result = appStore.state.chat.messages.filter {$0.room != nil && $0.room!.id == self.id && $0.from_user.id != me.id}.count
+        var messages = collection
+        if messages == nil {
+            messages = appStore.state.chat.messages
+        }
+        var users = users
+        if users == nil {
+            users = appStore.state.chat.users
+        }
+        if let me = ChatUser.getById(appStore.state.user.user_id,collection:users!) {
+            result = messages!.filter {$0.room != nil && $0.room!.id == self.id && $0.from_user.id != me.id}.count
         }
         return result
     }
@@ -68,45 +83,41 @@ class ChatRoom: Model {
     /**
      * Method returns all messages in this room, sorted ascending by timestamp
      *
+     * - Parameter collection: Collection of messages to search in (optional)
+     * - Parameter users: Collection of users to use as a base
      * - Returns: [ChatMessage] array of messages
      */
-    func getMessages() -> [ChatMessage] {
+    func getMessages(_ collection:[ChatMessage]?=nil,users:[ChatUser]?=nil) -> [ChatMessage] {
         var result = [ChatMessage]()
-        if ChatUser.getById(appStore.state.user.user_id) != nil {
-            result = appStore.state.chat.messages.filter {$0.room != nil && $0.room!.id == self.id }
-                .sorted { $0.timestamp < $1.timestamp}
+        var messages = collection
+        if messages == nil {
+            messages = appStore.state.chat.messages
+        }
+        var users = users
+        if users == nil {
+            users = appStore.state.chat.users
+        }
+        if ChatUser.getById(appStore.state.user.user_id,collection:users) != nil {
+            result = messages!.filter {$0.room != nil && $0.room!.id == self.id }
+                .sorted { $0.timestamp < $1.timestamp}.map { $0.copy() }
         }
         return result
     }
     
     /**
-     * Function returns copy of room object
+     * Method returns copy of room object
      * - Returns: ChatRoom object copy of current one
      */
-    func copy() -> ChatRoom {
+    override func copy() -> ChatRoom {
         return ChatRoom(id:self.id,name:self.name)
     }
     
     /**
-     * Compares current object with provided and returns
-     * true if they are equal and false otherwise
-     *
-     * - Parameter obj: Object to compare
-     * - Returns: true if they are equal and false otherwise
-     */
-    func equals(obj:Any?) -> Bool {
-        guard let room = obj as? ChatRoom else {
-            return false
-        }
-        return room.id == self.id && room.name == self.name
-    }
-    
-    /**
-     * Function converts object to HashMap
+     * Method converts object to HashMap
      *
      * - Returns: Dictionary with object properties
      */
-    func toHashMap() -> [String:String] {
+    override func toHashMap() -> [String:Any] {
         return ["id":self.id,"name":self.name]
     }
 }

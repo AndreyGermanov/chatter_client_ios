@@ -50,26 +50,43 @@ class ChatUser: Model {
      * Method returns instance of this class by ID
      *
      * - Parameter id: ID of item to return
+     * - Parameter collection: Array of users to search in (optional)
      * - Returns: ChatUser instance or nothing if not found
      */
-    static func getById(_ id:String) -> ChatUser? {
-        return getModelById(id: id, collection: appStore.state.chat.users)
+    static func getById(_ id:String,collection:[ChatUser]?=nil) -> ChatUser? {
+        var users = collection
+        if users == nil {
+            users = appStore.state.chat.users
+        }
+        return getModelById(id: id, collection: collection)
     }
     
     /**
      * Method returns array of private messages, sent by this user
      * to active user.
      *
+     * - Parameter collection: Array of source messages (optional)
+     * - Parameter users: Array of users to use as a base (optional)
      * - Returns: [ChatMessage] array of all private messages
      */
-    func getPrivateMessages() -> [ChatMessage] {
+    func getPrivateMessages(_ collection:[ChatMessage]?=nil,users:[ChatUser]?=nil) -> [ChatMessage] {
         var result = [ChatMessage]()
-        if let me = ChatUser.getById(appStore.state.user.user_id) {
+        var messages = collection
+        if messages == nil {
+            messages  = appStore.state.chat.messages
+        }
+        var users = users
+        if users == nil {
+            users = appStore.state.chat.users
+        }
+        if let me = ChatUser.getById(appStore.state.user.user_id,collection:users!) {
             if me.id == self.id {
                 return result
             }
-            result = appStore.state.chat.messages.filter {$0.to_user != nil && $0.to_user!.id == me.id}
-                .sorted { $0.timestamp < $1.timestamp }
+            result = messages!.filter {$0.to_user != nil && $0.to_user!.id == me.id}
+                .sorted { $0.timestamp < $1.timestamp }.map {
+                    $0.copy()
+            }
         }
         return result
     }
@@ -77,25 +94,35 @@ class ChatUser: Model {
     /**
      * Method returns number of unread messages from this user
      *
+     * - Parameter collection: Collection of messages to search in (optional)
+     * - Parameter users: Collection of users, which use as a base (optional)
      * - Returns: Int number of unread messages
      */
-    func getUnreadMessagesCount() -> Int {
+    func getUnreadMessagesCount(_ collection:[ChatMessage]?=nil,users:[ChatUser]?=nil) -> Int {
         var result = 0
-        if let me = ChatUser.getById(appStore.state.user.user_id) {
+        var messages = collection
+        if messages == nil {
+            messages  = appStore.state.chat.messages
+        }
+        var users = users
+        if (users == nil) {
+            users = appStore.state.chat.users
+        }
+        if let me = ChatUser.getById(appStore.state.user.user_id,collection: users!) {
             if me.id == self.id {
                 return 0
             }
-            result = appStore.state.chat.messages.filter {$0.to_user != nil && $0.to_user!.id == me.id && $0.unread}.count
+            result = messages!.filter {$0.to_user != nil && $0.to_user!.id == me.id && $0.unread}.count
         }
         return result
     }
     
     /**
-     * Function returns copy of room object
-     * - Returns: ChatRoom object copy of current one
+     * Method returns copy of room object
+     * - Returns: copy of current object
      */
-    func copy() -> ChatUser {
-        var result = ChatUser(id: self.id)
+    override func copy() -> ChatUser {
+        let result = ChatUser(id: self.id)
         result.email = self.email
         result.login = self.login
         result.birthDate = self.birthDate
@@ -107,49 +134,50 @@ class ChatUser: Model {
         result.profileImage = self.profileImage
         result.profileImageChecksum = self.profileImageChecksum
         result.role = self.role
-        result.room = self.room
+        result.room = self.room?.copy()
         return result
     }
     
     /**
-     * Compares current object with provided and returns
+     * Method compares current object with provided obj and returns
      * true if they are equal and false otherwise
      *
      * - Parameter obj: Object to compare
      * - Returns: true if they are equal and false otherwise
      */
-    func equals(obj:Any?) -> Bool {
-        guard let user = obj as? ChatUser else {
+    func equals(_ obj:ChatUser?) -> Bool {
+        guard let user = obj else {
             return false
         }
-        return self.toHashMap().isEqual(user.toHashMap())
+        let result = super.equals(obj)
+        return result && Model.compare(model1: self.room, model2: user.room)
     }
     
     /**
-     * Function converts object to HashMap
+     * Method converts object to HashMap
      *
      * - Returns: Dictionary with object properties
      */
-    func toHashMap() -> [String:Any] {
-        var result:[String:Any] =  ["id":self.id,
-                                    "login":self.login,
-                                    "email":self.email,
-                                    "first_name":self.first_name,
-                                    "last_name":self.last_name,
-                                    "gender":self.gender,
-                                    "birthDate":self.birthDate,
-                                    "role":self.role,
-                                    "lastActivityTime":self.lastActivityTime,
-                                    "isLogin": self.isLogin,
-                                    "profileImageChecsum": self.profileImageChecksum
+    override func toHashMap() -> [String:Any] {
+        var result:[String:Any] =  [
+            "id":self.id,
+            "login":self.login,
+            "email":self.email,
+            "first_name":self.first_name,
+            "last_name":self.last_name,
+            "gender":self.gender,
+            "birthDate":self.birthDate,
+            "role":self.role,
+            "lastActivityTime":self.lastActivityTime,
+            "isLogin": self.isLogin,
+            "profileImageChecsum": self.profileImageChecksum
         ]
-        if self.room != nil {
-            result["room"] = self.room
+        if let room = self.room {
+            result["room"] = room
         }
-        if self.profileImage != nil {
-            result["profileImage"] = self.profileImage
+        if let profileImage = self.profileImage {
+            result["profileImage"] = profileImage
         }
         return result
     }
-
 }

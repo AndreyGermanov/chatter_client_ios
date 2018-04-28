@@ -132,6 +132,38 @@ struct ChatState {
     }
     
     /**
+     * Method creates and returns copy of state
+     *
+     * - Returns: ChatState instance which is identical copy of current instance of ChatState
+     */
+    func copy() -> ChatState {
+        var result = ChatState()
+        result.rooms = rooms.copy()
+        result.users = users.copy()
+        result.messages = messages.copy()
+        if let currentRoom = self.currentRoom {
+            result.currentRoom = currentRoom.copy()
+        }
+        if let selectedUser = self.selectedUser {
+            result.selectedUser = selectedUser.copy()
+        }
+        result.chatMode = chatMode
+        result.chatMessage = chatMessage
+        if let chatAttachment = self.chatAttachment {
+            result.chatAttachment = chatAttachment
+        }
+        result.privateChatMode = privateChatMode
+        result.privateChatMessage = privateChatMessage
+        if let privateChatAttachment = self.privateChatAttachment {
+            result.privateChatAttachment = privateChatAttachment
+        }
+        var privateChatAttachment: Data? = nil
+        result.showProgressIndicator = showProgressIndicator
+        result.errors = errors
+        return result
+    }
+    
+    /**
      * Logout action
      */
     struct logout: UserAction,MessageCenterResponseListener {
