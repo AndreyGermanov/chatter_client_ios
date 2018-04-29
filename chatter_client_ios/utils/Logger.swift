@@ -12,14 +12,13 @@ import Foundation
  * Class used to produce Log messages either on screen or in file, depending on used adapter
  */
 class Logger {
-    
+
     /// Which log levels to display
     static var displayLevels: [LogLevel] = [LogLevel.INFO,
                                             LogLevel.ERROR,
                                             LogLevel.WARNING,
-                                            LogLevel.DEBUG,
                                             LogLevel.DEBUG_UI]
-    
+
     /**
      * Function used to log message
      *
@@ -28,7 +27,7 @@ class Logger {
      * - Parameter className: Which class produced this log message
      * - Parameter methodName: Which method of class produced this log message
      */
-    static func log(level:LogLevel=LogLevel.INFO,message:String,className:String="",methodName:String="") {
+    static func log(level: LogLevel=LogLevel.INFO, message: String, className: String="", methodName: String="") {
         if message.count == 0 || !displayLevels.contains(level) {
             return
         }
@@ -48,7 +47,7 @@ class Logger {
 }
 
 /// Log levels for Logger
-enum LogLevel:String {
+enum LogLevel: String {
     case WARNING = "WARNING"
     case INFO = "INFO"
     case ERROR = "ERROR"

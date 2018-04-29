@@ -70,8 +70,7 @@ open class Store<State: StateType>: StoreType {
     fileprivate func _subscribe<SelectedState, S: StoreSubscriber>(
         _ subscriber: S, originalSubscription: Subscription<State>,
         transformedSubscription: Subscription<SelectedState>?)
-        where S.StoreSubscriberStateType == SelectedState
-    {
+        where S.StoreSubscriberStateType == SelectedState {
         // If the same subscriber is already registered with the store, replace the existing
         // subscription with the new one.
         if let index = subscriptions.index(where: { $0.subscriber === subscriber }) {
@@ -98,8 +97,7 @@ open class Store<State: StateType>: StoreType {
 
     open func subscribe<SelectedState, S: StoreSubscriber>(
         _ subscriber: S, transform: ((Subscription<State>) -> Subscription<SelectedState>)?
-    ) where S.StoreSubscriberStateType == SelectedState
-    {
+    ) where S.StoreSubscriberStateType == SelectedState {
         // Create a subscription for the new subscriber.
         let originalSubscription = Subscription<State>()
         // Call the optional transformation closure. This allows callers to modify
@@ -194,8 +192,7 @@ extension Store where State: Equatable {
 
     open func subscribe<SelectedState: Equatable, S: StoreSubscriber>(
         _ subscriber: S, transform: ((Subscription<State>) -> Subscription<SelectedState>)?
-        ) where S.StoreSubscriberStateType == SelectedState
-    {
+        ) where S.StoreSubscriberStateType == SelectedState {
         let originalSubscription = Subscription<State>()
 
         var transformedSubscription = transform?(originalSubscription)

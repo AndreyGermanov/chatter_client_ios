@@ -12,41 +12,41 @@ import ReSwift
 /**
  *  Controller class for User Profile form
  */
-class UserProfileViewController: UIViewController,StoreSubscriber {
-    
+class UserProfileViewController: UIViewController, StoreSubscriber {
+
     /// Type of Application store object for Redux
     typealias StoreSubscriberStateType = AppState
 
     /// Link to profile image
     @IBOutlet weak var profileImage: UIImageView!
-    
+
     /// Link to Login text field
     @IBOutlet weak var loginTextField: UITextField!
-    
+
     /// Link to Password field
     @IBOutlet weak var passwordTextField: UITextField!
-    
+
     /// Link to Confirm Password field
     @IBOutlet weak var confirmPasswordTextField: UITextField!
-    
+
     /// Link to First name field
     @IBOutlet weak var firstNameTextField: UITextField!
-    
+
     /// Link to Last name field
     @IBOutlet weak var lastNameTextField: UITextField!
-    
+
     /// Link to Gender selector
     @IBOutlet weak var genderSegmentedControl: UISegmentedControl!
-    
+
     /// Link to BirthDate field
     @IBOutlet weak var birthDateTextField: UITextField!
-    
+
     /// Link to Default room field
     @IBOutlet weak var defaultRoomTextField: UITextField!
-    
+
     /// Link to Default room picker component
     let defaultRoomPicker = UIPickerView()
-    
+
     /// Error label for Login field
     @IBOutlet weak var loginErrorLabel: UILabel!
     /// Error label from Password field
@@ -61,10 +61,10 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
     @IBOutlet weak var birthDateErrorLabel: UILabel!
     /// Error label for Default Room field
     @IBOutlet weak var defaultRoomErrorLabel: UILabel!
-    
+
     /// Progress indicator widget
     @IBOutlet weak var progressIndicator: UIActivityIndicatorView!
-    
+
     /**
      * Callback function, which runs once after this screen constructed
      */
@@ -90,7 +90,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
         self.birthDateTextField.delegate = self
         self.defaultRoomTextField.delegate = self
     }
-    
+
     /**
      * Callback function, which runs every time when user displays this screen
      * - Parameter animated: Should animate when appear
@@ -109,7 +109,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
             self.lastNameTextField.text = appStore.state.userProfile.last_name
         }
     }
-    
+
     /**
      * Redux state change callback. Executes when state changes. Used to update
      * UI based on new state
@@ -124,7 +124,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
                 let bundle = Bundle.main
                 let path = bundle.path(forResource: "profile", ofType: "png")!
                 let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
-                self.profileImage.image = UIImage(data:data)
+                self.profileImage.image = UIImage(data: data)
             }
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
@@ -136,9 +136,9 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
             if filteredRooms.count == 1 {
                 self.defaultRoomTextField.text = filteredRooms[0]["name"]
             }
-        
+
             let state = appStore.state.userProfile
-            
+
             if state.errors["login"] != nil {
                 self.loginErrorLabel.text = state.errors["login"]?.message
                 self.loginErrorLabel.isHidden = false
@@ -195,29 +195,29 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
             } else {
                 self.progressIndicator.isHidden = true
             }
-            
+
             if state.errors["general"] != nil {
                 var errors = state.errors
-                self.present(showAlert(state.errors["general"]!.message),animated:true)
+                self.present(showAlert(state.errors["general"]!.message), animated: true)
                 errors["general"] = nil
-                appStore.dispatch(UserProfileState.changeUserProfileErrorsAction(errors:errors))
+                appStore.dispatch(UserProfileState.changeUserProfileErrorsAction(errors: errors))
             }
-                
+
             self.view.isUserInteractionEnabled = !state.show_progress_indicator
-            
+
             if appStore.state.current_activity == .CHAT {
                 self.performSegue(withIdentifier: "profileChatSegue", sender: self.parent)
             }
         }
     }
-    
+
     /**
      * Gender segmented control onChhange handler
      *
      * - Parameter sender: Source Segmented control
      */
     @IBAction func onGenderChange(_ sender: UISegmentedControl) {
-        var gender:Gender = .M
+        var gender: Gender = .M
         switch sender.selectedSegmentIndex {
         case 0: gender = .M
         case 1: gender = .F
@@ -225,7 +225,7 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
         }
         appStore.dispatch(UserProfileState.changeUserProfileGenderAction(gender: gender))
     }
-    
+
     /**
      * "Update" button click handler.
      *
@@ -243,23 +243,23 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
     @IBAction func onCancelButtonClick(_ sender: UIButton) {
         _ = UserProfileState.cancelUserProfileUpdateAction().exec()
     }
-    
+
     /**
      * Function fires when user clisk on profile image. Used to begin process
      * of image capture. Shows Image source selection dialog (Camera or Photo library)
      */
     @objc func onProfileImageClick() {
         let dialog = UIAlertController(title: "Select", message: "Image source", preferredStyle: .actionSheet)
-        dialog.addAction(UIAlertAction(title: "Camera", style: .default, handler: { action in
+        dialog.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             self.getPhoto(.camera)
         }))
-        dialog.addAction(UIAlertAction(title: "Photo library", style: .default, handler: { action in
+        dialog.addAction(UIAlertAction(title: "Photo library", style: .default, handler: { _ in
             self.getPhoto(.photoLibrary)
-            
+
         }))
         self.present(dialog, animated: true, completion: nil)
     }
-    
+
     /**
      * Function used to open Image capture view
      *
@@ -272,20 +272,20 @@ class UserProfileViewController: UIViewController,StoreSubscriber {
         dialog.delegate = self
         self.present(dialog, animated: true, completion: nil)
     }
-    
+
     /**
      * Handler which executes when user changes date using DatePicker control
      *
      * - Parameter sender: Source date picker
      */
-    @objc func setBirtrhDate(sender:UIDatePicker) {
+    @objc func setBirtrhDate(sender: UIDatePicker) {
         let date = Double(sender.date.timeIntervalSince1970)
         print(date)
         if date > 0 {
             appStore.dispatch(UserProfileState.changeUserProfileBirthDateAction(birthDate: Int(date)))
         }
     }
-    
+
     /**
      * Callback fired when user taps on screen. Used to hide onscreen keyboard
      */
@@ -305,7 +305,7 @@ extension UserProfileViewController: UIImagePickerControllerDelegate, UINavigati
      * - Parameter picker: Link to Source Image Picker component dialog
      * - Parameter info: Array of captured information, including captured image and other metadata
      */
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             if let data = UIImagePNGRepresentation(image) {
                 appStore.dispatch(UserProfileState.changeUserProfileProfileImageAction(profileImage: data))
@@ -328,7 +328,7 @@ extension UserProfileViewController: UIPickerViewDelegate, UIPickerViewDataSourc
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    
+
     /**
      * Callback which used to set number of items in PickerView component.
      *
@@ -339,7 +339,7 @@ extension UserProfileViewController: UIPickerViewDelegate, UIPickerViewDataSourc
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return appStore.state.userProfile.rooms.count
     }
-    
+
     /**
      * Callback used to set titles of items in picker view
      *
@@ -356,7 +356,7 @@ extension UserProfileViewController: UIPickerViewDelegate, UIPickerViewDataSourc
             return nil
         }
     }
-    
+
     /**
      * Picker value change handler. Executes when users selects value in PickerView component
      *
@@ -376,7 +376,7 @@ extension UserProfileViewController: UIPickerViewDelegate, UIPickerViewDataSourc
  * Extension to handle input to text fields
  */
 extension UserProfileViewController: UITextFieldDelegate {
-    
+
     /**
      * Callback called when user edit text in text field
      *
@@ -400,7 +400,7 @@ extension UserProfileViewController: UITextFieldDelegate {
         }
         return true
     }
-    
+
     /**
      * Function fires when user finishes edit text in text field and presses "Return" button
      *
@@ -411,7 +411,7 @@ extension UserProfileViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
+
     /**
      * Enumeration to map "tag" codes of text fields to human readable IDs
      */

@@ -10,26 +10,26 @@ import XCTest
 import ReSwift
 @testable import chatter_client_ios
 
-class StoreTests: XCTestCase,StoreSubscriber {
-    
+class StoreTests: XCTestCase, StoreSubscriber {
+
     typealias StoreSubscriberStateType = AppState
-    
+
     func newState(state: AppState) {
         print(state.current_activity)
     }
 
     override func setUp() {
         super.setUp()
-        appStore.dispatch(AppState.ChangeActivityAction(activity:AppScreens.LOGIN_FORM))
+        appStore.dispatch(AppState.ChangeActivityAction(activity: AppScreens.LOGIN_FORM))
         appStore.subscribe(self)
     }
 
     override func tearDown() {
         super.tearDown()
     }
-    
+
     func testChangeActivity() {
-        appStore.dispatch(AppState.ChangeActivityAction(activity:AppScreens.USER_PROFILE))
+        appStore.dispatch(AppState.ChangeActivityAction(activity: AppScreens.USER_PROFILE))
         XCTAssertEqual(AppScreens.USER_PROFILE, appStore.state.current_activity)
     }
 }

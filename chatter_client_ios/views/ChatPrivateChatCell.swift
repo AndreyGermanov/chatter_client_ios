@@ -11,11 +11,11 @@ import UIKit
 /**
  *  ViewController for Chat cell inside Private chat cell UI
  */
-class ChatPrivateChatCell: UITableViewCell,ChatViewControllerCell {
+class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell {
     /// Link to parent view controller
     var parentViewController: ChatViewController?
     /// Link to application state related to chat screen
-    var state: ChatState?
+    var state: ChatState = ChatState()
 }
 
 /**
@@ -29,21 +29,21 @@ extension ChatPrivateChatCell: UITableViewDataSource, UITableViewDelegate {
      * Parameter newState: new updated state, which used to compare with current state
      * Returns: true if need to redraw tableView or false otherwise
      */
-    static func shouldUpdateTableView(newState:ChatState) -> Bool {
+    static func shouldUpdateTableView(newState: ChatState) -> Bool {
         return true
     }
-    func shouldUpdateTableView(newState:ChatState) -> Bool {
-        return ChatPrivateUsersListCell.shouldUpdateTableView(newState:newState)
+    func shouldUpdateTableView(newState: ChatState) -> Bool {
+        return ChatPrivateUsersListCell.shouldUpdateTableView(newState: newState)
     }
-    
+
     /**
      *  Function, which chatTableView calls to determine number of
      *  rows in a section. Returns number of users from application state array
      */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return state!.users.count
+        return state.users.count
     }
-    
+
     /**
      * Function, which tablewView calls whenever it need to redraw cell
      *
@@ -52,7 +52,7 @@ extension ChatPrivateChatCell: UITableViewDataSource, UITableViewDelegate {
      * - Returns: new cell which will replace cell which need to update
      */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         return UITableViewCell()
     }
 }

@@ -10,14 +10,14 @@ import XCTest
 @testable import chatter_client_ios
 
 class ChatActions: XCTestCase {
- 
+
     var messageCenter: MessageCenter = (UIApplication.shared.delegate as! AppDelegate).msgCenter
-    var images = [String:Data]()
-    
+    var images = [String: Data]()
+
     override func setUp() {
         super.setUp()
-        appStore.dispatch(UserState.changeUserLoginAction(login:""))
-        appStore.dispatch(UserState.changeUserEmailAction(email:""))
+        appStore.dispatch(UserState.changeUserLoginAction(login: ""))
+        appStore.dispatch(UserState.changeUserEmailAction(email: ""))
         appStore.dispatch(UserState.changeUserFirstNameAction(firstName: ""))
         appStore.dispatch(UserState.changeUserLastNameAction(lastName: ""))
         appStore.dispatch(UserState.changeUserGenderAction(gender: .M))
@@ -41,17 +41,17 @@ class ChatActions: XCTestCase {
         let room1 = ChatRoom(id: "r1", name: "Room 1")
         let room2 = ChatRoom(id: "r2", name: "Room 2")
         let room3 = ChatRoom(id: "r3", name: "Room 3")
-        appStore.dispatch(ChatState.changeRooms(rooms:[room1,room2,room3]))
+        appStore.dispatch(ChatState.changeRooms(rooms: [room1, room2, room3]))
     }
-    
+
     override func tearDown() {
-    
+
         super.tearDown()
     }
-    
+
     func testLogout() {
-        appStore.dispatch(UserState.changeUserLoginAction(login:"andrey"))
-        appStore.dispatch(UserState.changeUserEmailAction(email:"test@test.com"))
+        appStore.dispatch(UserState.changeUserLoginAction(login: "andrey"))
+        appStore.dispatch(UserState.changeUserEmailAction(email: "test@test.com"))
         appStore.dispatch(UserState.changeUserFirstNameAction(firstName: "Andrey"))
         appStore.dispatch(UserState.changeUserLastNameAction(lastName: "Germanov"))
         appStore.dispatch(UserState.changeUserGenderAction(gender: .M))
@@ -63,21 +63,21 @@ class ChatActions: XCTestCase {
         appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: "r1"))
         appStore.dispatch(AppState.ChangeActivityAction(activity: .CHAT))
         ChatState.logout().exec()
-        XCTAssertEqual(ChatScreenError.RESULT_ERROR_CONNECTION_ERROR,appStore.state.chat.errors["general"],"Should return connection error")
+        XCTAssertEqual(ChatScreenError.RESULT_ERROR_CONNECTION_ERROR, appStore.state.chat.errors["general"], "Should return connection error")
         messageCenter.testingModeConnected = true
         ChatState.logout().exec()
-        XCTAssertEqual(true,appStore.state.chat.showProgressIndicator,"Should show progress indicator before sending requet")
-        XCTAssertEqual(1,messageCenter.pendingRequests.count,"Should add request to pending requests queue")
+        XCTAssertEqual(true, appStore.state.chat.showProgressIndicator, "Should show progress indicator before sending requet")
+        XCTAssertEqual(1, messageCenter.pendingRequests.count, "Should add request to pending requests queue")
         messageCenter.processPendingRequests()
         var request_id = messageCenter.lastRequestObject["request_id"]!
-        XCTAssertEqual(0,messageCenter.pendingRequests.count,"Should remove request from pending requests queue")
-        XCTAssertEqual(1,messageCenter.requestsWaitingResponses.count,"Should add request to requestsWaitingResponse queue")
+        XCTAssertEqual(0, messageCenter.pendingRequests.count, "Should remove request from pending requests queue")
+        XCTAssertEqual(1, messageCenter.requestsWaitingResponses.count, "Should add request to requestsWaitingResponse queue")
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text:
             """
             {"request_id":"\(request_id)","status_code":"BOBOO"}
             """)
-        XCTAssertEqual(ChatScreenError.RESULT_ERROR_UNKNOWN_ERROR,appStore.state.chat.errors["general"],"Should contain unknown error")
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponse queue")
+        XCTAssertEqual(ChatScreenError.RESULT_ERROR_UNKNOWN_ERROR, appStore.state.chat.errors["general"], "Should contain unknown error")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponse queue")
         ChatState.logout().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -85,7 +85,7 @@ class ChatActions: XCTestCase {
             """
             {"request_id":"\(request_id)","status_code":"INTERNAL_ERROR","status":"error"}
             """)
-        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR,appStore.state.chat.errors["general"],"Should contain internal error")
+        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR, appStore.state.chat.errors["general"], "Should contain internal error")
         ChatState.logout().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -93,9 +93,9 @@ class ChatActions: XCTestCase {
             """
             {"request_id":"\(request_id)","status_code":"RESULT_OK","status":"ok"}
             """)
-        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR,appStore.state.chat.errors["general"],"Should contain internal error")
-        appStore.dispatch(UserState.changeUserLoginAction(login:""))
-        appStore.dispatch(UserState.changeUserEmailAction(email:""))
+        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR, appStore.state.chat.errors["general"], "Should contain internal error")
+        appStore.dispatch(UserState.changeUserLoginAction(login: ""))
+        appStore.dispatch(UserState.changeUserEmailAction(email: ""))
         appStore.dispatch(UserState.changeUserFirstNameAction(firstName: ""))
         appStore.dispatch(UserState.changeUserLastNameAction(lastName: ""))
         appStore.dispatch(UserState.changeUserGenderAction(gender: .M))
@@ -106,21 +106,21 @@ class ChatActions: XCTestCase {
         appStore.dispatch(UserState.changeUserIsLoginAction(isLogin: false))
         appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: ""))
         appStore.dispatch(AppState.ChangeActivityAction(activity: .LOGIN_FORM))
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponse queue")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponse queue")
     }
-    
+
     func testLoadUsers() {
         /// Request sending sequence tests
         ChatState.loadUsers().exec()
-        XCTAssertEqual(ChatScreenError.RESULT_ERROR_CONNECTION_ERROR,appStore.state.chat.errors["general"],
+        XCTAssertEqual(ChatScreenError.RESULT_ERROR_CONNECTION_ERROR, appStore.state.chat.errors["general"],
                        "Should return connection error if disconnected")
         messageCenter.testingModeConnected = true
         ChatState.loadUsers().exec()
-        XCTAssertEqual(1,messageCenter.pendingRequests.count,"Should place request to pendingRequests queue")
+        XCTAssertEqual(1, messageCenter.pendingRequests.count, "Should place request to pendingRequests queue")
         messageCenter.processPendingRequests()
-        XCTAssertEqual(0,messageCenter.pendingRequests.count,"Should remove request from pending requests queue")
-        XCTAssertEqual(1,messageCenter.requestsWaitingResponses.count,"Should place request to requests waiting responses queue")
-        XCTAssertTrue(appStore.state.chat.showProgressIndicator,"Should show progress indicator")
+        XCTAssertEqual(0, messageCenter.pendingRequests.count, "Should remove request from pending requests queue")
+        XCTAssertEqual(1, messageCenter.requestsWaitingResponses.count, "Should place request to requests waiting responses queue")
+        XCTAssertTrue(appStore.state.chat.showProgressIndicator, "Should show progress indicator")
         /// Server responses processing tests
         var request_id = messageCenter.lastRequestObject["request_id"]!
         var responseText = """
@@ -132,9 +132,9 @@ class ChatActions: XCTestCase {
             }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses queue")
-        XCTAssertFalse(appStore.state.chat.showProgressIndicator,"Should hide progress indicator")
-        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR,appStore.state.chat.errors["general"],"Should parse error messages correctly")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses queue")
+        XCTAssertFalse(appStore.state.chat.showProgressIndicator, "Should hide progress indicator")
+        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR, appStore.state.chat.errors["general"], "Should parse error messages correctly")
         ChatState.loadUsers().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -148,9 +148,9 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses queue")
-        XCTAssertFalse(appStore.state.chat.showProgressIndicator,"Should hide progress indicator")
-        XCTAssertEqual(0,appStore.state.chat.users.count,"Should not load any users if users list has incorrect format")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses queue")
+        XCTAssertFalse(appStore.state.chat.showProgressIndicator, "Should hide progress indicator")
+        XCTAssertEqual(0, appStore.state.chat.users.count, "Should not load any users if users list has incorrect format")
 
         ChatState.loadUsers().exec()
         messageCenter.processPendingRequests()
@@ -165,8 +165,8 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(0,appStore.state.chat.users.count,"Should not load any users if users list has incorrect format")
-        
+        XCTAssertEqual(0, appStore.state.chat.users.count, "Should not load any users if users list has incorrect format")
+
         ChatState.loadUsers().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -183,10 +183,10 @@ class ChatActions: XCTestCase {
             }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(1,appStore.state.chat.users.count,"When receive list as string Should add user with single _id " +
+        XCTAssertEqual(1, appStore.state.chat.users.count, "When receive list as string Should add user with single _id " +
             "field and defaults for others \(appStore.state.chat.users)")
-        XCTAssertEqual("M",ChatUser.getById("u1")!.gender,"Should contain defaults for fields")
-        
+        XCTAssertEqual("M", ChatUser.getById("u1")!.gender, "Should contain defaults for fields")
+
         ChatState.loadUsers().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -216,19 +216,19 @@ class ChatActions: XCTestCase {
             }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(1,appStore.state.chat.users.count,"Should update user, not add new one: \(appStore.state.chat.users)")
+        XCTAssertEqual(1, appStore.state.chat.users.count, "Should update user, not add new one: \(appStore.state.chat.users)")
         var user = ChatUser.getById("u1")!
-        XCTAssertEqual("User 1",user.login,"Should update 'login' correctly")
-        XCTAssertEqual("user@user.com",user.email,"Should update 'email' correctly")
-        XCTAssertEqual(0,user.birthDate,"Should not get incorrect 'birthDate' value")
-        XCTAssertEqual("John",user.first_name,"Should update 'first_name' correctly")
-        XCTAssertEqual("Johnson",user.last_name,"Should update 'last_name' correctly")
-        XCTAssertEqual(false,user.isLogin,"Should update 'isLogin' correctly")
-        XCTAssertEqual("M",user.gender,"Should not get incorrect 'gender' value")
-        XCTAssertEqual(12345,user.lastActivityTime,"Should update 'lastActivityTime' correctly")
-        XCTAssertEqual(12345678,user.profileImageChecksum,"Should update 'profileImageChecksum' correctly")
-        XCTAssertNil(user.room,"Should not get room which does not exist")
-        XCTAssertEqual(1,messageCenter.responsesWaitingFile.count,"Should add this response to 'responsesWaitingFile' queue")
+        XCTAssertEqual("User 1", user.login, "Should update 'login' correctly")
+        XCTAssertEqual("user@user.com", user.email, "Should update 'email' correctly")
+        XCTAssertEqual(0, user.birthDate, "Should not get incorrect 'birthDate' value")
+        XCTAssertEqual("John", user.first_name, "Should update 'first_name' correctly")
+        XCTAssertEqual("Johnson", user.last_name, "Should update 'last_name' correctly")
+        XCTAssertEqual(false, user.isLogin, "Should update 'isLogin' correctly")
+        XCTAssertEqual("M", user.gender, "Should not get incorrect 'gender' value")
+        XCTAssertEqual(12345, user.lastActivityTime, "Should update 'lastActivityTime' correctly")
+        XCTAssertEqual(12345678, user.profileImageChecksum, "Should update 'profileImageChecksum' correctly")
+        XCTAssertNil(user.room, "Should not get room which does not exist")
+        XCTAssertEqual(1, messageCenter.responsesWaitingFile.count, "Should add this response to 'responsesWaitingFile' queue")
 
         ChatState.loadUsers().exec()
         messageCenter.processPendingRequests()
@@ -254,19 +254,19 @@ class ChatActions: XCTestCase {
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
         user = ChatUser.getById("u1")!
-        XCTAssertEqual(1,appStore.state.chat.users.count,"Should update user, not add new one: \(appStore.state.chat.users)")
-        XCTAssertEqual(1234567890,user.birthDate,"Should set correct 'birthDate' value")
-        XCTAssertEqual("r1",user.room!.id,"Should set correct 'room' value")
-        XCTAssertEqual("F",user.gender,"Should set correct 'gender' value")
-        XCTAssertEqual(true,user.isLogin,"Should set correct 'isLogin' value")
-        XCTAssertEqual(2,messageCenter.responsesWaitingFile.count,"Should add this response to 'responsesWaitingFile' queue")
+        XCTAssertEqual(1, appStore.state.chat.users.count, "Should update user, not add new one: \(appStore.state.chat.users)")
+        XCTAssertEqual(1234567890, user.birthDate, "Should set correct 'birthDate' value")
+        XCTAssertEqual("r1", user.room!.id, "Should set correct 'room' value")
+        XCTAssertEqual("F", user.gender, "Should set correct 'gender' value")
+        XCTAssertEqual(true, user.isLogin, "Should set correct 'isLogin' value")
+        XCTAssertEqual(2, messageCenter.responsesWaitingFile.count, "Should add this response to 'responsesWaitingFile' queue")
         messageCenter.websocketDidReceiveData(socket: messageCenter.ws, data: images["simp1"]!)
-        XCTAssertNotNil(user.profileImage,"Should set received profile image")
-        XCTAssertEqual(images["simp1"]!.bytes.crc32(),user.profileImage?.bytes.crc32(),"Should set correct profile image")
-        XCTAssertEqual(0,messageCenter.receivedFiles.count,"Should remove received profile image from 'receivedFiles' queue")
-        XCTAssertEqual(1,messageCenter.responsesWaitingFile.count,"Should remove response from 'responsesWaitingFile' queue")
-        
-        ChatState.loadUsers().exec() {
+        XCTAssertNotNil(user.profileImage, "Should set received profile image")
+        XCTAssertEqual(images["simp1"]!.bytes.crc32(), user.profileImage?.bytes.crc32(), "Should set correct profile image")
+        XCTAssertEqual(0, messageCenter.receivedFiles.count, "Should remove received profile image from 'receivedFiles' queue")
+        XCTAssertEqual(1, messageCenter.responsesWaitingFile.count, "Should remove response from 'responsesWaitingFile' queue")
+
+        ChatState.loadUsers().exec {
             print("CALLBACK STARTED")
         }
         messageCenter.processPendingRequests()
@@ -320,28 +320,28 @@ class ChatActions: XCTestCase {
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
         messageCenter.websocketDidReceiveData(socket: messageCenter.ws, data: images["simp2"]!)
         messageCenter.websocketDidReceiveData(socket: messageCenter.ws, data: images["simp4"]!)
-        XCTAssertEqual(5,appStore.state.chat.users.count,"Should receive all users")
+        XCTAssertEqual(5, appStore.state.chat.users.count, "Should receive all users")
         let user1 = ChatUser.getById("u1")!
         let user2 = ChatUser.getById("u2")!
         let user3 = ChatUser.getById("u3")!
         let user4 = ChatUser.getById("u4")!
         let user5 = ChatUser.getById("u5")!
-        XCTAssertEqual(1, messageCenter.responsesWaitingFile.count,"Should remove all responses waiting file after finish")
-        XCTAssertEqual(0, messageCenter.receivedFiles.count,"Should remove all records from receivedFiles queue")
-        XCTAssertTrue(user1.isLogin,"Should set correct 'isLogin' field value")
-        XCTAssertEqual(user1.profileImage!.bytes.crc32(),images["simp2"]!.bytes.crc32(),"Should set correct profile image for user1")
-        XCTAssertEqual(user2.profileImage!.bytes.crc32(),images["simp1"]!.bytes.crc32(),"Should set correct profile image for user2")
-        XCTAssertEqual(user3.profileImage!.bytes.crc32(),images["simp3"]!.bytes.crc32(),"Should set correct profile image for user3")
-        XCTAssertEqual(user4.profileImage!.bytes.crc32(),images["simp4"]!.bytes.crc32(),"Should set correct profile image for user4")
-        XCTAssertEqual(user5.profileImage!.bytes.crc32(),images["simp5"]!.bytes.crc32(),"Should set correct profile image for user5")
-        XCTAssertEqual("User 1",user1.login,"Should set correct 'login' for user1")
-        XCTAssertEqual("User 2",user2.login,"Should set correct 'login' for user2")
-        XCTAssertEqual("User 3",user3.login,"Should set correct 'login' for user3")
-        XCTAssertEqual("User 4",user4.login,"Should set correct 'login' for user4")
-        XCTAssertEqual("User 5",user5.login,"Should set correct 'login' for user5")
-        
+        XCTAssertEqual(1, messageCenter.responsesWaitingFile.count, "Should remove all responses waiting file after finish")
+        XCTAssertEqual(0, messageCenter.receivedFiles.count, "Should remove all records from receivedFiles queue")
+        XCTAssertTrue(user1.isLogin, "Should set correct 'isLogin' field value")
+        XCTAssertEqual(user1.profileImage!.bytes.crc32(), images["simp2"]!.bytes.crc32(), "Should set correct profile image for user1")
+        XCTAssertEqual(user2.profileImage!.bytes.crc32(), images["simp1"]!.bytes.crc32(), "Should set correct profile image for user2")
+        XCTAssertEqual(user3.profileImage!.bytes.crc32(), images["simp3"]!.bytes.crc32(), "Should set correct profile image for user3")
+        XCTAssertEqual(user4.profileImage!.bytes.crc32(), images["simp4"]!.bytes.crc32(), "Should set correct profile image for user4")
+        XCTAssertEqual(user5.profileImage!.bytes.crc32(), images["simp5"]!.bytes.crc32(), "Should set correct profile image for user5")
+        XCTAssertEqual("User 1", user1.login, "Should set correct 'login' for user1")
+        XCTAssertEqual("User 2", user2.login, "Should set correct 'login' for user2")
+        XCTAssertEqual("User 3", user3.login, "Should set correct 'login' for user3")
+        XCTAssertEqual("User 4", user4.login, "Should set correct 'login' for user4")
+        XCTAssertEqual("User 5", user5.login, "Should set correct 'login' for user5")
+
         /// High Load test
-        ChatState.loadUsers().exec() {
+        ChatState.loadUsers().exec {
             print("CALLBACK STARTED")
         }
         messageCenter.processPendingRequests()
@@ -357,7 +357,7 @@ class ChatActions: XCTestCase {
             }
             """)
         }
-        usersListText = users.joined(separator:",")
+        usersListText = users.joined(separator: ",")
         responseText = """
         {
             "request_id":"\(request_id)",
@@ -368,27 +368,27 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should empty requests waiting responses queue")
-        XCTAssertEqual(numberOfUsers,appStore.state.chat.users.count,"Should contain correct number of received users")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should empty requests waiting responses queue")
+        XCTAssertEqual(numberOfUsers, appStore.state.chat.users.count, "Should contain correct number of received users")
         for i in 1...numberOfUsers {
             let user = ChatUser.getById("u\(i)")!
-            XCTAssertEqual("User \(i)",user.login,"Should set correct login for user\(i)")
+            XCTAssertEqual("User \(i)", user.login, "Should set correct login for user\(i)")
         }
     }
-    
+
     func testLoadRooms() {
         appStore.dispatch(ChatState.changeRooms(rooms: [ChatRoom]()))
         /// Request sending sequence tests
         ChatState.loadRooms().exec()
-        XCTAssertEqual(ChatScreenError.RESULT_ERROR_CONNECTION_ERROR,appStore.state.chat.errors["general"],
+        XCTAssertEqual(ChatScreenError.RESULT_ERROR_CONNECTION_ERROR, appStore.state.chat.errors["general"],
                        "Should return connection error if disconnected")
         messageCenter.testingModeConnected = true
         ChatState.loadRooms().exec()
-        XCTAssertEqual(1,messageCenter.pendingRequests.count,"Should place request to pendingRequests queue")
+        XCTAssertEqual(1, messageCenter.pendingRequests.count, "Should place request to pendingRequests queue")
         messageCenter.processPendingRequests()
-        XCTAssertEqual(0,messageCenter.pendingRequests.count,"Should remove request from pending requests queue")
-        XCTAssertEqual(1,messageCenter.requestsWaitingResponses.count,"Should place request to requests waiting responses queue")
-        XCTAssertTrue(appStore.state.chat.showProgressIndicator,"Should show progress indicator")
+        XCTAssertEqual(0, messageCenter.pendingRequests.count, "Should remove request from pending requests queue")
+        XCTAssertEqual(1, messageCenter.requestsWaitingResponses.count, "Should place request to requests waiting responses queue")
+        XCTAssertTrue(appStore.state.chat.showProgressIndicator, "Should show progress indicator")
         /// Server responses processing tests
         var request_id = messageCenter.lastRequestObject["request_id"]!
         var responseText = """
@@ -400,9 +400,9 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses queue")
-        XCTAssertFalse(appStore.state.chat.showProgressIndicator,"Should hide progress indicator")
-        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR,appStore.state.chat.errors["general"],"Should parse error messages correctly")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses queue")
+        XCTAssertFalse(appStore.state.chat.showProgressIndicator, "Should hide progress indicator")
+        XCTAssertEqual(ChatScreenError.INTERNAL_ERROR, appStore.state.chat.errors["general"], "Should parse error messages correctly")
         ChatState.loadRooms().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -416,10 +416,10 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses queue")
-        XCTAssertFalse(appStore.state.chat.showProgressIndicator,"Should hide progress indicator")
-        XCTAssertEqual(0,appStore.state.chat.rooms.count,"Should not load any rooms if rooms list has incorrect format")
-        
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses queue")
+        XCTAssertFalse(appStore.state.chat.showProgressIndicator, "Should hide progress indicator")
+        XCTAssertEqual(0, appStore.state.chat.rooms.count, "Should not load any rooms if rooms list has incorrect format")
+
         ChatState.loadRooms().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -433,8 +433,8 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(0,appStore.state.chat.rooms.count,"Should not load any rooms if rooms list has incorrect format")
-        
+        XCTAssertEqual(0, appStore.state.chat.rooms.count, "Should not load any rooms if rooms list has incorrect format")
+
         ChatState.loadRooms().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -451,8 +451,8 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(0,appStore.state.chat.rooms.count,"Should not add room without 'name' field")
- 
+        XCTAssertEqual(0, appStore.state.chat.rooms.count, "Should not add room without 'name' field")
+
         ChatState.loadRooms().exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"]!
@@ -469,9 +469,9 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(1,appStore.state.chat.rooms.count,"Should add new room")
-        var room = ChatRoom.getById("r1")!;
-        XCTAssertEqual("Room",room.name,"Should set correct 'name' for new added room")
+        XCTAssertEqual(1, appStore.state.chat.rooms.count, "Should add new room")
+        var room = ChatRoom.getById("r1")!
+        XCTAssertEqual("Room", room.name, "Should set correct 'name' for new added room")
 
         ChatState.loadRooms().exec()
         messageCenter.processPendingRequests()
@@ -492,11 +492,11 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(1,appStore.state.chat.rooms.count,"Should update room, not add new one: \(appStore.state.chat.rooms)")
+        XCTAssertEqual(1, appStore.state.chat.rooms.count, "Should update room, not add new one: \(appStore.state.chat.rooms)")
         room = ChatRoom.getById("r1")!
-        XCTAssertEqual("Room 1",room.name,"Should update 'name' correctly")
-        
-        ChatState.loadRooms().exec() {
+        XCTAssertEqual("Room 1", room.name, "Should update 'name' correctly")
+
+        ChatState.loadRooms().exec {
             print("CALLBACK STARTED")
         }
         messageCenter.processPendingRequests()
@@ -535,20 +535,20 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(5,appStore.state.chat.rooms.count,"Should receive all rooms")
+        XCTAssertEqual(5, appStore.state.chat.rooms.count, "Should receive all rooms")
         let room1 = ChatRoom.getById("r1")!
         let room2 = ChatRoom.getById("r2")!
         let room3 = ChatRoom.getById("r3")!
         let room4 = ChatRoom.getById("r4")!
         let room5 = ChatRoom.getById("r5")!
-        XCTAssertEqual("Room 1",room1.name,"Should set correct 'name' for room1")
-        XCTAssertEqual("Room 2",room2.name,"Should set correct 'name' for room2")
-        XCTAssertEqual("Room 3",room3.name,"Should set correct 'name' for room3")
-        XCTAssertEqual("Room 4",room4.name,"Should set correct 'name' for room4")
-        XCTAssertEqual("Room 5",room5.name,"Should set correct 'name' for room5")
-        
+        XCTAssertEqual("Room 1", room1.name, "Should set correct 'name' for room1")
+        XCTAssertEqual("Room 2", room2.name, "Should set correct 'name' for room2")
+        XCTAssertEqual("Room 3", room3.name, "Should set correct 'name' for room3")
+        XCTAssertEqual("Room 4", room4.name, "Should set correct 'name' for room4")
+        XCTAssertEqual("Room 5", room5.name, "Should set correct 'name' for room5")
+
         /// High Load test
-        ChatState.loadRooms().exec() {
+        ChatState.loadRooms().exec {
             print("CALLBACK STARTED")
         }
         messageCenter.processPendingRequests()
@@ -563,7 +563,7 @@ class ChatActions: XCTestCase {
                 }
                 """)
         }
-        roomsListText = rooms.joined(separator:",")
+        roomsListText = rooms.joined(separator: ",")
         responseText = """
         {
             "request_id":"\(request_id)",
@@ -574,10 +574,10 @@ class ChatActions: XCTestCase {
         }
         """
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseText)
-        XCTAssertEqual(numberOfRooms,appStore.state.chat.rooms.count,"Should contain correct number of received rooms")
+        XCTAssertEqual(numberOfRooms, appStore.state.chat.rooms.count, "Should contain correct number of received rooms")
         for i in 1...numberOfRooms {
             let room = ChatRoom.getById("r\(i)")!
-            XCTAssertEqual("Room \(i)",room.name,"Should set correct name for room\(i)")
+            XCTAssertEqual("Room \(i)", room.name, "Should set correct name for room\(i)")
         }
     }
 }

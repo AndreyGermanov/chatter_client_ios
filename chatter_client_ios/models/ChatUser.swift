@@ -13,7 +13,7 @@ import Foundation
 /***
  * Definitions of user roles
  */
-enum UserRole:Int {
+enum UserRole: Int {
     case USER = 1, ADMIN = 2
 }
 
@@ -36,16 +36,16 @@ class ChatUser: Model {
     /// Last activity time of user (when he send last message), or login or logout
     var lastActivityTime: Int = 0
     /// Room, in which user currently presents
-    var room: ChatRoom? = nil
+    var room: ChatRoom?
     /// Is user login and active right now
     var isLogin: Bool = false
     /// Role of user
     var role: Int = 1
     /// Profile image
-    var profileImage: Data? = nil
+    var profileImage: Data?
     /// Profile image checksum
     var profileImageChecksum: Int = 0
-    
+
     /**
      * Method returns instance of this class by ID
      *
@@ -53,14 +53,14 @@ class ChatUser: Model {
      * - Parameter collection: Array of users to search in (optional)
      * - Returns: ChatUser instance or nothing if not found
      */
-    static func getById(_ id:String,collection:[ChatUser]?=nil) -> ChatUser? {
+    static func getById(_ id: String, collection: [ChatUser]?=nil) -> ChatUser? {
         var users = collection
         if users == nil {
             users = appStore.state.chat.users
         }
-        return getModelById(id: id, collection: collection)
+        return getModelById(id: id, collection: users)
     }
-    
+
     /**
      * Method returns array of private messages, sent by this user
      * to active user.
@@ -69,7 +69,7 @@ class ChatUser: Model {
      * - Parameter users: Array of users to use as a base (optional)
      * - Returns: [ChatMessage] array of all private messages
      */
-    func getPrivateMessages(_ collection:[ChatMessage]?=nil,users:[ChatUser]?=nil) -> [ChatMessage] {
+    func getPrivateMessages(_ collection: [ChatMessage]?=nil, users: [ChatUser]?=nil) -> [ChatMessage] {
         var result = [ChatMessage]()
         var messages = collection
         if messages == nil {
@@ -79,7 +79,7 @@ class ChatUser: Model {
         if users == nil {
             users = appStore.state.chat.users
         }
-        if let me = ChatUser.getById(appStore.state.user.user_id,collection:users!) {
+        if let me = ChatUser.getById(appStore.state.user.user_id, collection: users!) {
             if me.id == self.id {
                 return result
             }
@@ -90,7 +90,7 @@ class ChatUser: Model {
         }
         return result
     }
-    
+
     /**
      * Method returns number of unread messages from this user
      *
@@ -98,17 +98,17 @@ class ChatUser: Model {
      * - Parameter users: Collection of users, which use as a base (optional)
      * - Returns: Int number of unread messages
      */
-    func getUnreadMessagesCount(_ collection:[ChatMessage]?=nil,users:[ChatUser]?=nil) -> Int {
+    func getUnreadMessagesCount(_ collection: [ChatMessage]?=nil, users: [ChatUser]?=nil) -> Int {
         var result = 0
         var messages = collection
         if messages == nil {
             messages  = appStore.state.chat.messages
         }
         var users = users
-        if (users == nil) {
+        if users == nil {
             users = appStore.state.chat.users
         }
-        if let me = ChatUser.getById(appStore.state.user.user_id,collection: users!) {
+        if let me = ChatUser.getById(appStore.state.user.user_id, collection: users!) {
             if me.id == self.id {
                 return 0
             }
@@ -116,7 +116,7 @@ class ChatUser: Model {
         }
         return result
     }
-    
+
     /**
      * Method returns copy of room object
      * - Returns: copy of current object
@@ -137,7 +137,7 @@ class ChatUser: Model {
         result.room = self.room?.copy()
         return result
     }
-    
+
     /**
      * Method compares current object with provided obj and returns
      * true if they are equal and false otherwise
@@ -145,30 +145,26 @@ class ChatUser: Model {
      * - Parameter obj: Object to compare
      * - Returns: true if they are equal and false otherwise
      */
-    func equals(_ obj:ChatUser?) -> Bool {
-        guard let user = obj else {
-            return false
-        }
-        let result = super.equals(obj)
-        return result && Model.compare(model1: self.room, model2: user.room)
+    func equals(_ obj: ChatUser?) -> Bool {
+        return super.equals(obj) && ChatRoom.compare(model1: self.room, model2: obj!.room)
     }
-    
+
     /**
      * Method converts object to HashMap
      *
      * - Returns: Dictionary with object properties
      */
-    override func toHashMap() -> [String:Any] {
-        var result:[String:Any] =  [
-            "id":self.id,
-            "login":self.login,
-            "email":self.email,
-            "first_name":self.first_name,
-            "last_name":self.last_name,
-            "gender":self.gender,
-            "birthDate":self.birthDate,
-            "role":self.role,
-            "lastActivityTime":self.lastActivityTime,
+    override func toHashMap() -> [String: Any] {
+        var result: [String: Any] =  [
+            "id": self.id,
+            "login": self.login,
+            "email": self.email,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "gender": self.gender,
+            "birthDate": self.birthDate,
+            "role": self.role,
+            "lastActivityTime": self.lastActivityTime,
             "isLogin": self.isLogin,
             "profileImageChecsum": self.profileImageChecksum
         ]

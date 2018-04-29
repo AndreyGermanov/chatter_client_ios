@@ -15,9 +15,10 @@ import ReSwift
  * - Parateter state: Input state
  * - Returns State after applying action to it
  */
-func chatScreenReducer(action:Action,state:ChatState) -> ChatState {
+func chatScreenReducer(action: Action, state: ChatState) -> ChatState {
     var newState = state
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"ChatScreenReducer: Received action \(action)",className:"chatScreenReducer",methodName:"chatScreenReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "ChatScreenReducer: Received action \(action)",
+        className: "chatScreenReducer", methodName: "chatScreenReducer")
     switch action {
     case let action as ChatState.changeRooms:
         newState.rooms = action.rooms
@@ -48,7 +49,7 @@ func chatScreenReducer(action:Action,state:ChatState) -> ChatState {
     default:
         break
     }
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"ChatScreenReducer: ChatState after reducing - \(newState)",className:"chatScreenReducer",methodName:"chatScreenReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "ChatScreenReducer: ChatState after reducing - \(newState)",
+        className: "chatScreenReducer", methodName: "chatScreenReducer")
     return newState
 }
-

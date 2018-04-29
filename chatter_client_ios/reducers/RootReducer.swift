@@ -16,9 +16,9 @@ import ReSwift
  * - Parateter state: Input state
  * - Returns State after applying action to it
  */
-func rootReducer(action:Action,state:AppState?) -> AppState {
+func rootReducer(action: Action, state: AppState?) -> AppState {
     var newState = state ?? AppState()
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"RootReducer: Received action \(action)",className:"rootReducer",methodName:"rootReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "RootReducer: Received action \(action)", className: "rootReducer", methodName: "rootReducer")
     switch action {
     case let action as AppState.ChangeActivityAction:
         newState.current_activity = action.activity
@@ -33,6 +33,6 @@ func rootReducer(action:Action,state:AppState?) -> AppState {
     default:
         break
     }
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"RootReducer: AppState after reducing - \(newState)",className:"rootReducer",methodName:"rootReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "RootReducer: AppState after reducing - \(newState)", className: "rootReducer", methodName: "rootReducer")
     return newState
 }

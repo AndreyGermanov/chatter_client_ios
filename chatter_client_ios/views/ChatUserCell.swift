@@ -11,10 +11,10 @@ import UIKit
 /**
  *  ViewController for row in ChatUsersList table. Shows single user
  */
-class ChatUserCell: UITableViewCell,ChatViewControllerCell {
+class ChatUserCell: UITableViewCell, ChatViewControllerCell {
     var parentViewController: ChatViewController?
     /// Link to application state related to chat screen
-    var state: ChatState?
+    var state: ChatState = ChatState()
     /// Link to User image view
     @IBOutlet weak var userProfileImageView: UIImageView!
     /// Link to User label

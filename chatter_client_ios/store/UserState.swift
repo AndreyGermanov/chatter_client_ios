@@ -12,7 +12,7 @@ import Foundation
 import ReSwift
 
 /// Base protocol for User profile screen actions
-protocol UserAction : Action {}
+protocol UserAction: Action {}
 
 /**
  * Describes state of current application user
@@ -29,8 +29,8 @@ struct UserState {
     var gender: Gender = .M
     var birthDate = 0
     var default_room = ""
-    var profileImage: Data? = nil
-    
+    var profileImage: Data?
+
     /**
      * Action to change "Login" field
      */
@@ -38,7 +38,7 @@ struct UserState {
         /// New login field value
         let login: String
     }
-    
+
     /**
      * Action to change "user_id" field
      */
@@ -46,7 +46,7 @@ struct UserState {
         /// New user_id field value
         let user_id: String
     }
-    
+
     /**
      * Action to change "session_id" field
      */
@@ -54,7 +54,7 @@ struct UserState {
         /// New session_id field value
         let session_id: String
     }
-    
+
     /**
      * Action to change "isLogin" field
      */
@@ -62,7 +62,7 @@ struct UserState {
         /// New isLogin field value
         let isLogin: Bool
     }
-    
+
     /**
      * Action to change "email" field
      */
@@ -70,7 +70,7 @@ struct UserState {
         /// New email field value
         let email: String
     }
-    
+
     /**
      * Action to change "first_name" field
      */
@@ -78,7 +78,7 @@ struct UserState {
         /// New first_name field value
         let firstName: String
     }
-    
+
     /**
      * Action to change "last_name" field
      */
@@ -86,7 +86,7 @@ struct UserState {
         /// New last_name field value
         let lastName: String
     }
-    
+
     /**
      * Action to change "last_name" field
      */
@@ -94,7 +94,7 @@ struct UserState {
         /// New gender field value
         let gender: Gender
     }
-    
+
     /**
      * Action to change "birthDate" field
      */
@@ -102,7 +102,7 @@ struct UserState {
         /// New birthDate field value
         let birthDate: Int
     }
-    
+
     /**
      * Action to change "profileImage" field
      */
@@ -110,7 +110,7 @@ struct UserState {
         /// New profileImage field value
         let profileImage: Data?
     }
-    
+
     /**
      * Action to change "default_room" field
      */
@@ -118,7 +118,7 @@ struct UserState {
         /// New default_room field value
         let default_room: String
     }
-    
+
     /**
      * Utility function which cleans all user information
      * and logs him out
@@ -129,10 +129,10 @@ struct UserState {
         appStore.dispatch(UserState.changeUserGenderAction(gender: .M))
         appStore.dispatch(UserState.changeUserBirthDateAction(birthDate: 0))
         appStore.dispatch(UserState.changeUserUserIdAction(user_id: ""))
-        appStore.dispatch(UserState.changeUserSessionIdAction(session_id:""))
+        appStore.dispatch(UserState.changeUserSessionIdAction(session_id: ""))
         appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: ""))
         appStore.dispatch(UserState.changeUserFirstNameAction(firstName: ""))
-        appStore.dispatch(UserState.changeUserLastNameAction(lastName:""))
+        appStore.dispatch(UserState.changeUserLastNameAction(lastName: ""))
         appStore.dispatch(UserState.changeUserIsLoginAction(isLogin: false))
         appStore.dispatch(UserState.changeUserProfileImageAction(profileImage: nil))
         UserDefaults.standard.removeObject(forKey: "user_id")
@@ -143,6 +143,3 @@ struct UserState {
         appStore.dispatch(LoginFormState.changeLoginFormShowProgressIndicatorAction(progressIndicator: false))
     }
 }
-
-
-

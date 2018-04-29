@@ -12,13 +12,16 @@ import ReSwift
 /**
  *  ViewController for Users List cell inside Private chat cell UI
  */
-class ChatPrivateUsersListCell: UITableViewCell,ChatViewControllerCell,StoreSubscriber {
+class ChatPrivateUsersListCell: UITableViewCell, ChatViewControllerCell, StoreSubscriber {
+    
     /// Link to parent view controller
     var parentViewController: ChatViewController?
     /// Link to application state related to chat screen
-    var state: ChatState?
+    var state: ChatState = ChatState()
     /// TableView which displays list of users
     @IBOutlet weak var usersTableView: UITableView!
+    /// Link to object, using for testing purposes
+    let tester = (UIApplication.shared.delegate as! AppDelegate).tester
     
     /**
      * Callback called when cell initialized
@@ -30,7 +33,7 @@ class ChatPrivateUsersListCell: UITableViewCell,ChatViewControllerCell,StoreSubs
         // subscribe to application state change events
         appStore.subscribe(self)
     }
-    
+
     /**
      * Redux state change callback. Executes when state changes. Used to update
      * UI based on new state
@@ -38,13 +41,18 @@ class ChatPrivateUsersListCell: UITableViewCell,ChatViewControllerCell,StoreSubs
      * - Parameter state: Link to new updated state
      */
     func newState(state: AppState) {
-        let shouldUpdateTableView = self.shouldUpdateTableView(newState:state.chat)
+        let shouldUpdateTableView = self.shouldUpdateTableView(newState: state.chat)
         if shouldUpdateTableView {
-            Logger.log(level:LogLevel.DEBUG_UI,message:"Reloaded chatPrivateTableView data",
-                       className:"ChatPrivateCell",methodName:"newState")
+            Logger.log(level: LogLevel.DEBUG_UI, message: "Reloaded usersTableView data",
+                       className: "ChatPrivateCell", methodName: "newState")
             usersTableView.reloadData()
         }
-        self.state = state.chat
+        if (self.state.chatMode != state.chat.chatMode && state.chat.users.count == 0) {
+            tester.loadUsers()
+        }
+        self.state = state.chat.copy()
+        Logger.log(level: LogLevel.DEBUG_UI,message: "Updated local state from application state. State content: " +
+            "\(String(describing: self.state))",className: "ChatPrivateUsersListCell",methodName:"newState")
     }
 }
 /**
@@ -58,21 +66,21 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
      * Parameter newState: new updated state, which used to compare with current state
      * Returns: true if need to redraw tableView or false otherwise
      */
-    static func shouldUpdateTableView(newState:ChatState) -> Bool {
+    static func shouldUpdateTableView(newState: ChatState) -> Bool {
         return true
     }
-    func shouldUpdateTableView(newState:ChatState) -> Bool {
-        return ChatPrivateUsersListCell.shouldUpdateTableView(newState:newState)
+    func shouldUpdateTableView(newState: ChatState) -> Bool {
+        return ChatPrivateUsersListCell.shouldUpdateTableView(newState: newState)
     }
-    
+
     /**
      *  Function, which chatTableView calls to determine number of
      *  rows in a section. Returns number of users from application state array
      */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return state!.users.count
+        return state.users.count
     }
-    
+
     /**
      * Function, which tablewView calls whenever it need to redraw cell
      *
@@ -82,14 +90,11 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
      */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.row
-        guard let state = state else {
-            return UITableViewCell()
-        }
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ChatUserCell", for: indexPath) as? ChatUserCell else {
             return UITableViewCell()
         }
         let user = state.users[row]
-        var name = "";
+        var name = ""
         if !user.first_name.isEmpty {
             name = user.first_name
         }
@@ -104,4 +109,3 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 }
-

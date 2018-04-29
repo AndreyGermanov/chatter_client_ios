@@ -13,18 +13,21 @@ class ChatViewController: UIViewController, StoreSubscriber {
 
     /// Type of Application store object for Redux
     typealias StoreSubscriberStateType = AppState
-    
+
     /// Top segmented control used to switch between
     /// chat screen modes (Public, Private, Profile)
     @IBOutlet weak var chatModesSegmentedControl: UISegmentedControl!
-    
+
     /// Main Chat tableView, used to display different
     /// subscreens of chat (Public,Private or Profile) as
     /// cells
     @IBOutlet weak var chatTableView: UITableView!
-    
+
     /// Local copy of Chat Screen state (the state which used now to draw this screen)
-    var state:ChatState = ChatState()
+    var state: ChatState = ChatState()
+
+    /// Link to object, using for testing purposes
+    let tester = (UIApplication.shared.delegate as! AppDelegate).tester
     
     /**
      *  Callback function which executed after view constructed and before display
@@ -38,7 +41,7 @@ class ChatViewController: UIViewController, StoreSubscriber {
         self.state = appStore.state.chat
         appStore.subscribe(self)
     }
-    
+
     /**
      * Redux state change callback. Executes when state changes. Used to update
      * UI based on new state
@@ -56,19 +59,21 @@ class ChatViewController: UIViewController, StoreSubscriber {
             }
             if state.chat.errors["general"] != nil {
                 var errors = state.chat.errors
-                self.present(showAlert(state.chat.errors["general"]!.message),animated:true)
+                self.present(showAlert(state.chat.errors["general"]!.message), animated: true)
                 errors["general"] = nil
-                appStore.dispatch(ChatState.changeErrors(errors:errors))
+                appStore.dispatch(ChatState.changeErrors(errors: errors))
             }
             if self.shouldUpdateTableView(newState: state.chat) {
-                Logger.log(level:LogLevel.DEBUG_UI,message:"Reloaded data in chatTableView",
-                           className:"ChatViewController",methodName:"newState")
+                Logger.log(level: LogLevel.DEBUG_UI, message: "Reloaded data in chatTableView",
+                           className: "ChatViewController", methodName: "newState")
                 self.chatTableView.reloadData()
             }
-            self.state = state.chat
+            self.state = state.chat.copy()
+            Logger.log(level: LogLevel.DEBUG_UI,message: "Updated local state from application state. State content: \(self.state)",
+                className: "ChatViewController",methodName:"newState")
         }
     }
-    
+
     /**
      * "Logout" button click handler
      *
@@ -76,14 +81,14 @@ class ChatViewController: UIViewController, StoreSubscriber {
      */
     @IBAction func logoutBtnClick(_ sender: UIBarButtonItem) {
         let dialog = UIAlertController(title: "Logout", message: "Do you want to logout?", preferredStyle: .alert)
-        dialog.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+        dialog.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
             ChatState.logout().exec()
             dialog.dismiss(animated: true, completion: nil)
         }))
         dialog.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         self.present(dialog, animated: true, completion: nil)
     }
-    
+
     /**
      *  Chat modes segmented control onClick handler. Used
      *  to switch between different chat screen modes
@@ -102,7 +107,7 @@ class ChatViewController: UIViewController, StoreSubscriber {
  *  handlers
  */
 extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
-    
+
     /**
      * Function used to determine, does it need to redraw chatTableView
      * according to the changes of 'newState' or not
@@ -110,18 +115,11 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      * Parameter newState: new updated state, which used to compare with current state
      * Returns: true if need to redraw tableView or false otherwise
      */
-    func shouldUpdateTableView(newState:ChatState) -> Bool {
-        var result = false
-        if state.chatMode != newState.chatMode {
-            result = true
-        }
-        switch state.chatMode {
-        case .PRIVATE: return result || ChatPrivateChatCell.shouldUpdateTableView(newState:newState)
-        case .ROOM: return result
-        case .PROFILE: return result
-        }
+    func shouldUpdateTableView(newState: ChatState) -> Bool {
+        let result = state.chatMode != newState.chatMode
+        return result
     }
-    
+
     /**
      *  Function, which chatTableView calls to determine number of
      *  rows in a section. (always 1)
@@ -129,7 +127,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
-    
+
     /**
      * Function, which chatTableView calls whenever it need to redraw cell
      *
@@ -145,49 +143,46 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         case .PROFILE: return setupChatProfileCell(cell)
         }
     }
-    
+
     /**
      * Function used to setup tableView cell as Private Chat cell depending on current Chat state
      *
      * - Parameter cell: Source tableView cell to setup
      * - Returns: Reconstructed cell
      */
-    func setupChatPrivateCell(_ cell:UITableViewCell) -> ChatPrivateCell {
+    func setupChatPrivateCell(_ cell: UITableViewCell) -> ChatPrivateCell {
         let cell = cell as! ChatPrivateCell
         cell.parentViewController = self
-        cell.state = self.state
-        Logger.log(level:LogLevel.DEBUG_UI,message:"Constructed ChatPrivateCell",
-                   className:"ChatViewController",methodName:"setupChatPrivateCell")
+        Logger.log(level: LogLevel.DEBUG_UI, message: "Constructed ChatPrivateCell",
+                   className: "ChatViewController", methodName: "setupChatPrivateCell")
         return cell
     }
-    
+
     /**
      * Function used to setup tableView cell as Public Chat cell depending on current Chat state
      *
      * - Parameter cell: Source tableView cell to setup
      * - Returns: Reconstructed cell
      */
-    func setupChatPublicCell(_ cell:UITableViewCell) -> ChatPublicCell {
+    func setupChatPublicCell(_ cell: UITableViewCell) -> ChatPublicCell {
         let cell = cell as! ChatPublicCell
         cell.parentViewController = self
-        cell.state = self.state
-        Logger.log(level:LogLevel.DEBUG_UI,message:"Constructed ChatPublicCell",
-                   className:"ChatViewController",methodName:"setupChatPublicCell")
+        Logger.log(level: LogLevel.DEBUG_UI, message: "Constructed ChatPublicCell",
+                   className: "ChatViewController", methodName: "setupChatPublicCell")
         return cell
     }
-    
+
     /**
      * Function used to setup tableView cell as Profile Chat cell depending on current Chat state
      *
      * - Parameter cell: Source tableView cell to setup
      * - Returns: reconstructed cell
      */
-    func setupChatProfileCell(_ cell:UITableViewCell) -> ChatProfileCell {
+    func setupChatProfileCell(_ cell: UITableViewCell) -> ChatProfileCell {
         let cell = cell as! ChatProfileCell
         cell.parentViewController = self
-        cell.state = self.state
-        Logger.log(level:LogLevel.DEBUG_UI,message:"Constructed ChatProfileCell",
-                   className:"ChatViewController",methodName:"setupChatProfileCell")
+        Logger.log(level: LogLevel.DEBUG_UI, message: "Constructed ChatProfileCell",
+                   className: "ChatViewController", methodName: "setupChatProfileCell")
         return cell
     }
 }
@@ -197,6 +192,6 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
  */
 protocol ChatViewControllerCell {
     /// Link to view controller, which manages tableView of this cell
-    var parentViewController:ChatViewController? {get set}
-    var state:ChatState? {get set}
+    var parentViewController: ChatViewController? {get set}
+    var state: ChatState {get set}
 }

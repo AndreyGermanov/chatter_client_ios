@@ -16,7 +16,7 @@ extension String {
     /// calculated variable which is true if current string instance is email address and false otherwise
     var isEmail: Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,20}"
-        let emailTest  = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        let emailTest  = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: self)
     }
 }
@@ -27,7 +27,7 @@ extension String {
  * - Parameter message: Text message to display in dialog
  * - Returns: constructed UIAlertController to display Alert box
  */
-func showAlert(_ message:String) -> UIAlertController {
+func showAlert(_ message: String) -> UIAlertController {
     let dialog = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
     dialog.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     return dialog
@@ -39,7 +39,7 @@ func showAlert(_ message:String) -> UIAlertController {
  * - Parameter obj: Object to parse
  * - Returns: Int value or nil
  */
-func parseAnyToInt(_ obj:Any?) -> Int? {
+func parseAnyToInt(_ obj: Any?) -> Int? {
     if let obj = obj {
         if obj is String {
             if let result = Int(obj as! String) {
@@ -47,9 +47,9 @@ func parseAnyToInt(_ obj:Any?) -> Int? {
             }
         }
         if obj is NSNumber {
-            return Int(truncating:obj as! NSNumber)
+            return Int(truncating: obj as! NSNumber)
         }
-        Logger.log(level:LogLevel.WARNING,message:"Could not convert \(obj) to Int",className:"",methodName:"parseAnyToInt")
+        Logger.log(level: LogLevel.WARNING, message: "Could not convert \(obj) to Int", className: "", methodName: "parseAnyToInt")
     }
     return nil
 }

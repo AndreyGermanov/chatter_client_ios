@@ -15,11 +15,11 @@ import Starscream
 class UserActions: XCTestCase {
 
     var messageCenter: MessageCenter = MessageCenter()
-    
+
     override func setUp() {
         super.setUp()
-        appStore.dispatch(UserState.changeUserLoginAction(login:""))
-        appStore.dispatch(UserState.changeUserEmailAction(email:""))
+        appStore.dispatch(UserState.changeUserLoginAction(login: ""))
+        appStore.dispatch(UserState.changeUserEmailAction(email: ""))
         appStore.dispatch(UserState.changeUserFirstNameAction(firstName: ""))
         appStore.dispatch(UserState.changeUserLastNameAction(lastName: ""))
         appStore.dispatch(UserState.changeUserGenderAction(gender: .M))
@@ -36,69 +36,69 @@ class UserActions: XCTestCase {
         messageCenter.lastResponseObject = nil
         messageCenter.lastReceivedFile = Data()
     }
-    
+
     override func tearDown() {
         super.tearDown()
     }
-    
-    //MARK: Unit tests
+
+    // MARK: Unit tests
     func testChangeLoginFieldAction() {
-        appStore.dispatch(UserState.changeUserLoginAction(login:"test"))
-        XCTAssertEqual("test",appStore.state.user.login)
+        appStore.dispatch(UserState.changeUserLoginAction(login: "test"))
+        XCTAssertEqual("test", appStore.state.user.login)
     }
-    
+
     func testChangeEmailFieldAction() {
-        appStore.dispatch(UserState.changeUserEmailAction(email:"test@test.com"))
-        XCTAssertEqual("test@test.com",appStore.state.user.email)
+        appStore.dispatch(UserState.changeUserEmailAction(email: "test@test.com"))
+        XCTAssertEqual("test@test.com", appStore.state.user.email)
     }
-    
+
     func testChangeFirstNameFieldAction() {
-        appStore.dispatch(UserState.changeUserFirstNameAction(firstName:"test"))
-        XCTAssertEqual("test",appStore.state.user.first_name)
+        appStore.dispatch(UserState.changeUserFirstNameAction(firstName: "test"))
+        XCTAssertEqual("test", appStore.state.user.first_name)
     }
-    
+
     func testChangeLastNameFieldAction() {
-        appStore.dispatch(UserState.changeUserLastNameAction(lastName:"test"))
-        XCTAssertEqual("test",appStore.state.user.last_name)
+        appStore.dispatch(UserState.changeUserLastNameAction(lastName: "test"))
+        XCTAssertEqual("test", appStore.state.user.last_name)
     }
-    
+
     func testChangeGenderFieldAction() {
-        appStore.dispatch(UserState.changeUserGenderAction(gender:.F))
-        XCTAssertEqual(Gender.F,appStore.state.user.gender)
+        appStore.dispatch(UserState.changeUserGenderAction(gender: .F))
+        XCTAssertEqual(Gender.F, appStore.state.user.gender)
     }
-    
+
     func testChangeBirthDateFieldAction() {
-        appStore.dispatch(UserState.changeUserBirthDateAction(birthDate:1234567890))
-        XCTAssertEqual(1234567890,appStore.state.user.birthDate)
+        appStore.dispatch(UserState.changeUserBirthDateAction(birthDate: 1234567890))
+        XCTAssertEqual(1234567890, appStore.state.user.birthDate)
     }
-    
+
     func testChangeIsLoginFieldAction() {
-        appStore.dispatch(UserState.changeUserIsLoginAction(isLogin:true))
-        XCTAssertEqual(true,appStore.state.user.isLogin)
+        appStore.dispatch(UserState.changeUserIsLoginAction(isLogin: true))
+        XCTAssertEqual(true, appStore.state.user.isLogin)
     }
-    
+
     func testChangeDefaultRoomFieldAction() {
-        appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room:"test"))
-        XCTAssertEqual("test",appStore.state.user.default_room)
+        appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: "test"))
+        XCTAssertEqual("test", appStore.state.user.default_room)
     }
-    
+
     func testChangeUserIdFieldAction() {
-        appStore.dispatch(UserState.changeUserUserIdAction(user_id:"test"))
-        XCTAssertEqual("test",appStore.state.user.user_id)
+        appStore.dispatch(UserState.changeUserUserIdAction(user_id: "test"))
+        XCTAssertEqual("test", appStore.state.user.user_id)
     }
-    
+
     func testChangeSessionIdFieldAction() {
-        appStore.dispatch(UserState.changeUserSessionIdAction(session_id:"test"))
-        XCTAssertEqual("test",appStore.state.user.session_id)
+        appStore.dispatch(UserState.changeUserSessionIdAction(session_id: "test"))
+        XCTAssertEqual("test", appStore.state.user.session_id)
     }
-    
+
     func testChangeProfileImageFieldAction() {
         do {
             let bundle = Bundle.main
             let path = bundle.path(forResource: "apple", ofType: "png")!
             let data = try Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
             let checksum = data.crc32()
-            appStore.dispatch(UserState.changeUserProfileImageAction(profileImage:data))
+            appStore.dispatch(UserState.changeUserProfileImageAction(profileImage: data))
             XCTAssertEqual(checksum, appStore.state.user.profileImage?.crc32())
         } catch {
             XCTFail("Could not load image from resource")

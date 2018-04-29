@@ -12,38 +12,38 @@ import ReSwift
 /**
  * User interface for Register Form as a cell of TableView
  */
-class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
-    
+class RegisterFormCell: UITableViewCell, StoreSubscriber, UITextFieldDelegate {
+
     /// Alias to Application state for Redux
     typealias StoreSubscriberStateType = AppState
-    
+
     /// Link to parent ViewController
-    var parent:LoginFormViewController?
-    
+    var parent: LoginFormViewController?
+
     /// Login text field
     @IBOutlet weak var loginTextField: UITextField!
-    
+
     /// Email text field
     @IBOutlet weak var emailTextField: UITextField!
-    
+
     /// Password text field
     @IBOutlet weak var passwordTextField: UITextField!
-    
+
     /// Confirm password text field
     @IBOutlet weak var confirmPasswordTextField: UITextField!
-    
+
     /// Error message for Login field
     @IBOutlet weak var loginErrorLabel: UILabel!
 
     /// Error message for Email field
     @IBOutlet weak var emailErrorLabel: UILabel!
-    
+
     /// Error message for Password field
     @IBOutlet weak var passwordErrorLabel: UILabel!
-    
+
     /// Indicator of progress of Register operation
     @IBOutlet weak var progressIndicator: UIActivityIndicatorView!
-    
+
     /**
      * "Register" button click handler
      *
@@ -53,8 +53,7 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         LoginFormState.registerUserAction(messageCenter: appDelegate.msgCenter).exec()
     }
-    
-    
+
     /**
      * Function determines is it required to redraw TableView cell after state update
      * It is required if any of conditions below meet
@@ -62,7 +61,7 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
      * - Parameter state: Changed state
      * - Returns: true if need to redraw table cell to meet changed state or false otherwise
      */
-    func needReloadTableView(state:AppState) -> Bool {
+    func needReloadTableView(state: AppState) -> Bool {
         return (state.loginForm.errors["login"] != nil && self.loginErrorLabel.isHidden) ||
             (state.loginForm.errors["login"] == nil && !self.loginErrorLabel.isHidden) ||
             (state.loginForm.errors["password"] != nil && self.passwordErrorLabel.isHidden) ||
@@ -72,8 +71,7 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
             (!state.loginForm.show_progress_indicator && !self.progressIndicator.isHidden) ||
             (state.loginForm.show_progress_indicator && self.progressIndicator.isHidden)
     }
-    
-    
+
     /**
      * Redux state change callback. Executes when state changes. Used to update
      * UI based on new state
@@ -81,7 +79,7 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
      * - Parameter state: Link to new updated state
      */
     func newState(state: AppState) {
-        
+
         if state.loginForm.errors["login"] != nil {
             self.loginErrorLabel.text = state.loginForm.errors["login"]?.message
             self.loginErrorLabel.isHidden = false
@@ -109,26 +107,26 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         } else {
             self.progressIndicator.isHidden = true
         }
-        
+
         if let parent = self.parent {
             if state.loginForm.popup_message.count>0 {
-                parent.present(showAlert(state.loginForm.popup_message),animated: true)
+                parent.present(showAlert(state.loginForm.popup_message), animated: true)
                 appStore.dispatch(LoginFormState.changeLoginFormPopupMessageAction(popupMessage: ""))
             }
             if state.loginForm.errors["general"] != nil {
                 var errors = state.loginForm.errors
-                parent.present(showAlert(state.loginForm.errors["general"]!.message),animated:true)
+                parent.present(showAlert(state.loginForm.errors["general"]!.message), animated: true)
                 errors["general"] = nil
-                appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors:errors))
+                appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors: errors))
             }
-            
+
             parent.view.isUserInteractionEnabled = !state.loginForm.show_progress_indicator
             if (self.needReloadTableView(state: state)) {
                 parent.loginFormTableView.reloadData()
             }
         }
     }
-    
+
     /**
      * Callback called when cell initialized
      */
@@ -141,7 +139,7 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         // subscribe to application state change events
         appStore.subscribe(self)
     }
-    
+
     /**
      * Callback called when user edit text in text field
      *
@@ -162,7 +160,7 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         }
         return true
     }
-    
+
     /**
      * Function fires when user finishes edit text in text field and presses "Return" button
      *
@@ -173,7 +171,7 @@ class RegisterFormCell: UITableViewCell,StoreSubscriber,UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
+
     /**
      * Enumeration to map "tag" codes of text fields to human readable IDs
      */

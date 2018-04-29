@@ -12,15 +12,15 @@ import ReSwift
  *  Controller class for Login and Register forms
  */
 class LoginFormViewController: UIViewController, StoreSubscriber {
-    
+
     typealias StoreSubscriberStateType = AppState
 
     /// link to Table, which displays Login and Register forms inside it cells
     @IBOutlet weak var loginFormTableView: UITableView!
-    
+
     /// link to form mode switcher between LOGIN and REGISTER
     @IBOutlet weak var loginFormNavigation: UISegmentedControl!
-    
+
     /**
      * Login Form mode segmented control click handler. Changes Login Form
      * mode from "LOGIN" to "REGISTER" or vice versa
@@ -29,10 +29,10 @@ class LoginFormViewController: UIViewController, StoreSubscriber {
      */
     @IBAction func onChangeMode(_ sender: UISegmentedControl) {
         if let mode = LoginFormMode(rawValue: sender.selectedSegmentIndex) {
-            appStore.dispatch(LoginFormState.changeLoginFormModeAction(mode:mode))
+            appStore.dispatch(LoginFormState.changeLoginFormModeAction(mode: mode))
         }
     }
-    
+
     /**
      * Function determines is it required to redraw TableView cell after state update
      * It is required if any of conditions below meet
@@ -40,11 +40,11 @@ class LoginFormViewController: UIViewController, StoreSubscriber {
      * - Parameter state: Changed state
      * - Returns: true if need to redraw table cell to meet changed state or false otherwise
      */
-    func needReloadTableView(state:AppState) -> Bool {
+    func needReloadTableView(state: AppState) -> Bool {
         return (loginFormTableView.cellForRow(at: IndexPath(row: 0, section: 0)) is LoginFormCell && state.loginForm.mode == .REGISTER) ||
         (loginFormTableView.cellForRow(at: IndexPath(row: 0, section: 0)) is RegisterFormCell && state.loginForm.mode == .LOGIN)
     }
-    
+
     /**
      * Redux state change callback. Executes when state changes. Used to update
      * UI based on new state
@@ -59,7 +59,7 @@ class LoginFormViewController: UIViewController, StoreSubscriber {
             self.loginFormNavigation.selectedSegmentIndex = appStore.state.loginForm.mode.rawValue
         }
     }
-    
+
     /**
      *  Callback function which executed after view constructed and before display
      *  it on the screen
@@ -71,7 +71,7 @@ class LoginFormViewController: UIViewController, StoreSubscriber {
         appStore.subscribe(self)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.onScreenTap)))
     }
-    
+
     /**
      * Callback fired when user taps on screen. Used to hide onscreen keyboard
      */
@@ -84,7 +84,7 @@ class LoginFormViewController: UIViewController, StoreSubscriber {
  *  Extension used to manage tableView, which includes cells for Login Form and for Register forms
  */
 extension LoginFormViewController: UITableViewDataSource, UITableViewDelegate {
-    
+
     /**
      * Callback Function calculates and returns number of cells in a section of table view.
      * For current tableView it always display single cell
@@ -96,7 +96,7 @@ extension LoginFormViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
-    
+
     /**
      * Callback function which executes every time when need to display cell content of table view.
      * Cell object which need to display calculated based on application state. It can be either
@@ -121,7 +121,7 @@ extension LoginFormViewController: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
     }
-    
+
     /**
      * Callback function whcih executes every time when need to calculate height of tableView cell
      * depending on which cell and in which index displayed.
@@ -136,6 +136,6 @@ extension LoginFormViewController: UITableViewDataSource, UITableViewDelegate {
         case .LOGIN: return 200.0
         case .REGISTER: return 400.0
         }
-        
+
     }
 }

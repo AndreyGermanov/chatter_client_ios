@@ -15,10 +15,10 @@ import ReSwift
  * - Parateter state: Input state
  * - Returns State after applying action to it
  */
-func userProfileReducer(action:Action,state:UserProfileState) -> UserProfileState {
+func userProfileReducer(action: Action, state: UserProfileState) -> UserProfileState {
     var newState = state
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"UserProfileReducer: Received action \(action)",
-        className:"userProfileReducer",methodName:"userProfileReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "UserProfileReducer: Received action \(action)",
+        className: "userProfileReducer", methodName: "userProfileReducer")
     switch action {
     case let action as UserProfileState.changeUserProfileErrorsAction:
         newState.errors = action.errors
@@ -51,7 +51,6 @@ func userProfileReducer(action:Action,state:UserProfileState) -> UserProfileStat
     default:
         break
     }
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"UserProfileReducer: UserProfileState after reducing - \(newState)",className:"userProfileReducer",methodName:"userProfileReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "UserProfileReducer: UserProfileState after reducing - \(newState)", className: "userProfileReducer", methodName: "userProfileReducer")
     return newState
 }
-

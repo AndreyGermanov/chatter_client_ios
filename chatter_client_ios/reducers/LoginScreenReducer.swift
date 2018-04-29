@@ -15,9 +15,9 @@ import ReSwift
  * - Parateter state: Input state
  * - Returns State after applying action to it
  */
-func loginFormReducer(action:Action,state:LoginFormState) -> LoginFormState {
+func loginFormReducer(action: Action, state: LoginFormState) -> LoginFormState {
     var newState = state
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"LoginFormReducer: Received action \(action)",className:"loginFormReducer",methodName:"loginFormReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "LoginFormReducer: Received action \(action)", className: "loginFormReducer", methodName: "loginFormReducer")
     switch action {
     case let action as LoginFormState.changeLoginAction:
         newState.login = action.login
@@ -27,7 +27,7 @@ func loginFormReducer(action:Action,state:LoginFormState) -> LoginFormState {
         newState.confirm_password = action.confirmPassword
     case let action as LoginFormState.changeLoginFormModeAction:
         newState.mode = action.mode
-        newState.errors = [String:LoginFormError]()
+        newState.errors = [String: LoginFormError]()
     case let action as LoginFormState.changeEmailAction:
         newState.email = action.email
     case let action as LoginFormState.changeLoginFormErrorsAction:
@@ -39,6 +39,6 @@ func loginFormReducer(action:Action,state:LoginFormState) -> LoginFormState {
     default:
         break
     }
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"LoginFormReducer: LoginFormState after reducing - \(newState)",className:"loginFormReducer",methodName:"loginFormReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "LoginFormReducer: LoginFormState after reducing - \(newState)", className: "loginFormReducer", methodName: "loginFormReducer")
     return newState
 }

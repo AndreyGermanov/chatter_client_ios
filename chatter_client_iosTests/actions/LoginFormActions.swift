@@ -13,19 +13,19 @@ import Starscream
 import CryptoSwift
 @testable import chatter_client_ios
 
-class LoginFormActions: XCTestCase,MessageCenterResponseListener {
-    
+class LoginFormActions: XCTestCase, MessageCenterResponseListener {
+
     var messageCenter: MessageCenter = MessageCenter()
 
     override func setUp() {
         super.setUp()
-        appStore.dispatch(LoginFormState.changeLoginAction(login:""))
-        appStore.dispatch(LoginFormState.changePasswordAction(password:""))
+        appStore.dispatch(LoginFormState.changeLoginAction(login: ""))
+        appStore.dispatch(LoginFormState.changePasswordAction(password: ""))
         appStore.dispatch(LoginFormState.changeLoginFormConfirmPasswordAction(confirmPassword: ""))
-        appStore.dispatch(LoginFormState.changeLoginFormModeAction(mode:.LOGIN))
+        appStore.dispatch(LoginFormState.changeLoginFormModeAction(mode: .LOGIN))
         appStore.dispatch(LoginFormState.changeLoginFormShowProgressIndicatorAction(progressIndicator: false))
-        appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors:[String:LoginFormError]()))
-        appStore.dispatch(LoginFormState.changeEmailAction(email:""))
+        appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors: [String: LoginFormError]()))
+        appStore.dispatch(LoginFormState.changeEmailAction(email: ""))
         messageCenter.testingMode = true
         messageCenter.testingModeConnected = false
         messageCenter.lastRequestText = ""
@@ -33,61 +33,61 @@ class LoginFormActions: XCTestCase,MessageCenterResponseListener {
         messageCenter.lastResponseObject = nil
         messageCenter.lastReceivedFile = Data()
     }
-    
+
     override func tearDown() {
         super.tearDown()
     }
-    
-    //MARK: Unit tests
+
+    // MARK: Unit tests
     func testChangeLoginFieldAction() {
-        appStore.dispatch(LoginFormState.changeLoginAction(login:"test"))
-        XCTAssertEqual("test",appStore.state.loginForm.login)
+        appStore.dispatch(LoginFormState.changeLoginAction(login: "test"))
+        XCTAssertEqual("test", appStore.state.loginForm.login)
     }
-    
+
     func testChangeEmailFieldAction() {
-        appStore.dispatch(LoginFormState.changeEmailAction(email:"test"))
-        XCTAssertEqual("test",appStore.state.loginForm.email)
+        appStore.dispatch(LoginFormState.changeEmailAction(email: "test"))
+        XCTAssertEqual("test", appStore.state.loginForm.email)
     }
-    
+
     func testChangePasswordFieldAction() {
-        appStore.dispatch(LoginFormState.changePasswordAction(password:"test"))
-        XCTAssertEqual("test",appStore.state.loginForm.password)
+        appStore.dispatch(LoginFormState.changePasswordAction(password: "test"))
+        XCTAssertEqual("test", appStore.state.loginForm.password)
     }
- 
+
     func testChangeConfirmPasswordFieldAction() {
-        appStore.dispatch(LoginFormState.changeLoginFormConfirmPasswordAction(confirmPassword:"test"))
-        XCTAssertEqual("test",appStore.state.loginForm.confirm_password)
+        appStore.dispatch(LoginFormState.changeLoginFormConfirmPasswordAction(confirmPassword: "test"))
+        XCTAssertEqual("test", appStore.state.loginForm.confirm_password)
     }
-    
+
     func testChangeModeFieldAction() {
-        appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors:["general":.RESULT_ERROR_CONNECTION_ERROR]))
-        XCTAssertEqual(appStore.state.loginForm.errors["general"], LoginFormError.RESULT_ERROR_CONNECTION_ERROR,"Should contain error")
-        appStore.dispatch(LoginFormState.changeLoginFormModeAction(mode:.REGISTER))
-        XCTAssertEqual(LoginFormMode.REGISTER,appStore.state.loginForm.mode,"Should switch to new mode")
-        XCTAssertEqual(0,appStore.state.loginForm.errors.count,"Should reset all errors after switch to new mode")
+        appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors: ["general": .RESULT_ERROR_CONNECTION_ERROR]))
+        XCTAssertEqual(appStore.state.loginForm.errors["general"], LoginFormError.RESULT_ERROR_CONNECTION_ERROR, "Should contain error")
+        appStore.dispatch(LoginFormState.changeLoginFormModeAction(mode: .REGISTER))
+        XCTAssertEqual(LoginFormMode.REGISTER, appStore.state.loginForm.mode, "Should switch to new mode")
+        XCTAssertEqual(0, appStore.state.loginForm.errors.count, "Should reset all errors after switch to new mode")
     }
-    
+
     func testChangeProgressIndicatorFieldAction() {
-        appStore.dispatch(LoginFormState.changeLoginFormShowProgressIndicatorAction(progressIndicator:true))
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator)
+        appStore.dispatch(LoginFormState.changeLoginFormShowProgressIndicatorAction(progressIndicator: true))
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator)
     }
-    
+
     func testChangePopupMessageFieldAction() {
-        appStore.dispatch(LoginFormState.changeLoginFormPopupMessageAction(popupMessage:"Test message"))
-        XCTAssertEqual("Test message",appStore.state.loginForm.popup_message)
+        appStore.dispatch(LoginFormState.changeLoginFormPopupMessageAction(popupMessage: "Test message"))
+        XCTAssertEqual("Test message", appStore.state.loginForm.popup_message)
     }
 
     func testChangeErrorsFieldAction() {
-        var errors = [String:LoginFormError]()
+        var errors = [String: LoginFormError]()
         errors["general"] = LoginFormError.RESULT_ERROR_CONNECTION_ERROR
-        appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors:errors))
+        appStore.dispatch(LoginFormState.changeLoginFormErrorsAction(errors: errors))
         let result_errors = appStore.state.loginForm.errors
-        XCTAssertEqual(LoginFormError.RESULT_ERROR_CONNECTION_ERROR,result_errors["general"])
-        XCTAssertEqual(result_errors["general"]?.message,"Connection error.","Should return correct error description")
+        XCTAssertEqual(LoginFormError.RESULT_ERROR_CONNECTION_ERROR, result_errors["general"])
+        XCTAssertEqual(result_errors["general"]?.message, "Connection error.", "Should return correct error description")
     }
-    
-    //MARK: Features tests
-    
+
+    // MARK: Features tests
+
     /**
      * Test user register feature
      */
@@ -95,98 +95,98 @@ class LoginFormActions: XCTestCase,MessageCenterResponseListener {
         messageCenter.testingMode = true
         // Form validation tests
         LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
-        XCTAssertEqual(appStore.state.loginForm.errors["login"],LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
+        XCTAssertEqual(appStore.state.loginForm.errors["login"], LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
                      "Should return empty field error if no data provided")
         appStore.dispatch(LoginFormState.changeLoginAction(login: "test"))
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
-        XCTAssertEqual(appStore.state.loginForm.errors["email"],LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
+        XCTAssertEqual(appStore.state.loginForm.errors["email"], LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
                        "Should return empty field error if no email provided")
-        XCTAssertEqual(appStore.state.loginForm.errors["password"],LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
+        XCTAssertEqual(appStore.state.loginForm.errors["password"], LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
                        "Should return empty field error if no password provided")
         appStore.dispatch(LoginFormState.changeEmailAction(email: "ertf33df"))
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
-        XCTAssertEqual(appStore.state.loginForm.errors["email"],LoginFormError.RESULT_ERROR_INCORRECT_EMAIL,
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
+        XCTAssertEqual(appStore.state.loginForm.errors["email"], LoginFormError.RESULT_ERROR_INCORRECT_EMAIL,
                        "Should return incorrect field error if incorrect email provided")
-        appStore.dispatch(LoginFormState.changeEmailAction(email:"ema@test.com"))
+        appStore.dispatch(LoginFormState.changeEmailAction(email: "ema@test.com"))
         appStore.dispatch(LoginFormState.changeLoginFormConfirmPasswordAction(confirmPassword: "123"))
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
-        XCTAssertEqual(appStore.state.loginForm.errors["password"],LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
+        XCTAssertEqual(appStore.state.loginForm.errors["password"], LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
             "Should return empty field error if no password provided")
         appStore.dispatch(LoginFormState.changePasswordAction(password: "233"))
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
-        XCTAssertEqual(appStore.state.loginForm.errors["password"],LoginFormError.RESULT_ERROR_PASSWORDS_SHOULD_MATCH,
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
+        XCTAssertEqual(appStore.state.loginForm.errors["password"], LoginFormError.RESULT_ERROR_PASSWORDS_SHOULD_MATCH,
                        "Should return empty field error if password and confirm password do not match")
-        appStore.dispatch(LoginFormState.changePasswordAction(password:"123"))
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
+        appStore.dispatch(LoginFormState.changePasswordAction(password: "123"))
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
         // Check server connection
-        XCTAssertEqual(appStore.state.loginForm.errors["general"],LoginFormError.RESULT_ERROR_CONNECTION_ERROR,
+        XCTAssertEqual(appStore.state.loginForm.errors["general"], LoginFormError.RESULT_ERROR_CONNECTION_ERROR,
                        "Should return server connection error if not connected")
         messageCenter.testingModeConnected = true
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
-        XCTAssertEqual(0,appStore.state.loginForm.errors.count,"Should clear all errors if data validated")
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
+        XCTAssertEqual(0, appStore.state.loginForm.errors.count, "Should clear all errors if data validated")
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator,
                         "Should show progress indicator before sending request to server")
-        XCTAssertEqual(1,messageCenter.pendingRequests.count,"Should add request to pendingRequests queue")
+        XCTAssertEqual(1, messageCenter.pendingRequests.count, "Should add request to pendingRequests queue")
         messageCenter.processPendingRequests()
-        XCTAssertEqual(0,messageCenter.pendingRequests.count,"Should remove request from pendingRequests queue")
-        XCTAssertEqual(1,messageCenter.requestsWaitingResponses.count,"Should add request to requestsWaitingResponses queue")
+        XCTAssertEqual(0, messageCenter.pendingRequests.count, "Should remove request from pendingRequests queue")
+        XCTAssertEqual(1, messageCenter.requestsWaitingResponses.count, "Should add request to requestsWaitingResponses queue")
         // Check reaction to server responses
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: "BOO")
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,"Should not react to incorrect server responses")
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator, "Should not react to incorrect server responses")
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: "{}")
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,"Should not react to incorrect server responses")
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator, "Should not react to incorrect server responses")
         var response = [
             "request_id": "12345",
-            "action":"register_user"
+            "action": "register_user"
         ]
-        var responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        var responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,"Should not react to responses with incorrect request_id")
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator, "Should not react to responses with incorrect request_id")
         var request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses after receive error")
-        XCTAssertEqual(false,appStore.state.loginForm.show_progress_indicator,"Should remove progress indicator after receive error")
-        XCTAssertEqual(LoginFormError.RESULT_ERROR_UNKNOWN,appStore.state.loginForm.errors["general"]!,
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses after receive error")
+        XCTAssertEqual(false, appStore.state.loginForm.show_progress_indicator, "Should remove progress indicator after receive error")
+        XCTAssertEqual(LoginFormError.RESULT_ERROR_UNKNOWN, appStore.state.loginForm.errors["general"]!,
                        "Should receive UNKNOWN_ERROR if status of responses does not exist")
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
         response["status"] = "error"
         response["status_code"] = "BOO!"
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses after receive error")
-        XCTAssertEqual(false,appStore.state.loginForm.show_progress_indicator,"Should remove progress indicator after receive error")
-        XCTAssertEqual(LoginFormError.RESULT_ERROR_UNKNOWN,appStore.state.loginForm.errors["general"]!,
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses after receive error")
+        XCTAssertEqual(false, appStore.state.loginForm.show_progress_indicator, "Should remove progress indicator after receive error")
+        XCTAssertEqual(LoginFormError.RESULT_ERROR_UNKNOWN, appStore.state.loginForm.errors["general"]!,
                        "Should receive UNKNOWN_ERROR if status_code of response is incorrect")
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
         response["status"] = "error"
         response["status_code"] = "RESULT_ERROR_ACTIVATION_EMAIL"
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses after receive error")
-        XCTAssertEqual(false,appStore.state.loginForm.show_progress_indicator,"Should remove progress indicator after receive error")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses after receive error")
+        XCTAssertEqual(false, appStore.state.loginForm.show_progress_indicator, "Should remove progress indicator after receive error")
         XCTAssertEqual(LoginFormError.RESULT_ERROR_ACTIVATION_EMAIL, appStore.state.loginForm.errors["general"]!,
                        "Should receive correct error object if status_code is correct")
-        LoginFormState.registerUserAction(messageCenter:messageCenter).exec()
+        LoginFormState.registerUserAction(messageCenter: messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
         response["status"] = "ok"
         response["status_code"] = "RESULT_OK"
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses after success")
-        XCTAssertEqual(false,appStore.state.loginForm.show_progress_indicator,"Should remove progress indicator after receive error")
-        XCTAssertEqual(LoginFormMode.LOGIN,appStore.state.loginForm.mode,"Should switch to LOGIN screen")
-        XCTAssertEqual(0,appStore.state.loginForm.errors.count,"Should remove all errors")
-        XCTAssertEqual(LoginFormError.RESULT_REGISTER_OK.message,appStore.state.loginForm.popup_message,"Should show activation popup message")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses after success")
+        XCTAssertEqual(false, appStore.state.loginForm.show_progress_indicator, "Should remove progress indicator after receive error")
+        XCTAssertEqual(LoginFormMode.LOGIN, appStore.state.loginForm.mode, "Should switch to LOGIN screen")
+        XCTAssertEqual(0, appStore.state.loginForm.errors.count, "Should remove all errors")
+        XCTAssertEqual(LoginFormError.RESULT_REGISTER_OK.message, appStore.state.loginForm.popup_message, "Should show activation popup message")
     }
 
     /**
@@ -196,71 +196,71 @@ class LoginFormActions: XCTestCase,MessageCenterResponseListener {
         messageCenter.testingMode = true
         // Form validation tests
         LoginFormState.loginUserAction(messageCenter: messageCenter).exec()
-        XCTAssertEqual(appStore.state.loginForm.errors["login"],LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
+        XCTAssertEqual(appStore.state.loginForm.errors["login"], LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
                        "Should return empty field error if no data provided")
         appStore.dispatch(LoginFormState.changeLoginAction(login: "test"))
-        LoginFormState.loginUserAction(messageCenter:messageCenter).exec()
-        XCTAssertEqual(appStore.state.loginForm.errors["password"],LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
+        LoginFormState.loginUserAction(messageCenter: messageCenter).exec()
+        XCTAssertEqual(appStore.state.loginForm.errors["password"], LoginFormError.RESULT_ERROR_FIELD_IS_EMPTY,
                        "Should return empty field error if no password provided")
         appStore.dispatch(LoginFormState.changePasswordAction(password: "test"))
-        LoginFormState.loginUserAction(messageCenter:messageCenter).exec()
+        LoginFormState.loginUserAction(messageCenter: messageCenter).exec()
         // Check server connection
-        XCTAssertEqual(appStore.state.loginForm.errors["general"],LoginFormError.RESULT_ERROR_CONNECTION_ERROR,
+        XCTAssertEqual(appStore.state.loginForm.errors["general"], LoginFormError.RESULT_ERROR_CONNECTION_ERROR,
                        "Should return server connection error if not connected")
         messageCenter.testingModeConnected = true
-        LoginFormState.loginUserAction(messageCenter:messageCenter).exec()
-        XCTAssertEqual(0,appStore.state.loginForm.errors.count,"Should clear all errors if data validated")
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,
+        LoginFormState.loginUserAction(messageCenter: messageCenter).exec()
+        XCTAssertEqual(0, appStore.state.loginForm.errors.count, "Should clear all errors if data validated")
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator,
                        "Should show progress indicator before sending request to server")
-        XCTAssertEqual(1,messageCenter.pendingRequests.count,"Should add request to pendingRequests queue")
+        XCTAssertEqual(1, messageCenter.pendingRequests.count, "Should add request to pendingRequests queue")
         messageCenter.processPendingRequests()
-        XCTAssertEqual(0,messageCenter.pendingRequests.count,"Should remove request from pendingRequests queue")
-        XCTAssertEqual(1,messageCenter.requestsWaitingResponses.count,"Should add request to requestsWaitingResponses queue")
+        XCTAssertEqual(0, messageCenter.pendingRequests.count, "Should remove request from pendingRequests queue")
+        XCTAssertEqual(1, messageCenter.requestsWaitingResponses.count, "Should add request to requestsWaitingResponses queue")
         // Check reaction to server responses
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: "BOO")
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,"Should not react to incorrect server responses")
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator, "Should not react to incorrect server responses")
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: "{}")
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,"Should not react to incorrect server responses")
-        var response:[String:Any] = [
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator, "Should not react to incorrect server responses")
+        var response: [String: Any] = [
             "request_id": "12345",
-            "action":"login_user"
+            "action": "login_user"
         ]
-        var responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        var responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,"Should not react to responses with incorrect request_id")
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator, "Should not react to responses with incorrect request_id")
         var request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses after receive error")
-        XCTAssertEqual(false,appStore.state.loginForm.show_progress_indicator,"Should remove progress indicator after receive error")
-        XCTAssertEqual(LoginFormError.RESULT_ERROR_UNKNOWN,appStore.state.loginForm.errors["general"]!,
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses after receive error")
+        XCTAssertEqual(false, appStore.state.loginForm.show_progress_indicator, "Should remove progress indicator after receive error")
+        XCTAssertEqual(LoginFormError.RESULT_ERROR_UNKNOWN, appStore.state.loginForm.errors["general"]!,
                        "Should receive UNKNOWN_ERROR if status of responses does not exist")
-        LoginFormState.loginUserAction(messageCenter:messageCenter).exec()
+        LoginFormState.loginUserAction(messageCenter: messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
         response["status"] = "error"
         response["status_code"] = "BOO!"
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses after receive error")
-        XCTAssertEqual(false,appStore.state.loginForm.show_progress_indicator,"Should remove progress indicator after receive error")
-        XCTAssertEqual(LoginFormError.RESULT_ERROR_UNKNOWN,appStore.state.loginForm.errors["general"]!,
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses after receive error")
+        XCTAssertEqual(false, appStore.state.loginForm.show_progress_indicator, "Should remove progress indicator after receive error")
+        XCTAssertEqual(LoginFormError.RESULT_ERROR_UNKNOWN, appStore.state.loginForm.errors["general"]!,
                        "Should receive UNKNOWN_ERROR if status_code of response is incorrect")
-        LoginFormState.loginUserAction(messageCenter:messageCenter).exec()
+        LoginFormState.loginUserAction(messageCenter: messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
         response["status"] = "error"
         response["status_code"] = "RESULT_ERROR_INCORRECT_LOGIN"
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses after receive error")
-        XCTAssertEqual(false,appStore.state.loginForm.show_progress_indicator,"Should remove progress indicator after receive error")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses after receive error")
+        XCTAssertEqual(false, appStore.state.loginForm.show_progress_indicator, "Should remove progress indicator after receive error")
         XCTAssertEqual(LoginFormError.RESULT_ERROR_INCORRECT_LOGIN, appStore.state.loginForm.errors["general"]!,
                        "Should receive correct error object if status_code is correct")
-        LoginFormState.loginUserAction(messageCenter:messageCenter).exec()
+        LoginFormState.loginUserAction(messageCenter: messageCenter).exec()
         messageCenter.processPendingRequests()
         request_id = messageCenter.lastRequestObject["request_id"] as! String
         response["request_id"] = request_id
@@ -273,30 +273,30 @@ class LoginFormActions: XCTestCase,MessageCenterResponseListener {
         response["last_name"] = "Johnson"
         response["gender"] = "F"
         response["birthDate"] = "1234567890"
-        let rooms:[[String:String]] = [["_id":"r1","name":"Room 1"],["_id":"r2","name":"Room 2"]]
+        let rooms: [[String: String]] = [["_id": "r1", "name": "Room 1"], ["_id": "r2", "name": "Room 2"]]
         response["rooms"] = rooms
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
         var userState = appStore.state.user
         var profileState = appStore.state.userProfile
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses")
-        XCTAssertEqual(false,appStore.state.loginForm.show_progress_indicator,"Should remove progress indicator")
-        XCTAssertEqual(AppScreens.USER_PROFILE,appStore.state.current_activity,"Should move to User profile screen if no default_room returned")
-        XCTAssertEqual("u1",userState.user_id,"Should set correct user_id to User state")
-        XCTAssertEqual("s1",userState.session_id,"Should set correct session_id User state")
-        XCTAssertEqual("test",userState.login,"Should set correct login to User state")
-        XCTAssertEqual("test",profileState.login,"Should set correct login to User profile")
-        XCTAssertEqual("test@test.com",userState.email,"Should set correct email to User state")
-        XCTAssertEqual("Bob",userState.first_name,"Should set correct first_name to User state")
-        XCTAssertEqual("Johnson",userState.last_name,"Should set correct last_name to User state")
-        XCTAssertEqual(Gender.F,userState.gender,"Should set correct gender to User state")
-        XCTAssertEqual(1234567890,userState.birthDate,"Should set correct birthDate to User state")
-        XCTAssertEqual("Bob",profileState.first_name,"Should set correct first_name to User profile")
-        XCTAssertEqual("Johnson",profileState.last_name,"Should set correct last_name to User profile")
-        XCTAssertEqual(Gender.F,profileState.gender,"Should set correct gender to User profile")
-        XCTAssertEqual(1234567890,profileState.birthDate,"Should set correct birthDate to User profile")
-        XCTAssertEqual("Room 2",profileState.rooms[1]["name"],"Should set correct rooms to User Profile")
-        LoginFormState.loginUserAction(messageCenter:messageCenter).exec()
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses")
+        XCTAssertEqual(false, appStore.state.loginForm.show_progress_indicator, "Should remove progress indicator")
+        XCTAssertEqual(AppScreens.USER_PROFILE, appStore.state.current_activity, "Should move to User profile screen if no default_room returned")
+        XCTAssertEqual("u1", userState.user_id, "Should set correct user_id to User state")
+        XCTAssertEqual("s1", userState.session_id, "Should set correct session_id User state")
+        XCTAssertEqual("test", userState.login, "Should set correct login to User state")
+        XCTAssertEqual("test", profileState.login, "Should set correct login to User profile")
+        XCTAssertEqual("test@test.com", userState.email, "Should set correct email to User state")
+        XCTAssertEqual("Bob", userState.first_name, "Should set correct first_name to User state")
+        XCTAssertEqual("Johnson", userState.last_name, "Should set correct last_name to User state")
+        XCTAssertEqual(Gender.F, userState.gender, "Should set correct gender to User state")
+        XCTAssertEqual(1234567890, userState.birthDate, "Should set correct birthDate to User state")
+        XCTAssertEqual("Bob", profileState.first_name, "Should set correct first_name to User profile")
+        XCTAssertEqual("Johnson", profileState.last_name, "Should set correct last_name to User profile")
+        XCTAssertEqual(Gender.F, profileState.gender, "Should set correct gender to User profile")
+        XCTAssertEqual(1234567890, profileState.birthDate, "Should set correct birthDate to User profile")
+        XCTAssertEqual("Room 2", profileState.rooms[1]["name"], "Should set correct rooms to User Profile")
+        LoginFormState.loginUserAction(messageCenter: messageCenter).exec()
         let bundle = Bundle.main
         let path = bundle.path(forResource: "apple", ofType: "png")!
         let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path, isDirectory: false))
@@ -307,24 +307,24 @@ class LoginFormActions: XCTestCase,MessageCenterResponseListener {
         response["status"] = "ok"
         response["checksum"] = checksum
         response["default_room"] = "r1"
-        responseString = try! String(data:JSONSerialization.data(withJSONObject:response,options: .sortedKeys),encoding: .utf8)!
+        responseString = try! String(data: JSONSerialization.data(withJSONObject: response, options: .sortedKeys), encoding: .utf8)!
         messageCenter.websocketDidReceiveMessage(socket: messageCenter.ws, text: responseString)
-        XCTAssertEqual(0,messageCenter.requestsWaitingResponses.count,"Should remove request from requestsWaitingResponses")
-        XCTAssertEqual(true,appStore.state.loginForm.show_progress_indicator,"Should wait for profile image file")
+        XCTAssertEqual(0, messageCenter.requestsWaitingResponses.count, "Should remove request from requestsWaitingResponses")
+        XCTAssertEqual(true, appStore.state.loginForm.show_progress_indicator, "Should wait for profile image file")
         messageCenter.websocketDidReceiveData(socket: messageCenter.ws, data: data)
-        XCTAssertEqual(AppScreens.CHAT,appStore.state.current_activity,"Should move to User profile screen if no default_room returned")
+        XCTAssertEqual(AppScreens.CHAT, appStore.state.current_activity, "Should move to User profile screen if no default_room returned")
         userState = appStore.state.user
         profileState = appStore.state.userProfile
-        XCTAssertNotNil(userState.profileImage,"Should set profile image to User")
-        XCTAssertNotNil(profileState.profileImage,"Should set profile image to User profile")
-        XCTAssertEqual(checksum,Int(userState.profileImage!.bytes.crc32()),"Should set correct profile image to User")
-        XCTAssertEqual(checksum,Int(profileState.profileImage!.bytes.crc32()),"Should set correct profile image to User Profile")
-        XCTAssertEqual(0,messageCenter.receivedFiles.count,"Should remove request from receivedFiels queue")
-        XCTAssertEqual(0,messageCenter.responsesWaitingFile.count,"Should remove request from responsesWaitingFile queue")
-        XCTAssertTrue(userState.isLogin,"Should switch user login status to TRUE")
+        XCTAssertNotNil(userState.profileImage, "Should set profile image to User")
+        XCTAssertNotNil(profileState.profileImage, "Should set profile image to User profile")
+        XCTAssertEqual(checksum, Int(userState.profileImage!.bytes.crc32()), "Should set correct profile image to User")
+        XCTAssertEqual(checksum, Int(profileState.profileImage!.bytes.crc32()), "Should set correct profile image to User Profile")
+        XCTAssertEqual(0, messageCenter.receivedFiles.count, "Should remove request from receivedFiels queue")
+        XCTAssertEqual(0, messageCenter.responsesWaitingFile.count, "Should remove request from responsesWaitingFile queue")
+        XCTAssertTrue(userState.isLogin, "Should switch user login status to TRUE")
     }
-    
-    func handleWebSocketResponse(request_id: String, response: [String : Any]) {
-        
+
+    func handleWebSocketResponse(request_id: String, response: [String: Any]) {
+
     }
 }

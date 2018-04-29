@@ -15,10 +15,10 @@ import ReSwift
  * - Parateter state: Input state
  * - Returns State after applying action to it
  */
-func userReducer(action:Action,state:UserState) -> UserState {
+func userReducer(action: Action, state: UserState) -> UserState {
     var newState = state
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"UserReducer: Received action \(action)",
-        className:"userReducer",methodName:"userReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "UserReducer: Received action \(action)",
+        className: "userReducer", methodName: "userReducer")
     switch action {
     case let action as UserState.changeUserIsLoginAction:
         newState.isLogin = action.isLogin
@@ -45,7 +45,7 @@ func userReducer(action:Action,state:UserState) -> UserState {
     default:
         break
     }
-    Logger.log(level:LogLevel.DEBUG_REDUX,message:"UserReducer: UserState after reducing - \(newState)",
-        className:"userReducer",methodName:"userReducer")
+    Logger.log(level: LogLevel.DEBUG_REDUX, message: "UserReducer: UserState after reducing - \(newState)",
+        className: "userReducer", methodName: "userReducer")
     return newState
 }

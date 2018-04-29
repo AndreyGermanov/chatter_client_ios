@@ -14,19 +14,19 @@ import Foundation
  * Base class for all models
  */
 class Model: Equatable {
-    
+
     /// UUID of model
     var id: String
-    
+
     /**
      * Class constructor
      *
      * - Parameter id: UUID of model
      */
-    init(id:String) {
+    init(id: String) {
         self.id = id.isEmpty ? UUID().uuidString : id
     }
-    
+
     /**
      * Method returns model from collection of type "T" by it ID
      *
@@ -34,34 +34,34 @@ class Model: Equatable {
      * - Parameter collection: Link to collection of models (array of models) to return item from
      * - Returns found model or nil, if nothing found
      */
-    static func getModelById<T:Model>(id:String,collection:[T]?) -> T? {
+    static func getModelById<T: Model>(id: String, collection: [T]?) -> T? {
         if collection == nil {
-            Logger.log(level:LogLevel.WARNING,message:"Nil sent as a collection",
-                       className:"Model",methodName:"getModelById")
+            Logger.log(level: LogLevel.WARNING, message: "Nil sent as a collection",
+                       className: "Model", methodName: "getModelById")
             return nil
         }
         let models = collection!.filter { $0.id == id }
         return models.count > 0 ? models[0] : nil
     }
-    
+
     /**
      * Method used to create and return copy of model
      *
      * - Returns: copy of current model
      */
     func copy() -> Model {
-        return Model(id:id)
+        return Model(id: id)
     }
-    
+
     /**
      * Method converts object to HashMap
      *
      * - Returns: Dictionary with object properties
      */
-    func toHashMap() -> [String:Any] {
-        return ["id":self.id]
+    func toHashMap() -> [String: Any] {
+        return ["id": self.id]
     }
-    
+
     /**
      * Method which compares this model to model "obj".
      * It compares all fields of models except fields of type "Model".
@@ -71,28 +71,29 @@ class Model: Equatable {
      * - Parameter obj: Object to compare
      * - Returns: true if models are equal and false otherwise
      */
-    func equals<T:Model>(_ obj:T?) -> Bool {
+    func equals<T: Model>(_ obj: T?) -> Bool {
         guard let model = obj else {
             return false
         }
+        var result = true
         var selfMap = self.toHashMap()
         var modelMap = model.toHashMap()
-        for (index,selfItem) in selfMap {
+        for (index, selfItem) in selfMap {
             if selfItem is Model {
                 selfMap.removeValue(forKey: index)
             }
         }
-        for (index,modelItem) in modelMap {
+        for (index, modelItem) in modelMap {
             if modelItem is Model {
                 modelMap.removeValue(forKey: index)
             }
         }
         if selfMap.count != modelMap.count {
-            return false
+            result = false
         }
-        return selfMap.isEqual(modelMap)
+        return result && selfMap.isEqual(modelMap)
     }
-    
+
     /**
      * Method which compares model1 to model2
      *
@@ -100,16 +101,21 @@ class Model: Equatable {
      * - Parameter model2: Second model to compare
      * - Returns: true if models are equal and false otherwise
      */
-    static func compare<T:Model>(model1:T?,model2:T?) -> Bool {
-        var result = false
+    static func compare<T: Model>(model1: T?, model2: T?) -> Bool {
+        var result = true
         if model1 != nil {
-            result = model1!.equals(model2)
+            switch model1 {
+            case is ChatMessage: result = (model1 as! ChatMessage).equals(model2 as? ChatMessage)
+            case is ChatUser: result = (model1 as! ChatUser).equals(model2 as? ChatUser)
+            case is ChatRoom: result = (model1 as! ChatRoom).equals(model2 as? ChatRoom)
+            default: result = false
+            }
         } else if model2 != nil {
             result = false
         }
         return result
     }
-    
+
     /**
      * Method compares 2 collections of models and return true
      * if they are equal and have the same order of items. Otherwise false
@@ -119,12 +125,12 @@ class Model: Equatable {
      * - Parameter models2: Second collection
      * - Returns: True if collections are equal or false otherwise
      */
-    static func compare<T:Model>(models1:[T]?,models2:[T]?) -> Bool {
-        var result = false
-        if (models1 == nil && models2 != nil) || (models2 == nil && models1 != nil)  {
+    static func compare<T: Model>(models1: [T]?, models2: [T]?) -> Bool {
+        var result = true
+        if (models1 == nil && models2 != nil) || (models2 == nil && models1 != nil) {
             return false
         }
-        if (models1 == nil && models2 == nil) {
+        if models1 == nil && models2 == nil {
             return true
         }
         if models1!.count != models2!.count {
@@ -133,9 +139,11 @@ class Model: Equatable {
         for i in 0...models1!.count-1 {
             let model1 = models1![i]
             if let model2 = models2?[i] {
-                result = model1.equals(model2)
-                if (!result) {
-                    return false
+                switch model1 {
+                case is ChatMessage: result = result && (model1 as! ChatMessage).equals(model2 as? ChatMessage)
+                case is ChatUser: result = result && (model1 as! ChatUser).equals(model2 as? ChatUser)
+                case is ChatRoom: result = result && (model1 as! ChatRoom).equals(model2 as? ChatRoom)
+                default: result = false
                 }
             } else {
                 return false
@@ -143,7 +151,7 @@ class Model: Equatable {
         }
         return result
     }
-    
+
     /**
      * Operator tests two values of this type to equality
      *
@@ -166,8 +174,8 @@ extension Dictionary {
      * - Parameter dict: Dictionary to compare
      * - Returns: true if dict is equal to self and false otherwise
      */
-    public func isEqual(_ dict:[String:Any]) -> Bool {
-        return NSDictionary(dictionary:dict).isEqual(to:self)
+    public func isEqual(_ dict: [String: Any]) -> Bool {
+        return NSDictionary(dictionary: dict).isEqual(to: self)
     }
 }
 
@@ -179,7 +187,7 @@ extension Array {
      *  Method used to copy array of models
      *  to new array of models
      */
-    func copy<T:Model>() -> [T] {
+    func copy<T: Model>() -> [T] {
         var result = [T]()
         self.forEach { el in
             let model = el as! T
