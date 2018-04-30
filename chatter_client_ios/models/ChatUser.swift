@@ -83,7 +83,7 @@ class ChatUser: Model {
             if me.id == self.id {
                 return result
             }
-            result = messages!.filter {$0.to_user != nil && $0.to_user!.id == me.id}
+            result = messages!.filter {$0.from_user.id == self.id && $0.to_user != nil && $0.to_user!.id == me.id}
                 .sorted { $0.timestamp < $1.timestamp }.map {
                     $0.copy()
             }
@@ -112,7 +112,7 @@ class ChatUser: Model {
             if me.id == self.id {
                 return 0
             }
-            result = messages!.filter {$0.to_user != nil && $0.to_user!.id == me.id && $0.unread}.count
+            result = messages!.filter {$0.from_user.id == self.id && $0.to_user != nil && $0.to_user!.id == me.id && $0.unread}.count
         }
         return result
     }

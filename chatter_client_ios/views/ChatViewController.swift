@@ -26,6 +26,9 @@ class ChatViewController: UIViewController, StoreSubscriber {
     /// Local copy of Chat Screen state (the state which used now to draw this screen)
     var state: ChatState = ChatState()
 
+    /// Link to "Private chat" tableView cell
+    var chatPrivateCell: ChatPrivateCell?
+    
     /// Link to object, using for testing purposes
     let tester = (UIApplication.shared.delegate as! AppDelegate).tester
     
@@ -40,6 +43,19 @@ class ChatViewController: UIViewController, StoreSubscriber {
         chatTableView.delegate = self
         self.state = appStore.state.chat
         appStore.subscribe(self)
+       
+    }
+    
+    /**
+     * Method fires each time when view appears on the screen
+     *
+     * - Parameter animated: Should animate when appear
+     */
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if (state.rooms.count == 0) {
+            tester.loadTestState()
+        }
     }
 
     /**
@@ -116,7 +132,12 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      * Returns: true if need to redraw tableView or false otherwise
      */
     func shouldUpdateTableView(newState: ChatState) -> Bool {
-        let result = state.chatMode != newState.chatMode
+        var result = state.chatMode != newState.chatMode
+        switch newState.chatMode {
+        case .PRIVATE: result = result || ChatPrivateCell.shouldUpdateTableView(newState: newState)
+        case .ROOM: break
+        case .PROFILE: break
+        }
         return result
     }
 
@@ -126,6 +147,18 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
+    }
+
+    /**
+     * Function fires when tableView needs to calculate height of cell
+     *
+     * - Parameter tableView: Source tableView
+     * - Parameter indexPath: Coordinates of cell, which height need to calculated
+     * - Returns: calculated height
+     */
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let screenSize = UIScreen.main.bounds
+        return screenSize.height
     }
 
     /**

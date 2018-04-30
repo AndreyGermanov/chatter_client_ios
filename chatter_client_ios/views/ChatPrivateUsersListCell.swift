@@ -42,15 +42,12 @@ class ChatPrivateUsersListCell: UITableViewCell, ChatViewControllerCell, StoreSu
      */
     func newState(state: AppState) {
         let shouldUpdateTableView = self.shouldUpdateTableView(newState: state.chat)
+        self.state = state.chat.copy()
         if shouldUpdateTableView {
-            Logger.log(level: LogLevel.DEBUG_UI, message: "Reloaded usersTableView data",
+            Logger.log(level: LogLevel.DEBUG_UI, message: "Reloaded usersTableView data \(self.state.users)",
                        className: "ChatPrivateCell", methodName: "newState")
             usersTableView.reloadData()
         }
-        if (self.state.chatMode != state.chat.chatMode && state.chat.users.count == 0) {
-            tester.loadUsers()
-        }
-        self.state = state.chat.copy()
         Logger.log(level: LogLevel.DEBUG_UI,message: "Updated local state from application state. State content: " +
             "\(String(describing: self.state))",className: "ChatPrivateUsersListCell",methodName:"newState")
     }
@@ -67,7 +64,20 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
      * Returns: true if need to redraw tableView or false otherwise
      */
     static func shouldUpdateTableView(newState: ChatState) -> Bool {
-        return true
+        var result = false
+        let state = appStore.state.chat
+        result = ChatUser.compare(models1:state.users,models2:newState.users)
+        if !result {
+            for user in newState.users {
+                let new_messages_count = user.getPrivateMessages(newState.messages, users: newState.users)
+                let old_messages_count = ChatUser.getById(user.id,collection:state.users)!.getPrivateMessages(state.messages, users: state.users)
+                if new_messages_count != old_messages_count {
+                    result = true
+                    break
+                }
+            }
+        }
+        return result
     }
     func shouldUpdateTableView(newState: ChatState) -> Bool {
         return ChatPrivateUsersListCell.shouldUpdateTableView(newState: newState)
@@ -80,7 +90,8 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return state.users.count
     }
-
+    
+   
     /**
      * Function, which tablewView calls whenever it need to redraw cell
      *
@@ -101,7 +112,8 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
         if !user.last_name.isEmpty {
             name += " \(user.last_name)"
         }
-        name += " \(user.login)"
+        let messages_count = user.getUnreadMessagesCount(state.messages, users: state.users)
+        name += " \(user.login) - \(messages_count)"
         cell.userNameLabel.text = name.trimmingCharacters(in: .whitespacesAndNewlines)
         if let profileImage = user.profileImage {
             cell.userProfileImageView.image = UIImage(data: profileImage)

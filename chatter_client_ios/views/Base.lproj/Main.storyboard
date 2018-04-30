@@ -642,8 +642,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatProfileCell" id="Zlk-Ur-sz7" customClass="ChatProfileCell" customModule="chatter_client_ios">
+                                        <rect key="frame" x="0.0" y="166" width="343" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Zlk-Ur-sz7" id="Kaw-us-LXc">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatPrivateCell" rowHeight="249" id="PLW-jS-Q0t" customClass="ChatPrivateCell" customModule="chatter_client_ios">
-                                        <rect key="frame" x="0.0" y="166" width="343" height="249"/>
+                                        <rect key="frame" x="0.0" y="210" width="343" height="249"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PLW-jS-Q0t" id="odB-cP-buz">
                                             <rect key="frame" x="0.0" y="0.0" width="343" height="248.5"/>
@@ -727,23 +735,18 @@
                                                 </tableView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="nHg-pt-8yI" secondAttribute="bottom" id="09o-lV-ufa"/>
+                                                <constraint firstAttribute="bottom" secondItem="nHg-pt-8yI" secondAttribute="bottom" id="0vQ-Uo-gHv"/>
+                                                <constraint firstAttribute="trailing" secondItem="nHg-pt-8yI" secondAttribute="trailing" id="9KJ-rY-ka2"/>
+                                                <constraint firstItem="nHg-pt-8yI" firstAttribute="top" secondItem="odB-cP-buz" secondAttribute="top" id="9jy-D1-K2B"/>
                                                 <constraint firstItem="nHg-pt-8yI" firstAttribute="leading" secondItem="odB-cP-buz" secondAttribute="leading" id="E3D-ve-anT"/>
                                                 <constraint firstAttribute="trailing" secondItem="nHg-pt-8yI" secondAttribute="trailing" id="bDN-Tu-61C"/>
+                                                <constraint firstItem="nHg-pt-8yI" firstAttribute="leading" secondItem="odB-cP-buz" secondAttribute="leading" id="wEt-RF-0nP"/>
                                                 <constraint firstItem="nHg-pt-8yI" firstAttribute="top" secondItem="odB-cP-buz" secondAttribute="top" id="zJs-yO-bYd"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="chatPrivateTableView" destination="nHg-pt-8yI" id="Co9-OR-jlA"/>
                                         </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatProfileCell" id="Zlk-Ur-sz7" customClass="ChatProfileCell" customModule="chatter_client_ios">
-                                        <rect key="frame" x="0.0" y="415" width="343" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Zlk-Ur-sz7" id="Kaw-us-LXc">
-                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>

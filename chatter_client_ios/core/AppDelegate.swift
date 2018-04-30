@@ -23,8 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if let session_id = UserDefaults.standard.string(forKey: "session_id") {
                 LoginFormState.loginUserAction().exec(user_id: user_id, session_id: session_id)
             }
-        }
-        tester.loadTestState()
+        }       
         return true
     }
 
