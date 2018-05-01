@@ -139,6 +139,7 @@
 		CEB219892091A81700138754 /* ChatPrivateUsersListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPrivateUsersListCell.swift; sourceTree = "<group>"; };
 		CEB2198B2091A86200138754 /* ChatPrivateChatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatPrivateChatCell.swift; sourceTree = "<group>"; };
 		CEB2198D2092F68500138754 /* ChatUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUserCell.swift; sourceTree = "<group>"; };
+		CEB219902098303A00138754 /* chatter_client_ios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = chatter_client_ios.entitlements; sourceTree = "<group>"; };
 		CEC7C06A20653B5300D1302B /* MessageCenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCenterTests.swift; sourceTree = "<group>"; };
 		CEC7C06F20656D4900D1302B /* LoginFormActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFormActions.swift; sourceTree = "<group>"; };
 		CEC7C0732066215600D1302B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -234,6 +235,7 @@
 		CE0AB46A205FD39D0071DE82 /* chatter_client_ios */ = {
 			isa = PBXGroup;
 			children = (
+				CEB219902098303A00138754 /* chatter_client_ios.entitlements */,
 				CE9BC097208C65380056081A /* models */,
 				CEC7C06920653B2E00D1302B /* tests */,
 				CE0AB4AE2062C9DF0071DE82 /* utils */,
@@ -480,6 +482,14 @@
 					CE0AB467205FD39D0071DE82 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InterAppAudio = {
+								enabled = 0;
+							};
+						};
 					};
 					CE0AB47B205FD3A20071DE82 = {
 						CreatedOnToolsVersion = 9.2;
@@ -917,6 +927,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7QLLYRF93H;
 				INFOPLIST_FILE = chatter_client_ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -933,6 +944,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7QLLYRF93H;
 				INFOPLIST_FILE = chatter_client_ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

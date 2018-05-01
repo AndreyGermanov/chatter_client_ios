@@ -13,9 +13,17 @@ class MessageCenterTests: MessageCenterResponseListener {
     var messageCenter: MessageCenter
     var lastWebSocketResponse: [String: Any]?
     var i = 1
+    var i1 = 1
+    var images = [String:Data]()
+    
 
     init(msgCenter: MessageCenter) {
         self.messageCenter = msgCenter
+        for i in 1...5 {
+            do {
+                images["simp\(i)"] = try Data(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "simp\(i)", ofType: "png")!, isDirectory: false))
+            } catch {}
+        }
     }
 
     func testTransferImage() {
@@ -79,7 +87,11 @@ class MessageCenterTests: MessageCenterResponseListener {
         if i>100 {
             i = 1
         }
-        if let from_user = ChatUser.getById("u\(i)") {
+        if i1>5 {
+            i1 = 1
+        }
+        var users:[ChatUser] = appStore.state.chat.users.copy()
+        if let from_user = ChatUser.getById("u\(i)",collection:users) {
             let to_user = ChatUser.getById(appStore.state.user.user_id)!
             let message = ChatMessage(id: "m\(i)",
                 timestamp: Int.init(Date().timeIntervalSince1970/1000),
@@ -94,6 +106,9 @@ class MessageCenterTests: MessageCenterResponseListener {
             Logger.log(level:LogLevel.DEBUG,message:"Pushed new message from user \(from_user.id)",
                 className:"MessageCenterTests",methodName:"loadTestState")
             i = i + 1
+            from_user.profileImage = self.images["simp\(i1)"]
+            appStore.dispatch(ChatState.changeUsers(users: users))
+            i1 = i1 + 1
         }
         self.i = i
     }

@@ -81,8 +81,7 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
             result = true
         }
         return result ||
-            ChatPrivateUsersListCell.shouldUpdateTableView(newState: newState) ||
-            ChatPrivateChatCell.shouldUpdateTableView(newState: newState)
+            ChatPrivateUsersListCell.shouldUpdateTableView(newState: newState)
     }
 
     /**
@@ -90,7 +89,7 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
      *  rows in a section. (always 1)
      */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
 
     /**
@@ -101,12 +100,10 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
      * - Returns: new cell which will replace cell which need to update
      */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let screenMode = state.privateChatMode
-        let cellID = screenMode.cellID
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        switch (screenMode) {
-        case .CHAT: return setupPrivateChatCell(cell)
-        case .USERS: return setupUsersListCell(cell)
+        switch (indexPath.row) {
+        case 0: return setupPrivateChatCell(tableView.dequeueReusableCell(withIdentifier: "ChatPrivateChatCell")!)
+        case 1: return setupUsersListCell(tableView.dequeueReusableCell(withIdentifier: "ChatPrivateUsersListCell")!)
+        default: return UITableViewCell()
         }
     }
     
@@ -148,6 +145,17 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
      */
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let screenSize = UIScreen.main.bounds
-        return screenSize.height
+        switch(state.privateChatMode) {
+        case .CHAT:
+            switch(indexPath.row) {
+            case 0: return screenSize.height
+            default: return 0
+            }
+        case .USERS:
+            switch(indexPath.row) {
+            case 1: return screenSize.height
+            default: return 0
+            }
+        }
     }
 }

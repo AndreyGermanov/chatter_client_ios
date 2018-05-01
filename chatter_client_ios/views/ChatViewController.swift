@@ -79,12 +79,13 @@ class ChatViewController: UIViewController, StoreSubscriber {
                 errors["general"] = nil
                 appStore.dispatch(ChatState.changeErrors(errors: errors))
             }
-            if self.shouldUpdateTableView(newState: state.chat) {
+            let shouldUpdate = self.shouldUpdateTableView(newState: state.chat)
+            self.state = state.chat.copy()
+            if shouldUpdate {
                 Logger.log(level: LogLevel.DEBUG_UI, message: "Reloaded data in chatTableView",
                            className: "ChatViewController", methodName: "newState")
                 self.chatTableView.reloadData()
             }
-            self.state = state.chat.copy()
             Logger.log(level: LogLevel.DEBUG_UI,message: "Updated local state from application state. State content: \(self.state)",
                 className: "ChatViewController",methodName:"newState")
         }
@@ -132,13 +133,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      * Returns: true if need to redraw tableView or false otherwise
      */
     func shouldUpdateTableView(newState: ChatState) -> Bool {
-        var result = state.chatMode != newState.chatMode
-        switch newState.chatMode {
-        case .PRIVATE: result = result || ChatPrivateCell.shouldUpdateTableView(newState: newState)
-        case .ROOM: break
-        case .PROFILE: break
-        }
-        return result
+        return state.chatMode != newState.chatMode
     }
 
     /**
@@ -146,7 +141,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      *  rows in a section. (always 1)
      */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 3
     }
 
     /**
@@ -158,7 +153,23 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      */
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let screenSize = UIScreen.main.bounds
-        return screenSize.height
+        switch(state.chatMode) {
+        case .ROOM:
+            switch(indexPath.row) {
+            case 0: return screenSize.height
+            default: return 0
+            }
+        case .PRIVATE:
+            switch(indexPath.row) {
+            case 1: return screenSize.height
+            default: return 0
+            }
+        case .PROFILE:
+            switch(indexPath.row) {
+            case 2: return screenSize.height
+            default: return 0
+            }
+        }
     }
 
     /**
@@ -169,11 +180,11 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      * - Returns: new cell which will replace cell which need to update
      */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: state.chatMode.cellID, for: indexPath)
-        switch (appStore.state.chat.chatMode) {
-        case .ROOM: return setupChatPublicCell(cell)
-        case .PRIVATE: return setupChatPrivateCell(cell)
-        case .PROFILE: return setupChatProfileCell(cell)
+        switch (indexPath.row) {
+        case 0: return setupChatPublicCell(tableView.dequeueReusableCell(withIdentifier: "ChatPublicCell")!)
+        case 1: return setupChatPrivateCell(tableView.dequeueReusableCell(withIdentifier: "ChatPrivateCell")!)
+        case 2: return setupChatProfileCell(tableView.dequeueReusableCell(withIdentifier: "ChatProfileCell")!)
+        default: return UITableViewCell()
         }
     }
 
