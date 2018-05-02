@@ -62,7 +62,6 @@ class ChatUserTests: XCTestCase {
         XCTAssertNil(result, "Should return null if user not found")
         result = ChatUser.getById("u2")
         XCTAssertNotNil(result, "Should return result if user found")
-        print(result)
         XCTAssertEqual("andrey@it-port.ru", result!.email, "Should provide access to fields of returned results")
     }
 

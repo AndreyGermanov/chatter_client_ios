@@ -23,14 +23,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, StoreSubscriber {
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let center  = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.badge,.alert], completionHandler: { (granted,error) in
-            print("GRANTED")
+            if granted {
+                Logger.log(level:LogLevel.DEBUG,message:"Granted access to send local notifications",
+                           className:"AppDelegate",methodName:"didFinishiLaunchingWithOptions")
+            }
         })
         msgCenter.run()
-        if let user_id = UserDefaults.standard.string(forKey: "user_id") {
-            if let session_id = UserDefaults.standard.string(forKey: "session_id") {
-                LoginFormState.loginUserAction().exec(user_id: user_id, session_id: session_id)
-            }
-        }
         appStore.subscribe(self)
         return true
     }

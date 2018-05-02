@@ -9,6 +9,7 @@
 //
 
 import Foundation
+import UIKit
 
 /**
  * Class describes chat message, which sent "from_user" either to specified "to_room"
@@ -142,5 +143,31 @@ class ChatMessage: Model {
             result["attachment"] = attachment
         }
         return result
+    }
+    
+    /**
+     * Method constructs view of chat message for chat screen
+     *
+     * - Returns: View object with user profile image, text block and attachment
+     */
+    func getView() -> UIView {
+        let container = UIStackView(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        let user_image = UIImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        let text_view = UITextView(frame: CGRect(x:0,y:0,width:100,height:100))
+        do {
+            user_image.image = UIImage(data: self.from_user.profileImage != nil ? self.from_user.profileImage! :
+                try Data(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "profile", ofType: "png")!, isDirectory: false)))
+        } catch {
+            Logger.log(level:LogLevel.WARNING,message:"Could not load default profile.png image",className:"ChatMessage",methodName:"getView")
+        }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = formatter.string(from: Date(timeIntervalSince1970:Double(self.timestamp)))
+        text_view.text = dateString+"\n"+self.text
+        container.addArrangedSubview(user_image)
+        container.addArrangedSubview(text_view)
+        container.distribution = .fillEqually
+        container.axis = .horizontal
+        return container
     }
 }

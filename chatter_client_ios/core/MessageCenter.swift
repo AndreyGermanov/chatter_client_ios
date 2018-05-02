@@ -51,7 +51,7 @@ class MessageCenter: NSObject, WebSocketDelegate {
 
     /// Remote WebSocket endpoint instance
     var remoteSession: WebSocketClient?
-
+    
     /// Last response from WebSocket server as text
     var lastResponseText = ""
 
@@ -68,7 +68,7 @@ class MessageCenter: NSObject, WebSocketDelegate {
     var lastReceivedFile = Data()
 
     /// Timer used to run main message loop (process message queues)
-    lazy var timer: Timer = Timer()
+    var timer: Timer?
 
     /**************************
      * Message queue core vars
@@ -127,6 +127,7 @@ class MessageCenter: NSObject, WebSocketDelegate {
      * Message center starter
      */    
     @objc func run() {
+        Logger.log(level:LogLevel.DEBUG,message:"Starting main MessageCenter loop",className:"MessageCenter",methodName:"run")
         self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.runCronjob), userInfo: nil, repeats: true)
     }
 
@@ -164,7 +165,21 @@ class MessageCenter: NSObject, WebSocketDelegate {
         self.cleanRequestsWaitingResponses()
         self.cleanReceivedFiles()
         self.cleanResponsesWaitingFile()
+        if appStore.state.user.isLogin {
+            return
+        }
+        if !self.isConnected() {
+            return
+        }
+        guard let user_id = UserDefaults.standard.string(forKey: "user_id") else {
+            return
+        }
+        guard let session_id = UserDefaults.standard.string(forKey: "session_id") else {
+            return
+        }
+        LoginFormState.loginUserAction().exec(user_id: user_id, session_id: session_id)
     }
+    
 
     // MARK: Message queue management
 

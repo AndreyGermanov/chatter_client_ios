@@ -48,12 +48,12 @@ class ChatPrivateCell: UITableViewCell, ChatViewControllerCell, StoreSubscriber 
      */
     func newState(state: AppState) {
         let shouldUpdateTableView = self.shouldUpdateTableView(newState: state.chat)
+        self.state = state.chat.copy()
         if shouldUpdateTableView {
             Logger.log(level: LogLevel.DEBUG_UI, message: "Reloaded chatPrivateTableView data",
                        className: "ChatPrivateCell", methodName: "newState")
             chatPrivateTableView.reloadData()
         }
-        self.state = state.chat.copy()
         Logger.log(level: LogLevel.DEBUG_UI,message: "Updated local state from application state. State content: \(String(describing: self.state))",
             className: "ChatPrivateCell",methodName:"newState")
     }
@@ -72,16 +72,11 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
      * Returns: true if need to redraw tableView or false otherwise
      */
     func shouldUpdateTableView(newState: ChatState) -> Bool {
-        return ChatPrivateCell.shouldUpdateTableView(newState:newState)
-    }
-    static func shouldUpdateTableView(newState: ChatState) -> Bool {
-        let state = appStore.state.chat
         var result = false
         if state.privateChatMode != newState.privateChatMode {
             result = true
         }
-        return result ||
-            ChatPrivateUsersListCell.shouldUpdateTableView(newState: newState)
+        return result
     }
 
     /**
@@ -106,7 +101,6 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
         default: return UITableViewCell()
         }
     }
-    
 
     /**
      * Function used to setup tableView cell as Users List cell depending on current Chat state
@@ -148,7 +142,7 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
         switch(state.privateChatMode) {
         case .CHAT:
             switch(indexPath.row) {
-            case 0: return screenSize.height
+            case 0: return screenSize.height-107
             default: return 0
             }
         case .USERS:

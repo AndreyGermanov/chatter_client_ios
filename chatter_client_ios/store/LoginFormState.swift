@@ -267,17 +267,18 @@ struct LoginFormState {
                 return
             }
             appStore.dispatch(changeLoginFormShowProgressIndicatorAction(progressIndicator: true))
-            if let request = self.messageCenter.addToPendingRequests([
+            let request:[String:Any] = [
                 "sender": self,
                 "action": "login_user",
                 "login": login,
                 "password": password
-                ]) {
+            ]
+            if let sent_request = self.messageCenter.addToPendingRequests(request) {
                 Logger.log(level: LogLevel.DEBUG,
-                           message: "Added user login request to MessageCenter pendingRequests queue. Request: \(request)",
+                           message: "Added user login request to MessageCenter pendingRequests queue. Request: \(sent_request)",
                     className: "loginUserAction", methodName: "exec")
             } else {
-                Logger.log(level: LogLevel.WARNING, message: "Error constructing user login request for state: \(state)",
+                Logger.log(level: LogLevel.WARNING, message: "Error constructing user login request for state: \(state). Request: \(request)",
                     className: "loginUserAction", methodName: "exec")
             }
         }

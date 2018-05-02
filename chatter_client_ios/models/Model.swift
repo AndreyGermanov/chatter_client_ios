@@ -136,6 +136,9 @@ class Model: Equatable {
         if models1!.count != models2!.count {
             return false
         }
+        if models1!.count == 0 {
+            return true
+        }
         for i in 0...models1!.count-1 {
             let model1 = models1![i]
             if let model2 = models2?[i] {

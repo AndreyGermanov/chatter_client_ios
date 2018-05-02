@@ -84,16 +84,16 @@ class MessageCenterTests: MessageCenterResponseListener {
     @objc func play() {
         var i = self.i
         Logger.log(level:LogLevel.DEBUG,message:"Started timer",className:"MessageCenterTests",methodName:"loadTestState")
-        if i>100 {
+        if i>5 {
             i = 1
         }
         if i1>5 {
             i1 = 1
         }
-        var users:[ChatUser] = appStore.state.chat.users.copy()
+        let users:[ChatUser] = appStore.state.chat.users.copy()
         if let from_user = ChatUser.getById("u\(i)",collection:users) {
             let to_user = ChatUser.getById(appStore.state.user.user_id)!
-            let message = ChatMessage(id: "m\(i)",
+            let message = ChatMessage(id: "m\(appStore.state.chat.messages.count)",
                 timestamp: Int.init(Date().timeIntervalSince1970/1000),
                 from_user: from_user,
                 text: "Hi",
@@ -117,12 +117,12 @@ class MessageCenterTests: MessageCenterResponseListener {
         let room1 = ChatRoom(id: "r1", name: "Room 1")
         let room2 = ChatRoom(id: "r2", name: "Room 2")
         appStore.dispatch(ChatState.changeRooms(rooms:[room1,room2]))
-        let timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.play), userInfo: nil, repeats: true)
+        let _ = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.play), userInfo: nil, repeats: true)
     }
     
     func loadUsers() {
         var users = [ChatUser]()
-        for i in 1...100 {
+        for i in 1...5 {
             let user = ChatUser(id:"u\(i)")
             user.login = "user\(i)"
             user.email = "user\(i)@test.com"

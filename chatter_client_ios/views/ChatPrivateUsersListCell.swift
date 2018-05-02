@@ -120,4 +120,16 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
         }
         return cell
     }
+    
+    /**
+     * Function, which tableView calls whenever users selects row
+     *
+     * - Parameter tableView: Source tableView
+     * - Parameter indexPath: Coordinates of selected row
+     */
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let user = self.state.users[indexPath.row]
+        appStore.dispatch(ChatState.changeSelectedUser(selectedUser: user))
+        appStore.dispatch(ChatState.changePrivateChatMode(privateChatMode: .CHAT))
+    }
 }
