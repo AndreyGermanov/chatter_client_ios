@@ -88,7 +88,7 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
      *  rows in a section. Returns number of users from application state array
      */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return state.users.count
+        return state.users.count > 0 ? state.users.count-1 : 0
     }
     
    

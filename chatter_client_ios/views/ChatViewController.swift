@@ -23,6 +23,9 @@ class ChatViewController: UIViewController, StoreSubscriber {
     /// cells
     @IBOutlet weak var chatTableView: UITableView!
 
+    /// link to "Back" button
+    @IBOutlet weak var backButton: UIBarButtonItem!
+    
     /// Local copy of Chat Screen state (the state which used now to draw this screen)
     var state: ChatState = ChatState()
 
@@ -86,6 +89,7 @@ class ChatViewController: UIViewController, StoreSubscriber {
                            className: "ChatViewController", methodName: "newState")
                 self.chatTableView.reloadData()
             }
+            self.backButton.tintColor = state.chat.privateChatMode == .CHAT ? nil : UIColor.clear
             Logger.log(level: LogLevel.DEBUG_UI,message: "Updated local state from application state. State content: \(self.state)",
                 className: "ChatViewController",methodName:"newState")
         }
@@ -115,6 +119,17 @@ class ChatViewController: UIViewController, StoreSubscriber {
     @IBAction func chatModesClick(_ sender: UISegmentedControl) {
         if let currentMode = ChatScreenMode(rawValue: sender.selectedSegmentIndex+1) {
             appStore.dispatch(ChatState.changeChatMode(chatMode: currentMode))
+        }
+    }
+    
+    /**
+     * "Back" button click handler
+     *
+     * - Parameter sender: Source button clicked
+     */
+    @IBAction func backBtnClick(_ sender: UIButton) {
+        if state.chatMode == .PRIVATE && state.privateChatMode == .CHAT {
+            appStore.dispatch(ChatState.changePrivateChatMode(privateChatMode: .USERS))
         }
     }
 }
@@ -229,6 +244,8 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
                    className: "ChatViewController", methodName: "setupChatProfileCell")
         return cell
     }
+    
+    
 }
 
 /**

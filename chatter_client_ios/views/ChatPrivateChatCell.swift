@@ -27,8 +27,8 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
     /// Array of message View objects, displayed inside scrollview in format [message_id:View]
     var messageViews = [String:UIView]()
     
-    /// Link to chat window
-    @IBOutlet weak var chatScrollView: UIScrollView!
+    /// Link to chat table view
+    @IBOutlet weak var privateChatTableView: UITableView!
     /// Link to message input field
     @IBOutlet weak var messageInputField: UITextField!
    
@@ -38,6 +38,10 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
     override func awakeFromNib() {
         super.awakeFromNib()
         // subscribe to application state change events
+        privateChatTableView.dataSource = self
+        privateChatTableView.delegate = self
+        privateChatTableView.estimatedRowHeight = 107.0
+        privateChatTableView.rowHeight = UITableViewAutomaticDimension
         appStore.subscribe(self)
     }
     
@@ -48,53 +52,22 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
      * - Parameter state: Link to new updated state
      */
     func newState(state: AppState) {
-        var messages_to_add = [ChatMessage]()
-        if let new_user = state.chat.selectedUser {
-            Logger.log(level:LogLevel.DEBUG_UI,message:"Received state update for \(new_user.login) private chat window",
-                className:"ChatPrivateChatCell",methodName:"newState")
-            let new_user_messages = new_user.getPrivateMessages()
-            if (!new_user.equals(user)) {
-                messages = [ChatMessage]()
-                clearChatWindow()
-                Logger.log(level:LogLevel.DEBUG_UI,message:"Cleared chat window of user: \(new_user.login)",
-                    className:"ChatPrivateChatCell",methodName:"newState")
-            }
-            if (!ChatMessage.compare(models1:self.messages,models2:new_user_messages)) {
-                messages_to_add = new_user_messages.copy()
-                if messages.count>0 {
-                    messages_to_add.removeSubrange(0...messages.count-1)
-                }
-                Logger.log(level:LogLevel.DEBUG_UI,message:"Adding messages to chat window of user: \(new_user.login)",
-                    className:"ChatPrivateChatCell",methodName:"newState")
-                addMessages(messages_to_add)
-            }
-            messages = new_user_messages.copy()
-            user = new_user.copy()
+        Logger.log(level:LogLevel.DEBUG_UI,message:"Received state update for \(String(describing:user?.login)) private chat window",
+            className:"ChatPrivateChatCell",methodName:"newState")
+        let shouldUpdate = shouldUpdateTable(state.chat)
+        if let selectedUser = state.chat.selectedUser?.copy() {
+            user = selectedUser
+            messages = selectedUser.getPrivateMessages()
         }
-    }
-    
-    /**
-     * Method used to add messages to chat scrollView
-     *
-     * - Parameter messages: Array of messages to add
-     */
-    func addMessages(_ messages:[ChatMessage]) {
-        for message in messages {
-            let messageView = message.getView()
-            messageView.leftAnchor.constraint(equalTo: chatScrollView.leftAnchor, constant: 5.0)
-            messageView.rightAnchor.constraint(equalTo: chatScrollView.rightAnchor, constant: 5.0)
-            if messageViews.count > 0 {
-                if let lastMessageView = messageViews[messages[messages.count-1].id] {
-                    messageView.topAnchor.constraint(equalTo: lastMessageView.bottomAnchor, constant: 5.0)
-                }
-            } else {
-                messageView.topAnchor.constraint(equalTo: chatScrollView.topAnchor, constant: 5.0)
+        self.state = state.chat.copy()
+        if shouldUpdate {
+            Logger.log(level:LogLevel.DEBUG_UI,message:"Reload chat tableView from \(String(describing:user?.login)) private chat window." +
+                "Messages \(messages)",className:"ChatPrivateChatCell",methodName:"newState")
+            privateChatTableView.reloadData()
+            if messages.count > 0 {
+                let lastRow = IndexPath(row:messages.count-1,section:0)
+                privateChatTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
             }
-            messageView.widthAnchor.constraint(equalTo: chatScrollView.widthAnchor, multiplier: 1.0)
-            messageViews[message.id] = messageView
-            chatScrollView.contentMode = .bottom
-            chatScrollView.contentSize = CGSize(width: 500, height: 5000)
-            chatScrollView.addSubview(messageView)
         }
     }
     
@@ -121,8 +94,73 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
      */
     @IBAction func sendMessageBtnClick(_ sender: UIButton) {
     }
-    
-    
-    
-   }
+}
 
+/**
+ * Extension used to communicate with privateChatTableView table
+ */
+extension ChatPrivateChatCell: UITableViewDelegate,UITableViewDataSource {
+    
+    /**
+     * Method which tableView executes to determine number of rows in TableView
+     *
+     * - Parameter tableView: Source tableView
+     * - Parameter section: Number of section for which need to get number of rows
+     * - Returns: Number of rows
+     */
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    /**
+     * Method which tableView executes to get and drow cell in table view
+     *
+     * - Parameter tableView: Source tableView
+     * - Parameter indexPath: Coordinates of cell to draw
+     */
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "privateChatMessageCell") as? ChatMessageCell {
+            return setupChatMessageCell(cell,index:indexPath.row)
+        } else {
+            Logger.log(level: LogLevel.WARNING, message: "Could not get ChatMessageCell object",
+                       className: "ChatPrivateChatCell", methodName: "cellForRowAt")
+            return UITableViewCell()
+        }
+    }
+
+    /**
+     * Method used to determine if need to reload data in tableView to meet new application state
+     *
+     * - Parameter newState: New application state
+     * - Returns: True if need to reload data and false otherwise
+     */
+    func shouldUpdateTable(_ newState:ChatState) -> Bool {
+        return ChatMessage.compare(models1: messages, models2: newState.selectedUser?.getPrivateMessages()) ||
+            ChatUser.compare(model1:user,model2:newState.selectedUser)
+    }
+    
+    /**
+     * Method used to setup cell inside tableView when draw or redraw
+     *
+     * - Parameter cell: Link to Cell object to setup
+     * - Parameter index: Row Index of cell
+     * - Returns: Cell after setup all options, ready to display
+     */
+    func setupChatMessageCell(_ cell:ChatMessageCell,index:Int) -> ChatMessageCell {
+        let message = messages[index]
+        cell.message = message.copy()
+        cell.messageTextLabel.text = message.text
+        cell.userLoginLabel.text = message.from_user.login
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateString = formatter.string(from: Date(timeIntervalSince1970: Double.init(message.timestamp*1000)))
+        cell.messageDateLabel.text = dateString
+        if let image = message.attachment {
+            cell.messageAttachmentImageView.image = UIImage(data: image)
+        }
+        if let profileImage = message.from_user.profileImage {
+            cell.userProfileImageView.image = UIImage(data: profileImage)
+        }
+        return cell
+    }
+}
