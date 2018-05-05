@@ -24,6 +24,11 @@ class MessageCenterTests: MessageCenterResponseListener {
                 images["simp\(i)"] = try Data(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "simp\(i)", ofType: "png")!, isDirectory: false))
             } catch {}
         }
+        do {
+            images["splash"] = try Data(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "splash", ofType: "jpg")!, isDirectory: false))
+            images["splash2"] = try Data(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "splash2", ofType: "jpg")!, isDirectory:
+                false))
+        } catch {}
     }
 
     func testTransferImage() {
@@ -82,6 +87,13 @@ class MessageCenterTests: MessageCenterResponseListener {
     }
     
     @objc func play() {
+        guard let to_user = ChatUser.getById(appStore.state.user.user_id) else {
+            return
+        }
+        let users:[ChatUser] = appStore.state.chat.users.copy()
+        if users.count == 0 {
+            return
+        }
         var i = self.i
         Logger.log(level:LogLevel.DEBUG,message:"Started timer",className:"MessageCenterTests",methodName:"loadTestState")
         if i>5 {
@@ -90,14 +102,19 @@ class MessageCenterTests: MessageCenterResponseListener {
         if i1>5 {
             i1 = 1
         }
-        let users:[ChatUser] = appStore.state.chat.users.copy()
         if let from_user = ChatUser.getById("u\(i)",collection:users) {
-            let to_user = ChatUser.getById(appStore.state.user.user_id)!
+            let text = "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
+            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
+            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
+            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
+            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
+            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
+            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello";
             let message = ChatMessage(id: "m\(appStore.state.chat.messages.count)",
                 timestamp: Int.init(Date().timeIntervalSince1970/1000),
                 from_user: from_user,
-                text: "Hi",
-                attachment: nil,
+                text: text,
+                attachment: images["splash"],
                 room: nil,
                 to_user: to_user)
             var messages:[ChatMessage] = appStore.state.chat.messages.copy()

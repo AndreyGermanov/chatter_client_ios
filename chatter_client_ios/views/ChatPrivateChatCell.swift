@@ -154,10 +154,7 @@ extension ChatPrivateChatCell: UITableViewDelegate,UITableViewDataSource {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let dateString = formatter.string(from: Date(timeIntervalSince1970: Double.init(message.timestamp*1000)))
-        cell.messageDateLabel.text = dateString
-        if let image = message.attachment {
-            cell.messageAttachmentImageView.image = UIImage(data: image)
-        }
+        cell.messageDateLabel.text = dateString       
         if let profileImage = message.from_user.profileImage {
             cell.userProfileImageView.image = UIImage(data: profileImage)
         }

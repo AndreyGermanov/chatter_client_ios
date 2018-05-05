@@ -24,7 +24,7 @@ class ChatMessageCell: UITableViewCell, ChatViewControllerCell {
     /// Link to message text (if exists)
     @IBOutlet weak var messageTextLabel: UILabel!
     /// Link to message attachment (if exists)
-    @IBOutlet weak var messageAttachmentImageView: UIImageView!
+    //@IBOutlet weak var messageAttachmentImageView: UIImageView!
     /// Link to displayed chat message object
     var message:ChatMessage? = nil
 }
