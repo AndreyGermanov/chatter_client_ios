@@ -65,18 +65,9 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
                 "Messages \(messages)",className:"ChatPrivateChatCell",methodName:"newState")
             privateChatTableView.reloadData()
             if messages.count > 0 {
-                let lastRow = IndexPath(row:messages.count-1,section:0)
+                let lastRow = IndexPath(row:(messages.count-1)*2,section:0)
                 privateChatTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
             }
-        }
-    }
-    
-    /**
-     * Method removes all messages from ScrollView
-     */
-    func clearChatWindow() {
-        for (_,messageView) in messageViews {
-            messageView.removeFromSuperview()
         }
     }
     
@@ -85,6 +76,21 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
      * - Parameter sender: Link to clicked button
      */
     @IBAction func addPictureBtnClick(_ sender: UIButton) {
+        if state.privateChatAttachment == nil {
+            GetPhoto(parent:self.parentViewController!,callback:{ image in
+                print("HERE")
+                if let image = image {
+                    appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: image))
+                }
+            }).run()
+        } else {
+            let dialog = UIAlertController(title: "Confirm",
+                                           message: "Do you want to remove picked image from cache?", preferredStyle: .alert)
+            dialog.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { action in
+                appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: nil))
+            }))
+            dialog.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        }
     }
     
     /**
@@ -93,6 +99,23 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
      * - Parameter sender: Link to clicked button
      */
     @IBAction func sendMessageBtnClick(_ sender: UIButton) {
+        guard let messageText = messageInputField.text else {
+            return
+        }
+        if messageText.isEmpty {
+            return
+        }
+        let message = ChatMessage(id: UUID().description,
+                                  timestamp: Int(Date().timeIntervalSince1970/1000),
+                                  from_user: ChatUser.getById(appStore.state.user.user_id)!,
+                                  text: messageText,
+                                  attachment: state.privateChatAttachment,
+                                  room: nil,
+                                  to_user: state.selectedUser)
+        messages.append(message)
+        appStore.dispatch(ChatState.changeMessages(messages:messages))
+        messageInputField.text = ""
+        appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: nil))
     }
 }
 
@@ -109,7 +132,7 @@ extension ChatPrivateChatCell: UITableViewDelegate,UITableViewDataSource {
      * - Returns: Number of rows
      */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages.count
+        return messages.count*2
     }
     
     /**
@@ -119,13 +142,35 @@ extension ChatPrivateChatCell: UITableViewDelegate,UITableViewDataSource {
      * - Parameter indexPath: Coordinates of cell to draw
      */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "privateChatMessageCell") as? ChatMessageCell {
-            return setupChatMessageCell(cell,index:indexPath.row)
+        let messageIndex = Int(floor(Double(indexPath.row/2)))
+        if indexPath.row % 2 != 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "privateChatAttachmentCell") as! ChatAttachmentCell
+            return setupChatMessageAttachmentCell(cell, index: messageIndex)
         } else {
-            Logger.log(level: LogLevel.WARNING, message: "Could not get ChatMessageCell object",
-                       className: "ChatPrivateChatCell", methodName: "cellForRowAt")
-            return UITableViewCell()
+            let cell = tableView.dequeueReusableCell(withIdentifier: "privateChatMessageCell") as! ChatMessageCell
+             return setupChatMessageCell(cell, index: messageIndex)
         }
+    }
+    
+    /**
+     * Function used to get height for tableView row, depending on row number
+     *
+     * - Parameter tableView: Source tableView
+     * - Parameter indexPath: Coordinates of row
+     * - Returns: calculated height of row
+     */
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let messageIndex = Int(floor(Double(indexPath.row/2)))
+        if indexPath.row % 2 == 0 {
+            return UITableViewAutomaticDimension
+        }
+        guard let imageData = messages[messageIndex].attachment else {
+            return 0.0
+        }
+        guard let image = UIImage(data:imageData) else {
+            return 0.0
+        }
+        return image.size.height
     }
 
     /**
@@ -140,7 +185,7 @@ extension ChatPrivateChatCell: UITableViewDelegate,UITableViewDataSource {
     }
     
     /**
-     * Method used to setup cell inside tableView when draw or redraw
+     * Method used to setup Message text cell when draw or redraw
      *
      * - Parameter cell: Link to Cell object to setup
      * - Parameter index: Row Index of cell
@@ -155,8 +200,23 @@ extension ChatPrivateChatCell: UITableViewDelegate,UITableViewDataSource {
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let dateString = formatter.string(from: Date(timeIntervalSince1970: Double.init(message.timestamp*1000)))
         cell.messageDateLabel.text = dateString       
-        if let profileImage = message.from_user.profileImage {
+        if let profileImage = message.from_user.id == appStore.state.user.user_id ? appStore.state.user.profileImage : message.from_user.profileImage {
             cell.userProfileImageView.image = UIImage(data: profileImage)
+        }
+        return cell
+    }
+    
+    /**
+     * Method used to setup Message image attachment cell when draw or redraw
+     *
+     * - Parameter cell: Link to Cell object to setup
+     * - Parameter index: Row Index of cell
+     * - Returns: Cell after setup all options, ready to display
+     */
+    func setupChatMessageAttachmentCell(_ cell:ChatAttachmentCell,index:Int) -> ChatAttachmentCell {
+        let message = messages[index]
+        if let imageData = message.attachment {
+            cell.chatAttachmentImageView.image = UIImage(data: imageData)
         }
         return cell
     }

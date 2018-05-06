@@ -65,11 +65,9 @@ struct ChatState {
     var selectedUser: ChatUser?
 
     var chatMode: ChatScreenMode = .ROOM
-    var chatMessage: String = ""
     var chatAttachment: Data?
 
     var privateChatMode: PrivateChatScreenMode = .USERS
-    var privateChatMessage: String = ""
     var privateChatAttachment: Data?
 
     var showProgressIndicator = false
@@ -107,20 +105,12 @@ struct ChatState {
         let privateChatMode: PrivateChatScreenMode
     }
 
-    struct changeChatMessage: ChatAction {
-        let chatMessage: String
-    }
-
-    struct changePrivateChatMessage: ChatAction {
-        let privateChatMessage: String
-    }
-
     struct changeChatAttachment: ChatAction {
-        let chatAttachment: Data
+        let chatAttachment: Data?
     }
 
     struct changePrivateChatAttachment: ChatAction {
-        let privateChatAttachment: Data
+        let privateChatAttachment: Data?
     }
 
     struct changeShowProgressIndicator: ChatAction {
@@ -148,12 +138,10 @@ struct ChatState {
             result.selectedUser = selectedUser.copy()
         }
         result.chatMode = chatMode
-        result.chatMessage = chatMessage
         if let chatAttachment = self.chatAttachment {
             result.chatAttachment = chatAttachment
         }
         result.privateChatMode = privateChatMode
-        result.privateChatMessage = privateChatMessage
         if let privateChatAttachment = self.privateChatAttachment {
             result.privateChatAttachment = privateChatAttachment
         }

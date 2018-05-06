@@ -16,9 +16,9 @@ class Logger {
     /// Which log levels to display
     static var displayLevels: [LogLevel] = [LogLevel.INFO,
                                             LogLevel.ERROR,
-                                            LogLevel.WARNING,
-                                            LogLevel.DEBUG,
-                                            LogLevel.DEBUG_UI
+                                            LogLevel.WARNING
+                                            //LogLevel.DEBUG
+                                            //LogLevel.DEBUG_UI
                                             ]
 
     /**

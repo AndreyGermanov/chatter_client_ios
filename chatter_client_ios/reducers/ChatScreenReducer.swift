@@ -31,13 +31,9 @@ func chatScreenReducer(action: Action, state: ChatState) -> ChatState {
     case let action as ChatState.changeCurrentRoom:
         newState.currentRoom = action.currentRoom
     case let action as ChatState.changeSelectedUser:
-        newState.selectedUser = action.selectedUser
-    case let action as ChatState.changeChatMessage:
-        newState.chatMessage = action.chatMessage
+        newState.selectedUser = action.selectedUser   
     case let action as ChatState.changeChatAttachment:
         newState.chatAttachment = action.chatAttachment
-    case let action as ChatState.changePrivateChatMessage:
-        newState.privateChatMessage = action.privateChatMessage
     case let action as ChatState.changePrivateChatAttachment:
         newState.privateChatAttachment = action.privateChatAttachment
     case let action as ChatState.changePrivateChatMode:

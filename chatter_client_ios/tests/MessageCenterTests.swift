@@ -106,15 +106,15 @@ class MessageCenterTests: MessageCenterResponseListener {
             let text = "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
             "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
             "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
-            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
-            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
-            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
-            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello";
+            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,"
+//            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
+//            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello," +
+//            "Hi, hello, Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello,Hi, hello";
             let message = ChatMessage(id: "m\(appStore.state.chat.messages.count)",
                 timestamp: Int.init(Date().timeIntervalSince1970/1000),
                 from_user: from_user,
                 text: text,
-                attachment: images["splash"],
+                attachment: nil,//images["splash"],
                 room: nil,
                 to_user: to_user)
             var messages:[ChatMessage] = appStore.state.chat.messages.copy()
