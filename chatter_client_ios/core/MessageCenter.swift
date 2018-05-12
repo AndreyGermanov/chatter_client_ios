@@ -661,7 +661,6 @@ protocol MessageCenterResponseListener {
      * - Parameter response: Decoded from JSON response as a Dictionary
      */
     func handleWebSocketResponse(request_id: String, response: [String: Any])
-
 }
 
 // MARK: Utility enums

@@ -24,8 +24,6 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
     var user:ChatUser? = nil
     /// Array of chat messages which currently displayed in ScrollView
     var messages = [ChatMessage]()
-    /// Array of message View objects, displayed inside scrollview in format [message_id:View]
-    var messageViews = [String:UIView]()
     
     /// Link to chat table view
     @IBOutlet weak var privateChatTableView: UITableView!
@@ -37,7 +35,6 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
      */
     override func awakeFromNib() {
         super.awakeFromNib()
-        // subscribe to application state change events
         privateChatTableView.dataSource = self
         privateChatTableView.delegate = self
         privateChatTableView.estimatedRowHeight = 107.0
@@ -71,18 +68,19 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
         }
     }
     
+    
     /** "Add picture" button click handler
      *
      * - Parameter sender: Link to clicked button
      */
     @IBAction func addPictureBtnClick(_ sender: UIButton) {
         if state.privateChatAttachment == nil {
-            GetPhoto(parent:self.parentViewController!,callback:{ image in
-                print("HERE")
-                if let image = image {
+            let photoCtrl = GetPhoto(parent: self.parentViewController!, callback: { data in
+                if let image = data {
                     appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: image))
                 }
-            }).run()
+            })
+            photoCtrl.run()
         } else {
             let dialog = UIAlertController(title: "Confirm",
                                            message: "Do you want to remove picked image from cache?", preferredStyle: .alert)
@@ -109,9 +107,12 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
                                   timestamp: Int(Date().timeIntervalSince1970/1000),
                                   from_user: ChatUser.getById(appStore.state.user.user_id)!,
                                   text: messageText,
-                                  attachment: state.privateChatAttachment,
+                                  attachment: nil,
                                   room: nil,
                                   to_user: state.selectedUser)
+        if let image = state.privateChatAttachment {
+            message.attachment = image
+        }
         messages.append(message)
         appStore.dispatch(ChatState.changeMessages(messages:messages))
         messageInputField.text = ""
@@ -148,12 +149,12 @@ extension ChatPrivateChatCell: UITableViewDelegate,UITableViewDataSource {
             return setupChatMessageAttachmentCell(cell, index: messageIndex)
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "privateChatMessageCell") as! ChatMessageCell
-             return setupChatMessageCell(cell, index: messageIndex)
+            return setupChatMessageCell(cell, index: messageIndex)
         }
     }
     
     /**
-     * Function used to get height for tableView row, depending on row number
+     * Method used to get height for tableView row, depending on row number
      *
      * - Parameter tableView: Source tableView
      * - Parameter indexPath: Coordinates of row

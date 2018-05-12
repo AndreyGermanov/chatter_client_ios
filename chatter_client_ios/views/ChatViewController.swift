@@ -46,7 +46,6 @@ class ChatViewController: UIViewController, StoreSubscriber {
         chatTableView.delegate = self
         self.state = appStore.state.chat
         appStore.subscribe(self)
-       
     }
     
     /**
@@ -244,8 +243,6 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
                    className: "ChatViewController", methodName: "setupChatProfileCell")
         return cell
     }
-    
-    
 }
 
 /**
@@ -255,4 +252,22 @@ protocol ChatViewControllerCell {
     /// Link to view controller, which manages tableView of this cell
     var parentViewController: ChatViewController? {get set}
     var state: ChatState {get set}
+}
+
+extension ChatViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    /**
+     * Function fired when user captures image either from Camera or form PhotoLibrary
+     *
+     * - Parameter picker: Link to Source Image Picker component dialog
+     * - Parameter info: Array of captured information, including captured image and other metadata
+     */
+    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if let data = UIImagePNGRepresentation(image) {
+                print(data.bytes.count)
+                appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: data))
+                picker.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
 }

@@ -15,7 +15,7 @@ import Foundation
  *  either from Camera, or from Gallery. It shows dialog to delect image source
  *  and then depending on selected source runs appropriate software
  */
-class GetPhoto: NSObject,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+class GetPhoto: NSObject {
     
     /// Callback, which is used to transfer selected image to function, initiated image picking process
     var callback: ((_ image:Data)->())? = nil
@@ -58,28 +58,7 @@ class GetPhoto: NSObject,UIImagePickerControllerDelegate,UINavigationControllerD
         let dialog = UIImagePickerController()
         dialog.sourceType = source
         dialog.allowsEditing = false
-        dialog.delegate = self
+        dialog.delegate = self.parent as! ChatViewController
         self.parent.present(dialog, animated: true, completion: nil)
     }
-    
-    /**
-     * Function fired when user captures image either from Camera or form PhotoLibrary
-     *
-     * - Parameter picker: Link to Source Image Picker component dialog
-     * - Parameter info: Array of captured information, including captured image and other metadata
-     */
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
-        print("HERE1")
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            if let data = UIImagePNGRepresentation(image) {
-                print("ONE")
-                if let callback = self.callback {
-                    print("TWO")
-                    callback(data)
-                }
-                picker.dismiss(animated: true, completion: nil)
-            }
-        }
-    }
-
 }

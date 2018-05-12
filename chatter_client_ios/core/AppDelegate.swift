@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, StoreSubscriber {
     var unreadMessages: Int = 0
     let msgCenter = MessageCenter(host: "192.168.0.214", port: 8080, endpoint: "websocket")
     let tester = MessageCenterTests(msgCenter:MessageCenter(host: "192.168.0.214", port: 8080, endpoint: "websocket"))
+    
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let center  = UNUserNotificationCenter.current()

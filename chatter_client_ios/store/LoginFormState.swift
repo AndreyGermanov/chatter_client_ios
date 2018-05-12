@@ -485,6 +485,7 @@ struct LoginFormState {
                 appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: default_room))
                 appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom: default_room))
                 appStore.dispatch(AppState.ChangeActivityAction(activity: .CHAT))
+                appStore.dispatch(ChatState.changeCurrentRoom(currentRoom: ChatRoom.getById(default_room)!))
             } else {
                 appStore.dispatch(UserState.changeUserDefaultRoomAction(default_room: ""))
                 appStore.dispatch(UserProfileState.changeUserProfileDefaultRoomAction(defaultRoom: ""))
