@@ -19,4 +19,6 @@ class ChatUserCell: UITableViewCell, ChatViewControllerCell {
     @IBOutlet weak var userProfileImageView: UIImageView!
     /// Link to User label
     @IBOutlet weak var userNameLabel: UILabel!
+    /// Link to Unread messages label
+    @IBOutlet weak var unreadMessagesLabel: UILabel!
 }

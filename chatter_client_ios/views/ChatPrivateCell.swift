@@ -73,7 +73,7 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
      */
     func shouldUpdateTableView(newState: ChatState) -> Bool {
         var result = false
-        if state.privateChatMode != newState.privateChatMode {
+        if state.privateChatMode != newState.privateChatMode || state.privateChatAttachment != newState.privateChatAttachment {
             result = true
         }
         return result
@@ -125,6 +125,11 @@ extension ChatPrivateCell: UITableViewDelegate, UITableViewDataSource {
     func setupPrivateChatCell(_ cell: UITableViewCell) -> ChatPrivateChatCell {
         let cell = cell as! ChatPrivateChatCell
         cell.parentViewController = parentViewController
+        if state.privateChatAttachment == nil {
+            cell.addPictureBtn.setImage(UIImage(named:"camera.png",in: Bundle.main,compatibleWith:nil), for: .normal)
+        } else {
+            cell.addPictureBtn.setImage(UIImage(named:"uncamera.png",in: Bundle.main,compatibleWith:nil), for: .normal)
+        }
         Logger.log(level: LogLevel.DEBUG_UI, message: "Constructed ChatPrivateChatCell",
                    className: "ChatPrivateCell", methodName: "setupPrivateChatCell")
         return cell

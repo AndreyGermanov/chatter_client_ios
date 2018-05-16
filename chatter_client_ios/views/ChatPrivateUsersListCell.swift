@@ -113,7 +113,15 @@ extension ChatPrivateUsersListCell: UITableViewDataSource, UITableViewDelegate {
             name += " \(user.last_name)"
         }
         let messages_count = user.getUnreadMessagesCount(state.messages, users: state.users)
-        name += " \(user.login) - \(messages_count)"
+        name += " \(user.login)"
+        if messages_count>0 {
+            cell.unreadMessagesLabel.isHidden = false
+            if messages_count>99 {
+                cell.unreadMessagesLabel.text = "99+"
+            } else {
+                cell.unreadMessagesLabel.text = "\(messages_count)"
+            }
+        }
         cell.userNameLabel.text = name.trimmingCharacters(in: .whitespacesAndNewlines)
         if let profileImage = user.profileImage {
             cell.userProfileImageView.image = UIImage(data: profileImage)

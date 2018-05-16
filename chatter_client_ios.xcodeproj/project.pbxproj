@@ -28,6 +28,11 @@
 		CE0AB4B5206420B30071DE82 /* apple.png in Resources */ = {isa = PBXBuildFile; fileRef = CE0AB4B4206420B20071DE82 /* apple.png */; };
 		CE402F75209F4E380080254A /* ChatAttachmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE402F74209F4E370080254A /* ChatAttachmentCell.swift */; };
 		CE402F77209F8E380080254A /* GetPhotoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE402F76209F8E370080254A /* GetPhotoController.swift */; };
+		CE402F7C20AAF5000080254A /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = CE402F7B20AAF4FF0080254A /* back.png */; };
+		CE402F7E20AAF6C50080254A /* group.png in Resources */ = {isa = PBXBuildFile; fileRef = CE402F7D20AAF6C20080254A /* group.png */; };
+		CE7E6C2420AC544200F411CA /* logout.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7E6C2320AC544200F411CA /* logout.png */; };
+		CE7E6C2620AC545500F411CA /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7E6C2520AC545400F411CA /* camera.png */; };
+		CE7E6C2820AC546500F411CA /* uncamera.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7E6C2720AC546500F411CA /* uncamera.png */; };
 		CE9BC092208A67720056081A /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC091208A67720056081A /* ChatViewController.swift */; };
 		CE9BC094208BA9280056081A /* ChatState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC093208BA9280056081A /* ChatState.swift */; };
 		CE9BC096208BBE920056081A /* ChatScreenReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9BC095208BBE920056081A /* ChatScreenReducer.swift */; };
@@ -123,6 +128,11 @@
 		CE0AB4B4206420B20071DE82 /* apple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple.png; sourceTree = "<group>"; };
 		CE402F74209F4E370080254A /* ChatAttachmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatAttachmentCell.swift; sourceTree = "<group>"; };
 		CE402F76209F8E370080254A /* GetPhotoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPhotoController.swift; sourceTree = "<group>"; };
+		CE402F7B20AAF4FF0080254A /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
+		CE402F7D20AAF6C20080254A /* group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = group.png; sourceTree = "<group>"; };
+		CE7E6C2320AC544200F411CA /* logout.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logout.png; sourceTree = "<group>"; };
+		CE7E6C2520AC545400F411CA /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
+		CE7E6C2720AC546500F411CA /* uncamera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uncamera.png; sourceTree = "<group>"; };
 		CE9BC091208A67720056081A /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		CE9BC093208BA9280056081A /* ChatState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatState.swift; sourceTree = "<group>"; };
 		CE9BC095208BBE920056081A /* ChatScreenReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatScreenReducer.swift; sourceTree = "<group>"; };
@@ -245,6 +255,7 @@
 		CE0AB46A205FD39D0071DE82 /* chatter_client_ios */ = {
 			isa = PBXGroup;
 			children = (
+				CE402F7820AAEEFE0080254A /* images */,
 				CEB219902098303A00138754 /* chatter_client_ios.entitlements */,
 				CE9BC097208C65380056081A /* models */,
 				CEC7C06920653B2E00D1302B /* tests */,
@@ -362,6 +373,18 @@
 				CE0AB4B22063804C0071DE82 /* MessageCenterTests.swift */,
 			);
 			path = core;
+			sourceTree = "<group>";
+		};
+		CE402F7820AAEEFE0080254A /* images */ = {
+			isa = PBXGroup;
+			children = (
+				CE7E6C2720AC546500F411CA /* uncamera.png */,
+				CE7E6C2520AC545400F411CA /* camera.png */,
+				CE7E6C2320AC544200F411CA /* logout.png */,
+				CE402F7D20AAF6C20080254A /* group.png */,
+				CE402F7B20AAF4FF0080254A /* back.png */,
+			);
+			path = images;
 			sourceTree = "<group>";
 		};
 		CE9BC097208C65380056081A /* models */ = {
@@ -545,15 +568,20 @@
 			files = (
 				CE0AB476205FD39F0071DE82 /* LaunchScreen.storyboard in Resources */,
 				CE9BC0BA209079300056081A /* simp5.png in Resources */,
+				CE7E6C2420AC544200F411CA /* logout.png in Resources */,
 				CE9BC0B92090792D0056081A /* simp4.png in Resources */,
 				CEB2199A209C137C00138754 /* splash2.jpg in Resources */,
+				CE402F7C20AAF5000080254A /* back.png in Resources */,
+				CE7E6C2620AC545500F411CA /* camera.png in Resources */,
 				CE9BC0B7209079240056081A /* simp2.png in Resources */,
 				CE0AB473205FD39F0071DE82 /* Assets.xcassets in Resources */,
 				CE0AB4B5206420B30071DE82 /* apple.png in Resources */,
 				CE9BC0BB209079330056081A /* simp1.png in Resources */,
 				CEC7C0862068D17100D1302B /* profile.png in Resources */,
 				CEB21998209C136000138754 /* splash.jpg in Resources */,
+				CE402F7E20AAF6C50080254A /* group.png in Resources */,
 				CE9BC0B82090792A0056081A /* simp3.png in Resources */,
+				CE7E6C2820AC546500F411CA /* uncamera.png in Resources */,
 				CE0AB471205FD39F0071DE82 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

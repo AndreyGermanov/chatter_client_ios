@@ -37,11 +37,15 @@ class ChatPublicCell: UITableViewCell, ChatViewControllerCell, StoreSubscriber {
     /// Link to table view with chat messages
     @IBOutlet weak var publicChatTableView: UITableView!
     
+    // Link to "Camera" button
+    @IBOutlet weak var addPictureBtn: UIButton!
+    
     /**
      * Callback called when cell initialized
      */
     override func awakeFromNib() {
         super.awakeFromNib()
+        room = appStore.state.chat.currentRoom
         publicChatTableView.dataSource = self
         publicChatTableView.delegate = self
         publicChatTableView.estimatedRowHeight = 107.0
@@ -60,8 +64,15 @@ class ChatPublicCell: UITableViewCell, ChatViewControllerCell, StoreSubscriber {
         if newState.chatMode != .ROOM {
             return false
         }
-        return !(room?.equals(newState.currentRoom))! || !ChatUser.compare(models1:users,models2:newState.currentRoom?.getUsers())
-        || !ChatMessage.compare(models1: messages, models2: newState.currentRoom?.getMessages())
+        if newState.currentRoom == nil {
+            return false
+        } else {
+            room = newState.currentRoom
+        }
+        var result = !(room?.equals(newState.currentRoom))!
+        result = result || !ChatUser.compare(models1:users,models2:newState.currentRoom?.getUsers())
+        result = result || !ChatMessage.compare(models1: messages, models2: newState.currentRoom?.getMessages())
+        return result
     }
 
     /**
@@ -87,6 +98,7 @@ class ChatPublicCell: UITableViewCell, ChatViewControllerCell, StoreSubscriber {
                 publicChatTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
             }
         }
+        self.state.chatAttachment = state.chatAttachment
     }
     
     /**
@@ -123,19 +135,16 @@ class ChatPublicCell: UITableViewCell, ChatViewControllerCell, StoreSubscriber {
      */
     @IBAction func addPictureBtnClick(_ sender: UIButton) {
         if state.chatAttachment == nil {
-            let photoCtrl = GetPhoto(parent: self.parentViewController!, callback: { data in
-                if let image = data {
-                    appStore.dispatch(ChatState.changeChatAttachment(chatAttachment: image))
-                }
-            })
-            photoCtrl.run()
+            GetPhoto(parent: self.parentViewController!).run()
         } else {
             let dialog = UIAlertController(title: "Confirm",
                                            message: "Do you want to remove picked image from cache?", preferredStyle: .alert)
             dialog.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { action in
                 appStore.dispatch(ChatState.changeChatAttachment(chatAttachment: nil))
+                dialog.dismiss(animated: true, completion: nil)
             }))
             dialog.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+            parentViewController!.present(dialog, animated: true, completion: nil)
         }
     }
 }
@@ -213,6 +222,8 @@ extension ChatPublicCell: UITableViewDelegate,UITableViewDataSource {
         cell.messageDateLabel.text = dateString
         if let profileImage = message.from_user.id == appStore.state.user.user_id ? appStore.state.user.profileImage : message.from_user.profileImage {
             cell.userProfileImageView.image = UIImage(data: profileImage)
+        } else {
+            cell.userProfileImageView.image = UIImage(named: "profile.png", in: Bundle.main, compatibleWith: nil)            
         }
         return cell
     }

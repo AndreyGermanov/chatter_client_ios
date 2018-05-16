@@ -88,7 +88,37 @@ class ChatViewController: UIViewController, StoreSubscriber {
                            className: "ChatViewController", methodName: "newState")
                 self.chatTableView.reloadData()
             }
-            self.backButton.tintColor = state.chat.privateChatMode == .CHAT ? nil : UIColor.clear
+            var private_messages_count = 0
+            var room_messages_count = 0
+            if (state.chat.currentRoom != nil) {
+                room_messages_count = state.chat.currentRoom!.getUnreadMessagesCount()
+            }
+            if (state.chat.users.count>0) {
+                for user in state.chat.users {
+                    private_messages_count += user.getUnreadMessagesCount()
+                }
+            }
+            if room_messages_count > 99 {
+                self.chatModesSegmentedControl.setTitle("PUBLIC (99+)",forSegmentAt:0)
+            } else if room_messages_count>0 {
+                self.chatModesSegmentedControl.setTitle("PUBLIC \(room_messages_count)",forSegmentAt:0)
+            } else {
+                self.chatModesSegmentedControl.setTitle("PUBLIC",forSegmentAt:0)
+            }
+            if private_messages_count>99 {
+                self.chatModesSegmentedControl.setTitle("PRIVATE (99+)",forSegmentAt:1)
+            } else if private_messages_count>0 {
+                self.chatModesSegmentedControl.setTitle("PRIVATE \(private_messages_count)",forSegmentAt:1)
+            } else {
+                self.chatModesSegmentedControl.setTitle("PRIVATE",forSegmentAt:1)
+            }
+            if state.chat.chatMode == .PRIVATE {
+                self.backButton.tintColor = state.chat.privateChatMode == .CHAT ? nil : UIColor.clear
+                self.backButton.image = UIImage(named: "back.png", in: Bundle.main, compatibleWith: nil)
+            } else if state.chat.chatMode == .ROOM {
+                self.backButton.tintColor = nil
+                self.backButton.image = UIImage(named: "group.png", in: Bundle.main, compatibleWith: nil)
+            }
             Logger.log(level: LogLevel.DEBUG_UI,message: "Updated local state from application state. State content: \(self.state)",
                 className: "ChatViewController",methodName:"newState")
         }
@@ -147,7 +177,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
      * Returns: true if need to redraw tableView or false otherwise
      */
     func shouldUpdateTableView(newState: ChatState) -> Bool {
-        return state.chatMode != newState.chatMode
+        return state.chatMode != newState.chatMode || state.chatAttachment != newState.chatAttachment
     }
 
     /**
@@ -170,7 +200,7 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         switch(state.chatMode) {
         case .ROOM:
             switch(indexPath.row) {
-            case 0: return screenSize.height
+            case 0: return screenSize.height-107
             default: return 0
             }
         case .PRIVATE:
@@ -225,6 +255,11 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     func setupChatPublicCell(_ cell: UITableViewCell) -> ChatPublicCell {
         let cell = cell as! ChatPublicCell
         cell.parentViewController = self
+        if state.chatAttachment == nil {
+            cell.addPictureBtn.setImage(UIImage(named: "camera.png"), for: .normal)
+        } else {
+            cell.addPictureBtn.setImage(UIImage(named: "uncamera.png"), for: .normal)
+        }
         Logger.log(level: LogLevel.DEBUG_UI, message: "Constructed ChatPublicCell",
                    className: "ChatViewController", methodName: "setupChatPublicCell")
         return cell
@@ -265,7 +300,12 @@ extension ChatViewController: UINavigationControllerDelegate, UIImagePickerContr
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             if let data = UIImagePNGRepresentation(image) {
                 print(data.bytes.count)
-                appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: data))
+                if state.chatMode == .PRIVATE {
+                    appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: data))
+                } else if state.chatMode == .ROOM {
+                    print("ADDED TO PUBLIC ROOM \(data)")
+                    appStore.dispatch(ChatState.changeChatAttachment(chatAttachment: data))
+                }
                 picker.dismiss(animated: true, completion: nil)
             }
         }

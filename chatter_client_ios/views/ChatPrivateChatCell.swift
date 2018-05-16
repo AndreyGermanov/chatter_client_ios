@@ -29,7 +29,9 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
     @IBOutlet weak var privateChatTableView: UITableView!
     /// Link to message input field
     @IBOutlet weak var messageInputField: UITextField!
-   
+    /// Link to "Camera" button
+    @IBOutlet weak var addPictureBtn: UIButton!
+    
     /**
      * Callback called when cell initialized
      */
@@ -75,19 +77,16 @@ class ChatPrivateChatCell: UITableViewCell, ChatViewControllerCell,StoreSubscrib
      */
     @IBAction func addPictureBtnClick(_ sender: UIButton) {
         if state.privateChatAttachment == nil {
-            let photoCtrl = GetPhoto(parent: self.parentViewController!, callback: { data in
-                if let image = data {
-                    appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: image))
-                }
-            })
-            photoCtrl.run()
+            GetPhoto(parent: self.parentViewController!).run()
         } else {
             let dialog = UIAlertController(title: "Confirm",
                                            message: "Do you want to remove picked image from cache?", preferredStyle: .alert)
             dialog.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { action in
                 appStore.dispatch(ChatState.changePrivateChatAttachment(privateChatAttachment: nil))
+                dialog.dismiss(animated: true, completion: nil)
             }))
             dialog.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+            parentViewController!.present(dialog, animated: true, completion: nil)
         }
     }
     
@@ -203,6 +202,8 @@ extension ChatPrivateChatCell: UITableViewDelegate,UITableViewDataSource {
         cell.messageDateLabel.text = dateString       
         if let profileImage = message.from_user.id == appStore.state.user.user_id ? appStore.state.user.profileImage : message.from_user.profileImage {
             cell.userProfileImageView.image = UIImage(data: profileImage)
+        } else {
+            cell.userProfileImageView.image = UIImage(named: "profile.png", in: Bundle.main, compatibleWith: nil)
         }
         return cell
     }

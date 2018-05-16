@@ -94,8 +94,15 @@ class MessageCenterTests: MessageCenterResponseListener {
         if users.count == 0 {
             return
         }
+        var room_texts:[String] = [
+            "Hi there !",
+            "Hello all !!!",
+            "How it's going ?",
+            "Nice to meet you",
+            "Wow!",
+            "Good bye"
+        ]
         var i = self.i
-        Logger.log(level:LogLevel.DEBUG,message:"Started timer",className:"MessageCenterTests",methodName:"loadTestState")
         if i>5 {
             i = 1
         }
@@ -119,6 +126,22 @@ class MessageCenterTests: MessageCenterResponseListener {
                 to_user: to_user)
             var messages:[ChatMessage] = appStore.state.chat.messages.copy()
             messages.append(message)
+            let room_message1 = ChatMessage(id:"rm1_\(appStore.state.chat.messages.count)",
+            timestamp: Int.init(Date().timeIntervalSince1970/1000),
+            from_user: from_user,
+            text: "Message to ROOM 1",
+            attachment: nil,//images["splash"],
+            room: ChatRoom.getById("r1"),
+            to_user: nil)
+            messages.append(room_message1)
+            let room_message2 = ChatMessage(id:"rm2_\(appStore.state.chat.messages.count)",
+                timestamp: Int.init(Date().timeIntervalSince1970/1000),
+                from_user: from_user,
+                text: room_texts[i],
+                attachment: nil,//images["splash"],
+                room: ChatRoom.getById("r2"),
+                to_user: nil)
+            messages.append(room_message2)
             appStore.dispatch(ChatState.changeMessages(messages: messages))
             Logger.log(level:LogLevel.DEBUG,message:"Pushed new message from user \(from_user.id)",
                 className:"MessageCenterTests",methodName:"loadTestState")
@@ -134,6 +157,7 @@ class MessageCenterTests: MessageCenterResponseListener {
         let room1 = ChatRoom(id: "r1", name: "Room 1")
         let room2 = ChatRoom(id: "r2", name: "Room 2")
         appStore.dispatch(ChatState.changeRooms(rooms:[room1,room2]))
+        appStore.dispatch(ChatState.changeCurrentRoom(currentRoom: room2))
         let _ = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.play), userInfo: nil, repeats: true)
     }
     
